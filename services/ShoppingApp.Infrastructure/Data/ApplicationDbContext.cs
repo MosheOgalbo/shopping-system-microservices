@@ -1,0 +1,57 @@
+using Microsoft.EntityFrameworkCore;
+using ShoppingApp.Core.Models;
+
+namespace ShoppingApp.Infrastructure.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
+
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Category configuration
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Description).HasMaxLength(500);
+                entity.HasIndex(e => e.Name).IsUnique();
+            });
+
+            // Product configuration
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+                entity.Property(e => e.Description).HasMaxLength(1000);
+                entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
+
+                // Foreign key relationship
+                entity.HasOne(p => p.Category)
+                      .WithMany(c => c.Products)
+                      .HasForeignKey(p => p.CategoryId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Seed data
+            modelBuilder.Entity<Category>().HasData(
+                new Category { Id = 1, Name = "אלקטרוניקה", Description = "מוצרי אלקטרוניקה ומחשבים", CreatedAt = DateTime.UtcNow },
+                new Category { Id = 2, Name = "ביגוד", Description = "בגדים ואקססוריז", CreatedAt = DateTime.UtcNow },
+                new Category { Id = 3, Name = "ספרים", Description = "ספרים ומגזינים", CreatedAt = DateTime.UtcNow }
+            );
+
+            modelBuilder.Entity<Product>().HasData(
+                new Product { Id = 1, Name = "לפטופ Dell", Description = "מחשב נייד מתקדם", Price = 2999.99m, CategoryId = 1, CreatedAt = DateTime.UtcNow },
+                new Product { Id = 2, Name = "חולצה כחולה", Description = "חולצת כותנה איכותית", Price = 89.99m, CategoryId = 2, CreatedAt = DateTime.UtcNow },
+                new Product { Id = 3, Name = "ספר תכנות", Description = "ספר ללימוד תכנות", Price = 149.99m, CategoryId = 3, CreatedAt = DateTime.UtcNow }
+            );
+        }
+    }
+}
