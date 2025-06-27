@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Debug: וידוא ה־Connection String
+// Debug: Connection String
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine($">>> Using DefaultConnection = '{conn}'");
 
@@ -19,6 +19,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         // הצגת property names כפי שהם מוגדרים (לא camelCase)
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
+
     });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -77,7 +78,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Shopping App API V1");
-        c.RoutePrefix = string.Empty; // Swagger יהיה בroot path
+        c.RoutePrefix = string.Empty;
     });
 }
 
