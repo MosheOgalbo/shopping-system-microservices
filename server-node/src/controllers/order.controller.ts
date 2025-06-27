@@ -59,3 +59,13 @@ export const updateUserInfo = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Server error' });
   }
 };
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await User.find();
+    return res.status(200).json( {message: 'get all order users:', users});
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Server error' });
+  }
+};
