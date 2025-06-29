@@ -61,7 +61,7 @@ services:
       mongo:
         condition: service_healthy
     environment:
-      - MONGO_URI=mongodb://root:example@mongo:27017
+      - MONGO_URI=mongodb://root:example@shopping-app-mongo-1:27017/test?authSource=admin
     ports:
       - "3000:3000"
     networks:

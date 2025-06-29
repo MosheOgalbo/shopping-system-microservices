@@ -11,7 +11,8 @@ firstName: {
     minlength: [2, 'First name must be at least 2 characters'],
     match: [nameRegex, 'First name contains invalid characters'],
     trim: true
-  },  lastName: {
+  },
+   lastName: {
     type: String,
     required: true,
     minlength: [2, 'Last name must be at least 2 characters'],

@@ -13,18 +13,14 @@ connectDB();
 
 // הגדרת Swagger
 const swaggerOptions = {
-  definition: {
+  swaggerDefinition: {
     openapi: '3.0.0',
     info: {
-      title: 'Order API',
+      title: 'Shopping App API',
       version: '1.0.0',
-      description: 'API for managing users and orders'
+      description: 'API documentation for the Shopping App',
     },
-    servers: [
-      {
-         url: 'http://localhost:' + (process.env.PORT || 3000)
-      }
-    ]
+    servers: [{ url: 'http://localhost:3000' }],
   },
   apis: ['./src/routes/*.ts'],
 };
