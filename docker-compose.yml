@@ -18,6 +18,7 @@ services:
       - sql-data:/var/opt/mssql
     networks:
       - app-network
+    restart: unless-stopped
 
   mongo:
     image: mongo:6
@@ -36,6 +37,7 @@ services:
       retries: 5
     networks:
       - app-network
+    restart: unless-stopped
 
   server-net:
     build:
@@ -47,11 +49,11 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Server=sql,1433;Database=ShoppingAppDb;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=true;MultipleActiveResultSets=true;Encrypt=False;
       - ASPNETCORE_ENVIRONMENT=Development
-
     ports:
       - "5177:8080"
     networks:
       - app-network
+    restart: unless-stopped
 
   server-node:
     build:
@@ -61,11 +63,34 @@ services:
       mongo:
         condition: service_healthy
     environment:
-      - MONGO_URI=mongodb://root:example@shopping-app-mongo-1:27017/test?authSource=admin
+      - MONGO_URI=mongodb://root:example@mongo:27017/test?authSource=admin
     ports:
       - "3000:3000"
     networks:
       - app-network
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./shopping-client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+    restart: unless-stopped
+
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '0.5'
+        reservations:
+          memory: 256m
+          cpus: '0.25'
+
 
 volumes:
   sql-data:
