@@ -66,6 +66,12 @@ services:
       - "3000:3000"
     networks:
       - app-network
+app:
+    build: .
+    ports:
+      - "8900:8900"
+    environment:
+      - NODE_ENV=production
 
 volumes:
   sql-data:
