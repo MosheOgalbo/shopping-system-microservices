@@ -1,24 +1,82 @@
-import { Product } from '../features/products/types';
+import React, { useState } from 'react';
+import { Product } from '../store/slices/cartSlice';
 import { useAppDispatch } from '../hooks';
-import { addToCart } from '../features/cart/cartSlice';
+import { addToCart } from '../store/slices/cartSlice';
 
 interface Props {
   product: Product;
 }
 
-const ProductCard = ({ product }: Props) => {
+const ProductCard: React.FC<Props> = ({ product }) => {
   const dispatch = useAppDispatch();
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = async () => {
+    setIsAdding(true);
+    dispatch(addToCart(product));
+    // Add a small delay for user feedback
+    await new Promise(resolve => setTimeout(resolve, 300));
+    setIsAdding(false);
+  };
 
   return (
-    <div className="border rounded-lg p-4 shadow hover:shadow-lg transition">
-      <h2 className="text-lg font-bold">{product.name}</h2>
-      <p>מחיר: {product.price} ₪</p>
-      <button
-        onClick={() => dispatch(addToCart(product))}
-        className="mt-2 bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded"
-      >
-        הוסף לסל
-      </button>
+    <div className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2">
+      {/* Product Image/Icon */}
+      <div className="relative h-48 bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center overflow-hidden">
+        <div className="text-6xl group-hover:scale-125 transition-transform duration-300 filter group-hover:drop-shadow-lg">
+          {product.image || '📦'}
+        </div>
+        {/* Price Badge */}
+        <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full font-bold text-sm shadow-lg">
+          ₪{product.price.toFixed(2)}
+        </div>
+      </div>
+
+      {/* Product Info */}
+      <div className="p-6">
+        <div className="mb-4">
+          <h2 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors duration-300">
+            {product.name}
+          </h2>
+          {product.description && (
+            <p className="text-gray-600 text-sm leading-relaxed">
+              {product.description}
+            </p>
+          )}
+        </div>
+
+        {/* Category Tag */}
+        <div className="mb-4">
+          {product.category && (
+            <span className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">
+              {product.category}
+            </span>
+          )}
+        </div>
+
+        {/* Add to Cart Button */}
+        <button
+          onClick={handleAddToCart}
+          disabled={isAdding}
+          className={`w-full py-3 px-4 rounded-xl font-semibold text-white transition-all duration-300 transform ${
+            isAdding
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
+          }`}
+        >
+          {isAdding ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+              מוסיף לעגלה...
+            </div>
+          ) : (
+            <div className="flex items-center justify-center">
+              <span className="mr-2">🛒</span>
+              הוסף לעגלה
+            </div>
+          )}
+        </button>
+      </div>
     </div>
   );
 };
