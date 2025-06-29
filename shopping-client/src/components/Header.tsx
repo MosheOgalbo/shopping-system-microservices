@@ -13,7 +13,7 @@ const Header: React.FC = () => {
   const isOrderPage = location.pathname === '/order';
 
   return (
-    <header className="sticky top-0 z-50 glass shadow-lg">
+    <header className="w-full bg-gray-800 text-white py-4 px-6 text-center text-xl font-bold shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
 
