@@ -41,6 +41,12 @@ builder.Services.AddSwaggerGen(c =>
     }
 });
 
+// תוספת לוודא הקשבה לכל הכתובות
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8080);
+});
+
 // Database Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(conn, sqlOptions =>
@@ -90,7 +96,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Database Initialization
 // Database Initialization
 using (var scope = app.Services.CreateScope())
 {

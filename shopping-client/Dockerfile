@@ -3,8 +3,8 @@ FROM node:18
 
 WORKDIR /app
 COPY . .
-# RUN npm install
-# RUN npm run build
+RUN npm install
+RUN npm run build
 
 # שימוש ב־serve להרצת האפליקציה
 RUN npm install -g serve

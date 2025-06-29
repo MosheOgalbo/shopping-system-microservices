@@ -1,5 +1,4 @@
 import { API_ENDPOINTS } from '../utils/constants';
-
 export const fetchCategories = async () => {
   try {
     const response = await fetch(API_ENDPOINTS.CATEGORIES, {
