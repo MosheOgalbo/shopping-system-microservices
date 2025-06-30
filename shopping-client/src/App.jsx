@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import ShoppingScreen from './pages/ShoppingScreen';
 import OrderScreen from './pages/OrderScreen';
-import './App.css';
+ import './App.css';
 
 function App() {
   return (
