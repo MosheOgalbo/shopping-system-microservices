@@ -143,7 +143,7 @@ const OrderScreen = () => {
                 פרטים אישיים
               </h2>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 {/* First Name */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -155,7 +155,11 @@ const OrderScreen = () => {
                     placeholder="הכנס שם פרטי"
                     value={form.firstName}
                     onChange={handleChange}
-                    className={`form-input ${errors.firstName ? 'error' : ''}`}
+                    className={`w-full px-4 py-3 text-gray-700 border-2 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                      errors.firstName
+                        ? 'border-red-500 focus:ring-red-200 bg-red-50'
+                        : 'border-black focus:ring-blue-200 focus:border-blue-500'
+                    }`}
                   />
                   {errors.firstName && (
                     <p className="text-red-500 text-sm mt-2 flex items-center">
@@ -176,7 +180,11 @@ const OrderScreen = () => {
                     placeholder="הכנס שם משפחה"
                     value={form.lastName}
                     onChange={handleChange}
-                    className={`form-input ${errors.lastName ? 'error' : ''}`}
+                    className={`w-full px-4 py-3 text-gray-700 border-2 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                      errors.lastName
+                        ? 'border-red-500 focus:ring-red-200 bg-red-50'
+                        : 'border-black focus:ring-blue-200 focus:border-blue-500'
+                    }`}
                   />
                   {errors.lastName && (
                     <p className="text-red-500 text-sm mt-2 flex items-center">
@@ -197,7 +205,11 @@ const OrderScreen = () => {
                     placeholder="רחוב, מספר בית, עיר"
                     value={form.address}
                     onChange={handleChange}
-                    className={`form-input ${errors.address ? 'error' : ''}`}
+                    className={`w-full px-4 py-3 text-gray-700 border-2 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                      errors.address
+                        ? 'border-red-500 focus:ring-red-200 bg-red-50'
+                        : 'border-black focus:ring-blue-200 focus:border-blue-500'
+                    }`}
                   />
                   {errors.address && (
                     <p className="text-red-500 text-sm mt-2 flex items-center">
@@ -218,7 +230,11 @@ const OrderScreen = () => {
                     placeholder="example@email.com"
                     value={form.email}
                     onChange={handleChange}
-                    className={`form-input ${errors.email ? 'error' : ''}`}
+                    className={`w-full px-4 py-3 text-gray-700 border-2 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                      errors.email
+                        ? 'border-red-500 focus:ring-red-200 bg-red-50'
+                        : 'border-black focus:ring-blue-200 focus:border-blue-500'
+                    }`}
                   />
                   {errors.email && (
                     <p className="text-red-500 text-sm mt-2 flex items-center">
@@ -228,28 +244,30 @@ const OrderScreen = () => {
                   )}
                 </div>
 
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={isSubmitting || cartItems.length === 0}
-                  className={`w-full py-4 px-6 rounded-xl font-bold text-white text-lg transition-all duration-300 transform ${
-                    isSubmitting || cartItems.length === 0
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
-                  }`}
-                >
-                  {isSubmitting ? (
-                    <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white ml-2"></div>
-                      שולח הזמנה...
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center">
-                      <span className="ml-2">🚀</span>
-                      {cartItems.length === 0 ? 'העגלה ריקה' : `אשר הזמנה - ₪${totalPrice.toFixed(2)}`}
-                    </div>
-                  )}
-                </button>
+                {/* Submit Button - עם מרווח נוסף מלמעלה */}
+                <div className="pt-4">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || cartItems.length === 0}
+                    className={`w-full py-4 px-6 rounded-xl font-bold text-white text-lg transition-all duration-300 transform ${
+                      isSubmitting || cartItems.length === 0
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
+                    }`}
+                  >
+                    {isSubmitting ? (
+                      <div className="flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white ml-2"></div>
+                        שולח הזמנה...
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center">
+                        <span className="ml-2">🚀</span>
+                        {cartItems.length === 0 ? 'העגלה ריקה' : `אשר הזמנה - ₪${totalPrice.toFixed(2)}`}
+                      </div>
+                    )}
+                  </button>
+                </div>
               </form>
             </div>
 
