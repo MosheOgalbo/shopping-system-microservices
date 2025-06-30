@@ -1,16 +1,23 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { toggleCart } from '../store/slices/cartSlice';
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const cartItems = useAppSelector(state => state.cart.items);
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   const isOrderPage = location.pathname === '/order';
+
+  // Function to handle cart icon click
+  const handleCartClick = () => {
+    dispatch(toggleCart()); // פתח את העגלה
+    navigate('/order'); // עבור למסך הזמנה
+  };
 
   return (
     <header className="w-full bg-gray-800 text-white py-4 px-6 text-center text-xl font-bold shadow-md">
@@ -55,7 +62,7 @@ const Header: React.FC = () => {
           {/* Cart Button */}
           <div className="flex items-center space-x-4 rtl:space-x-reverse">
             <button
-              onClick={() => dispatch(toggleCart())}
+              onClick={handleCartClick}
               className="relative p-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-full shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 animate-pulse-ring"
             >
               <div className="text-2xl">🛒</div>
@@ -82,7 +89,7 @@ const Header: React.FC = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className="md:hidden border-t border-gray-200 bg-white/80 backdrop-blur-sm">
+      <div className=" border-t border-gray-200 bg-white/80 backdrop-blur-sm">
         <div className="flex">
           <Link
             to="/shopping"
