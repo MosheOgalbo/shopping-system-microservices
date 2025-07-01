@@ -10,7 +10,7 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
-         <div className=" min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex justify-center items-center">
+         <div  dir="rtl" className=" min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex justify-center items-center">
           <Routes>
             <Route path="/" element={<Navigate to="/shopping" />} />
             <Route path="/shopping" element={<ShoppingScreen />} />

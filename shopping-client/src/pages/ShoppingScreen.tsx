@@ -28,7 +28,7 @@ const categories = ['כל הקטגוריות', ...Array.from(new Set(products.ma
   });
 
  return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 font-hebrew" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 font-hebrew" >
       <Header />
       {/* Search & Filter Bar */}
       <div className="bg-white shadow-sm border-b border-gray-100">
