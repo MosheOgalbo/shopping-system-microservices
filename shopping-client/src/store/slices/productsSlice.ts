@@ -1,7 +1,38 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Product } from './cartSlice';
 
-// Mock products with Hebrew names
+const transformBackendProduct = (backendProduct: any): Product => ({
+  id: backendProduct.Id?.toString() || backendProduct.id?.toString(),
+  name: backendProduct.Name || backendProduct.name,
+  nameEn: (backendProduct.Name || backendProduct.name)?.toLowerCase().replace(/\s+/g, '-') || 'product',
+  category: backendProduct.CategoryName || backendProduct.category,
+  price: backendProduct.Price || backendProduct.price || 0,
+  description: backendProduct.Description || backendProduct.description,
+  image: getProductIcon(backendProduct.CategoryName || backendProduct.category)
+});
+
+// פונקציה לקבלת אייקון לפי קטגוריה
+const getProductIcon = (category: string): string => {
+  const iconMap: { [key: string]: string } = {
+    'אלקטרוניקה': '📱',
+    'ביגוד': '👕',
+    'ספרים': '📚',
+    'ספורט': '⚽',
+    'בית': '🏠',
+    'צעצועים': '🧸',
+    'מזון': '🍎',
+    'יופי': '💄'
+  };
+
+  for (const [key, icon] of Object.entries(iconMap)) {
+    if (category?.includes(key)) {
+      return icon;
+    }
+  }
+  return '📦'; // אייקון ברירת מחדל
+};
+
+// Mock products with Hebrew names (כגיבוי)
 const mockProducts: Product[] = [
   {
     id: '1',
@@ -102,8 +133,14 @@ const productsSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    // פונקציה חדשה לטעינת נתונים מהבקאנד
+    setBackendProducts(state, action: PayloadAction<any[]>) {
+      state.products = action.payload.map(transformBackendProduct);
+      state.loading = false;
+      state.error = null;
+    },
     setCategory(state, action: PayloadAction<string>) {
-      state.selectedCategory = action.payload;
+      state.selectedCategory = action.payload === 'כל הקטגוריות' ? '' : action.payload;
     },
     setSearchQuery(state, action: PayloadAction<string>) {
       state.searchQuery = action.payload;
@@ -120,6 +157,7 @@ const productsSlice = createSlice({
 
 export const {
   setProducts,
+  setBackendProducts,
   setCategory,
   setSearchQuery,
   setLoading,

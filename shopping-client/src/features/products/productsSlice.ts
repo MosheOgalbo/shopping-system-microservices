@@ -1,5 +1,37 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product } from './types';
+import { Product, BackendProduct } from './types';
+
+// פונקציה להמרת נתונים מהבקאנד
+const transformBackendProduct = (backendProduct: BackendProduct): Product => ({
+  id: backendProduct.Id.toString(),
+  name: backendProduct.Name,
+  nameEn: backendProduct.Name.toLowerCase().replace(/\s+/g, '-'),
+  category: backendProduct.CategoryName,
+  price: backendProduct.Price,
+  description: backendProduct.Description,
+  image: getProductIcon(backendProduct.CategoryName)
+});
+
+// פונקציה לקבלת אייקון לפי קטגוריה
+const getProductIcon = (category: string): string => {
+  const iconMap: { [key: string]: string } = {
+    'אלקטרוניקה': '📱',
+    'ביגוד': '👕',
+    'ספרים': '📚',
+    'ספורט': '⚽',
+    'בית': '🏠',
+    'צעצועים': '🧸',
+    'מזון': '🍎',
+    'יופי': '💄'
+  };
+
+  for (const [key, icon] of Object.entries(iconMap)) {
+    if (category?.includes(key)) {
+      return icon;
+    }
+  }
+  return '📦';
+};
 
 const dummyProducts: Product[] = [
   { id: '1', name: 'מוצר א', category: 'קטגוריה 1', price: 100 },
@@ -10,11 +42,15 @@ const dummyProducts: Product[] = [
 interface ProductsState {
   products: Product[];
   selectedCategory: string;
+  loading: boolean;
+  error: string | null;
 }
 
 const initialState: ProductsState = {
   products: dummyProducts,
   selectedCategory: '',
+  loading: false,
+  error: null,
 };
 
 const productsSlice = createSlice({
@@ -22,10 +58,35 @@ const productsSlice = createSlice({
   initialState,
   reducers: {
     setCategory(state, action: PayloadAction<string>) {
-      state.selectedCategory = action.payload;
+      state.selectedCategory = action.payload === 'כל הקטגוריות' ? '' : action.payload;
     },
+    setProducts(state, action: PayloadAction<Product[]>) {
+      state.products = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    // פונקציה חדשה לטעינת נתונים מהבקאנד
+    setBackendProducts(state, action: PayloadAction<BackendProduct[]>) {
+      state.products = action.payload.map(transformBackendProduct);
+      state.loading = false;
+      state.error = null;
+    },
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.loading = action.payload;
+    },
+    setError(state, action: PayloadAction<string | null>) {
+      state.error = action.payload;
+      state.loading = false;
+    }
   },
 });
 
-export const { setCategory } = productsSlice.actions;
+export const {
+  setCategory,
+  setProducts,
+  setBackendProducts,
+  setLoading,
+  setError
+} = productsSlice.actions;
+
 export default productsSlice.reducer;
