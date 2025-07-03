@@ -3,13 +3,11 @@ using ShoppingApp.Infrastructure.Data;
 using ShoppingApp.Infrastructure.Repositories;
 using System.Text.Json.Serialization;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Debug: Connection String
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine($">>> Using DefaultConnection = '{conn}'");
-
 
 // Add services to the container.
 builder.Services.AddControllers()
@@ -19,7 +17,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         // הצגת property names כפי שהם מוגדרים (לא camelCase)
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
-
     });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,28 +38,33 @@ builder.Services.AddSwaggerGen(c =>
     }
 });
 
-// תוספת לוודא הקשבה לכל הכתובות
+// הגדרת Kestrel להקשבה על כל הכתובות
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(8080);
+    options.ListenAnyIP(8080); // הפורט הפנימי של הקונטיינר
 });
 
-// Database Configuration
+// Database Configuration - שינוי ל-PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(conn, sqlOptions =>
-        sqlOptions.MigrationsAssembly("ShoppingApp.Infrastructure")
+    options.UseNpgsql(conn, npgsqlOptions =>
+        npgsqlOptions.MigrationsAssembly("ShoppingApp.Infrastructure")
     ));
 
 // Repository Registration
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-// CORS Configuration
+// CORS Configuration - הוספת הפורט של הקליינט
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+        policy.WithOrigins(
+                "http://localhost:3000",
+                "https://localhost:3000",
+                "http://localhost:5173",
+                "https://localhost:5173"
+              )
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -76,7 +78,6 @@ builder.Logging.AddDebug();
 
 var app = builder.Build();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -88,34 +89,30 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+// הסרת HTTPS redirect כי בדוקר זה לא נחוץ
+// app.UseHttpsRedirection();
 
-app.UseCors("AllowReactApp");
-
+app.UseCors("AllowAll");
 app.UseAuthorization();
-
 app.MapControllers();
 
 // Database Initialization
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
     try
-    {        // מוודא שהמבנה של המיגרציות מוחל
-
-         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-         Console.WriteLine(">>> Migrating database...");
-         db.Database.Migrate();
-          Console.WriteLine(">>> Migration complete.");
-
+    {
+        Console.WriteLine(">>> Migrating database...");
+        context.Database.Migrate();
+        Console.WriteLine(">>> Migration complete.");
     }
     catch (Exception ex)
     {
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occurred while migrating the database");
-        throw; // זורק שוב כדי שתראה את השגיאה במסוף
+        throw;
     }
 }
-
 
 app.Run();

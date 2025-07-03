@@ -1,26 +1,37 @@
+# Use the official .NET 8.0 SDK image for building
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# העתקת קבצי .csproj לפני ה־restore
+# Copy solution file and project files
+COPY *.sln ./
+COPY ShoppingApp.API/*.csproj ./ShoppingApp.API/
+COPY ShoppingApp.Core/*.csproj ./ShoppingApp.Core/
+COPY ShoppingApp.Infrastructure/*.csproj ./ShoppingApp.Infrastructure/
+
+# Restore dependencies
+RUN dotnet restore
+
+# Copy the rest of the source code
 COPY . .
 
-RUN dotnet restore ShoppingApp.sln
-
-# העתקת יתר הקבצים
-COPY . .
-
+# Build the application
 WORKDIR /src/ShoppingApp.API
+RUN dotnet build -c Release -o /app/build
 
-RUN dotnet publish -c Release -o /app/out
+# Publish the application
+FROM build AS publish
+RUN dotnet publish -c Release -o /app/publish
 
-RUN apt-get update && apt-get install -y curl
-
+# Final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
-
 WORKDIR /app
+COPY --from=publish /app/publish .
 
-COPY --from=build /app/out .
-
+# Expose port 8080 (internal container port)
 EXPOSE 8080
+
+# Set environment variables
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_ENVIRONMENT=Production
 
 ENTRYPOINT ["dotnet", "ShoppingApp.API.dll"]

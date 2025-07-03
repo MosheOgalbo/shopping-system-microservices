@@ -4,10 +4,19 @@ import { connectDB } from './config/db';
 import orderRoutes from './routes/order.routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import cors from 'cors';
 
 dotenv.config();
 const app = express();
 app.use(express.json());
+
+app.use(cors({
+    origin: ['http://localhost:3000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
+}));
+
 
 connectDB();
 

@@ -16,19 +16,20 @@ interface OrderRequest {
 export const ordersApi = createApi({
   reducerPath: 'ordersApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3000/api/',
+    baseUrl: 'http://localhost:5000/api/',
     prepareHeaders: (headers) => {
       headers.set('Content-Type', 'application/json');
-      headers.set('Accept', '*/*');
+      headers.set('Accept', 'application/json');
       return headers;
     },
   }),
   tagTypes: ['Order'],
   endpoints: (builder) => ({
     placeOrder: builder.mutation<Order, OrderRequest>({
-      // Remove the 'query' property and use only 'queryFn'
       queryFn: async (orderData, queryApi, extraOptions, baseQuery) => {
         try {
+          console.log('Sending order to Node.js server:', orderData);
+
           const result = await baseQuery({
             url: 'orders',
             method: 'POST',
@@ -36,16 +37,18 @@ export const ordersApi = createApi({
           });
 
           if (result.error) {
-            throw new Error('API Error');
+            console.error('API Error:', result.error);
+            throw new Error(`API Error: ${JSON.stringify(result.error)}`);
           }
 
           if (result.data) {
+            console.log('Order placed successfully:', result.data);
             return { data: result.data as Order };
           }
 
           throw new Error('No data received from server');
         } catch (error) {
-          console.warn('API unavailable, creating mock order:', error);
+          console.warn('Node.js API unavailable, creating mock order:', error);
 
           // Create mock order response
           const totalAmount = orderData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);

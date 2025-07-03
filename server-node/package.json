@@ -23,6 +23,7 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.4",
     "@types/swagger-jsdoc": "^6.0.4",

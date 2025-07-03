@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ShoppingApp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCreatePostgreSQL : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,11 +18,11 @@ namespace ShoppingApp.Infrastructure.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,13 +33,13 @@ namespace ShoppingApp.Infrastructure.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    Price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    CategoryId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,9 +57,9 @@ namespace ShoppingApp.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "Description", "Name" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 6, 26, 11, 40, 17, 83, DateTimeKind.Utc).AddTicks(6060), "מוצרי אלקטרוניקה ומחשבים", "אלקטרוניקה" },
-                    { 2, new DateTime(2025, 6, 26, 11, 40, 17, 83, DateTimeKind.Utc).AddTicks(6060), "בגדים ואקססוריז", "ביגוד" },
-                    { 3, new DateTime(2025, 6, 26, 11, 40, 17, 83, DateTimeKind.Utc).AddTicks(6060), "ספרים ומגזינים", "ספרים" }
+                    { 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "מוצרי אלקטרוניקה ומחשבים", "אלקטרוניקה" },
+                    { 2, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "בגדים ואקססוריז", "ביגוד" },
+                    { 3, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "ספרים ומגזינים", "ספרים" }
                 });
 
             migrationBuilder.InsertData(
@@ -66,9 +67,9 @@ namespace ShoppingApp.Infrastructure.Migrations
                 columns: new[] { "Id", "CategoryId", "CreatedAt", "Description", "Name", "Price" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2025, 6, 26, 11, 40, 17, 83, DateTimeKind.Utc).AddTicks(6130), "מחשב נייד מתקדם", "לפטופ Dell", 2999.99m },
-                    { 2, 2, new DateTime(2025, 6, 26, 11, 40, 17, 83, DateTimeKind.Utc).AddTicks(6130), "חולצת כותנה איכותית", "חולצה כחולה", 89.99m },
-                    { 3, 3, new DateTime(2025, 6, 26, 11, 40, 17, 83, DateTimeKind.Utc).AddTicks(6130), "ספר ללימוד תכנות", "ספר תכנות", 149.99m }
+                    { 1, 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "מחשב נייד מתקדם", "לפטופ Dell", 2999.99m },
+                    { 2, 2, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "חולצת כותנה איכותית", "חולצה כחולה", 89.99m },
+                    { 3, 3, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "ספר ללימוד תכנות", "ספר תכנות", 149.99m }
                 });
 
             migrationBuilder.CreateIndex(
