@@ -1,5 +1,5 @@
 import React from 'react';
-import { CartItem } from '../store/slices/cartSlice'; // או ה־type המתאים
+import { CartItem } from '../store/slices/cartSlice';
 
 interface OrderSummaryProps {
   items: CartItem[];

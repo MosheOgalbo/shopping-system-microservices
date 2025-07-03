@@ -57,7 +57,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 // CORS Configuration - הוספת הפורט של הקליינט
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
                 "http://localhost:3000",
@@ -89,10 +89,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// הסרת HTTPS redirect כי בדוקר זה לא נחוץ
 // app.UseHttpsRedirection();
 
-app.UseCors("AllowAll");
+app.UseCors("AllowFrontend");
 app.UseAuthorization();
 app.MapControllers();
 

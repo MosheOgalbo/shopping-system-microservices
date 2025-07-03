@@ -6,16 +6,19 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import cors from 'cors';
 
+const PORT = process.env.PORT || 5001;
+
 dotenv.config();
 const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: ['http://localhost:3000'],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
+  origin: ['http://localhost:5173', 'http://localhost:5001'],
+  credentials: true,
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Accept']
 }));
+
 
 
 connectDB();
@@ -29,7 +32,7 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API documentation for the Shopping App',
     },
-    servers: [{ url: 'http://localhost:3000' }],
+      servers: [{ url: 'http://localhost:5001' }]
   },
   apis: ['./src/routes/*.ts'],
 };
@@ -39,5 +42,4 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/api/orders', orderRoutes);
 
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server listening on port ${PORT}`));

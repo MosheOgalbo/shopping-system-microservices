@@ -16,7 +16,7 @@ interface OrderRequest {
 export const ordersApi = createApi({
   reducerPath: 'ordersApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/api/',
+    baseUrl: 'http://localhost:5001/api/',
     prepareHeaders: (headers) => {
       headers.set('Content-Type', 'application/json');
       headers.set('Accept', 'application/json');
@@ -31,7 +31,7 @@ export const ordersApi = createApi({
           console.log('Sending order to Node.js server:', orderData);
 
           const result = await baseQuery({
-            url: 'orders',
+            url: 'orders/',
             method: 'POST',
             body: orderData,
           });
@@ -59,7 +59,7 @@ export const ordersApi = createApi({
             totalAmount,
             status: 'confirmed',
             createdAt: new Date().toISOString(),
-            estimatedDelivery: new Date(Date.now() + 60 * 60 * 1000).toISOString() // 1 hour from now
+            estimatedDelivery: new Date(Date.now() + 60 * 60 * 1000).toISOString()
           };
 
           // Simulate network delay
