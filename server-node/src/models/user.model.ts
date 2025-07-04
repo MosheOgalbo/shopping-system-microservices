@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
-
-const nameRegex = /^[A-Za-z\u0590-\u05FF ]+$/; // עברית/אנגלית ורווחים בלבד
+// Hebrew/English and spaces only
+const nameRegex = /^[A-Za-z\u0590-\u05FF ]+$/;
 
 
 const userSchema = new Schema({
