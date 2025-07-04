@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Order } from '../store/slices/orderSlice';
 import { CartItem } from '../store/slices/cartSlice';
+import { API_ENDPOINTS } from '../util/constants';
 
 interface OrderRequest {
   user: {
@@ -16,7 +17,7 @@ interface OrderRequest {
 export const ordersApi = createApi({
   reducerPath: 'ordersApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5001/api/',
+    baseUrl: API_ENDPOINTS.ORDERS,
     prepareHeaders: (headers) => {
       headers.set('Content-Type', 'application/json');
       headers.set('Accept', 'application/json');

@@ -11,7 +11,6 @@ const transformBackendProduct = (backendProduct: any): Product => ({
   image: getProductIcon(backendProduct.CategoryName || backendProduct.category)
 });
 
-// פונקציה לקבלת אייקון לפי קטגוריה
 const getProductIcon = (category: string): string => {
   const iconMap: { [key: string]: string } = {
     'אלקטרוניקה': '📱',
@@ -29,10 +28,10 @@ const getProductIcon = (category: string): string => {
       return icon;
     }
   }
-  return '📦'; // אייקון ברירת מחדל
+  return '📦';
 };
 
-// Mock products with Hebrew names (כגיבוי)
+// Mock products with Hebrew names
 const mockProducts: Product[] = [
   {
     id: '1',
@@ -52,60 +51,6 @@ const mockProducts: Product[] = [
     description: 'בננות בשלות ועסיסיות',
     image: '🍌'
   },
-  {
-    id: '3',
-    name: 'חלב טרי 3%',
-    nameEn: 'fresh-milk',
-    category: 'חלב וביצים',
-    price: 6.90,
-    description: 'חלב טרי איכותי 1 ליטר',
-    image: '🥛'
-  },
-  {
-    id: '4',
-    name: 'ביצים טריות',
-    nameEn: 'fresh-eggs',
-    category: 'חלב וביצים',
-    price: 12.90,
-    description: 'תריסר ביצים טריות מחוות מקומיות',
-    image: '🥚'
-  },
-  {
-    id: '5',
-    name: 'לחם מחיטה מלאה',
-    nameEn: 'whole-wheat-bread',
-    category: 'לחם ומאפים',
-    price: 9.90,
-    description: 'לחם טרי מחיטה מלאה',
-    image: '🍞'
-  },
-  {
-    id: '6',
-    name: 'עוף טרי',
-    nameEn: 'fresh-chicken',
-    category: 'בשר ודגים',
-    price: 32.90,
-    description: 'עוף טרי איכותי לק"ג',
-    image: '🐔'
-  },
-  {
-    id: '7',
-    name: 'מים מינרליים',
-    nameEn: 'mineral-water',
-    category: 'משקאות',
-    price: 4.50,
-    description: 'מים מינרליים טבעיים 1.5 ליטר',
-    image: '💧'
-  },
-  {
-    id: '8',
-    name: 'שקדים קלויים',
-    nameEn: 'roasted-almonds',
-    category: 'חטיפים',
-    price: 18.90,
-    description: 'שקדים קלויים ומומלחים 200 גרם',
-    image: '🥜'
-  }
 ];
 
 interface ProductsState {
@@ -133,7 +78,6 @@ const productsSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
-    // פונקציה חדשה לטעינת נתונים מהבקאנד
     setBackendProducts(state, action: PayloadAction<any[]>) {
       state.products = action.payload.map(transformBackendProduct);
       state.loading = false;

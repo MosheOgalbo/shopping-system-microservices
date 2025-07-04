@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { API_ENDPOINTS } from '../util/constants';
 
 export interface Category {
   id: number;
@@ -10,7 +11,7 @@ export interface Category {
 export const categoriesApi = createApi({
   reducerPath: 'categoriesApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5177/api/', // שונה ל-.NET server
+    baseUrl: API_ENDPOINTS.PRODUCTS,
     prepareHeaders: (headers) => {
       headers.set('Accept', 'application/json');
       headers.set('Content-Type', 'application/json');
@@ -46,10 +47,6 @@ export const categoriesApi = createApi({
           const mockCategories: Category[] = [
             { id: 1, name: 'אלקטרוניקה', nameEn: 'electronics', icon: '📱' },
             { id: 2, name: 'ביגוד', nameEn: 'clothing', icon: '👕' },
-            { id: 3, name: 'ספורט', nameEn: 'sports', icon: '⚽' },
-            { id: 4, name: 'בית וגן', nameEn: 'home-garden', icon: '🏠' },
-            { id: 5, name: 'ספרים', nameEn: 'books', icon: '📚' },
-            { id: 6, name: 'צעצועים', nameEn: 'toys', icon: '🧸' }
           ];
 
           // Simulate network delay

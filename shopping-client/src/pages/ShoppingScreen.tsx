@@ -14,17 +14,15 @@ const ShoppingScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('name');
 
-  // טעינת נתונים מהבקאנד
   const { data: backendProducts, error, isLoading } = useGetProductsQuery();
 
-  // עדכון המוצרים כשהנתונים מגיעים מהבקאנד
   useEffect(() => {
     if (backendProducts) {
       dispatch(setBackendProducts(backendProducts));
     }
   }, [backendProducts, dispatch]);
 
-  // עדכון מצב הטעינה
+
   useEffect(() => {
     dispatch(setLoading(isLoading));
     if (error) {

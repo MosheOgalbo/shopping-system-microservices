@@ -15,8 +15,8 @@ const Header: React.FC = () => {
 
   // Function to handle cart icon click
   const handleCartClick = () => {
-    dispatch(toggleCart()); // פתח את העגלה
-    navigate('/order'); // עבור למסך הזמנה
+    dispatch(toggleCart());
+    navigate('/order');
   };
 
   return (

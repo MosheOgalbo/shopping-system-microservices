@@ -60,12 +60,12 @@ const productsSlice = createSlice({
     setCategory(state, action: PayloadAction<string>) {
       state.selectedCategory = action.payload === 'כל הקטגוריות' ? '' : action.payload;
     },
-    setProducts(state, action: PayloadAction<Product[]>) {
-      state.products = action.payload;
-      state.loading = false;
-      state.error = null;
-    },
-    // פונקציה חדשה לטעינת נתונים מהבקאנד
+    // setProducts(state, action: PayloadAction<Product[]>) {
+    //   state.products = action.payload;
+    //   state.loading = false;
+    //   state.error = null;
+    // },
+
     setBackendProducts(state, action: PayloadAction<BackendProduct[]>) {
       state.products = action.payload.map(transformBackendProduct);
       state.loading = false;
@@ -83,7 +83,6 @@ const productsSlice = createSlice({
 
 export const {
   setCategory,
-  setProducts,
   setBackendProducts,
   setLoading,
   setError
