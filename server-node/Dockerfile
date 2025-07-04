@@ -2,28 +2,25 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+COPY package*.json tsconfig.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# התקן את כל התלויות כולל dev
+RUN npm ci
 
-# Copy source code
+# עותק הקוד
 COPY . .
 
-# Build the application
+# הרץ build
 RUN npm run build
 
-# Expose port 5000
-EXPOSE 5000
+# התקן מחדש רק prod-dependencies למינימליזציה
+RUN npm prune --production
 
-# Set environment
+EXPOSE 5000
 ENV NODE_ENV=production
 ENV PORT=5000
 
-# Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
   CMD curl -f http://localhost:5000/health || exit 1
 
-# Start the application
 CMD ["node", "dist/index.js"]

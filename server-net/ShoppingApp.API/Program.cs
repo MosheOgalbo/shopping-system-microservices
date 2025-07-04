@@ -1,35 +1,46 @@
+using System;
+using System.IO;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using ShoppingApp.Infrastructure.Data;
 using ShoppingApp.Infrastructure.Repositories;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Debug: Connection String
-var conn = builder.Configuration.GetConnectionString("DefaultConnection");
-Console.WriteLine($">>> Using DefaultConnection = '{conn}'");
+// Retrieve the connection string from configuration
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine($"Using DefaultConnection = '{connectionString}'");
 
-// Add services to the container.
+// ===== Add Services =====
+// Configure MVC controllers and JSON serialization options
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        // מניעת infinite loop בserialization
+        // Prevent infinite loops in object graphs during JSON serialization
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        // הצגת property names כפי שהם מוגדרים (לא camelCase)
+
+        // Preserve original property names (disable camel-casing)
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Register Swagger/OpenAPI generator with XML comments support
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new() {
+    c.SwaggerDoc("v1", new()
+    {
         Title = "Shopping App API",
         Version = "v1",
-        Description = "API למערכת ניהול קטגוריות ומוצרים"
+        Description = "API for managing categories and products"
     });
 
-    // הוספת תיאורים מתוך XML comments
+    // Include XML comments if available for richer API documentation
     var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     if (File.Exists(xmlPath))
@@ -38,78 +49,82 @@ builder.Services.AddSwaggerGen(c =>
     }
 });
 
-// הגדרת Kestrel להקשבה על כל הכתובות
+// Configure Kestrel to listen on all network interfaces (container port)
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(8080); // הפורט הפנימי של הקונטיינר
+    options.ListenAnyIP(8080);
 });
 
-// Database Configuration - שינוי ל-PostgreSQL
+// Configure EF Core to use PostgreSQL and specify migrations assembly
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(conn, npgsqlOptions =>
-        npgsqlOptions.MigrationsAssembly("ShoppingApp.Infrastructure")
-    ));
+    options.UseNpgsql(connectionString, npgsql =>
+        npgsql.MigrationsAssembly("ShoppingApp.Infrastructure")
+    )
+);
 
-// Repository Registration
+// Register repository implementations for dependency injection
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-// CORS Configuration - הוספת הפורט של הקליינט
+// Configure CORS to allow front-end applications
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
+        // Consider moving origins to configuration for flexibility
         policy.WithOrigins(
-                "http://localhost:3000",
-                "https://localhost:3000",
-                "http://localhost:5173",
-                "https://localhost:5173"
-              )
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+            "http://localhost:3000",
+            "https://localhost:3000",
+            "http://localhost:5173",
+            "https://localhost:5173"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
 
-// Logging Configuration
+// Clear default logging providers and add console/debug logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ===== Configure HTTP Request Pipeline =====
 if (app.Environment.IsDevelopment())
 {
+    // Enable Swagger in development environment
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Shopping App API V1");
-        c.RoutePrefix = string.Empty;
+        c.RoutePrefix = string.Empty; // Serve UI at app root
     });
 }
 
+// Uncomment to enforce HTTPS
 // app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
 app.UseAuthorization();
 app.MapControllers();
 
-// Database Initialization
+// ===== Database Migration on Startup =====
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
     try
     {
-        Console.WriteLine(">>> Migrating database...");
-        context.Database.Migrate();
-        Console.WriteLine(">>> Migration complete.");
+        Console.WriteLine("Migrating database...");
+        dbContext.Database.Migrate();
+        Console.WriteLine("Database migration complete.");
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "An error occurred while migrating the database");
+        logger.LogError(ex, "Error occurred during database migration");
         throw;
     }
 }

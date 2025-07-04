@@ -24,7 +24,7 @@ namespace ShoppingApp.Infrastructure.Data
                 entity.Property(e => e.Description).HasMaxLength(500);
                 entity.HasIndex(e => e.Name).IsUnique();
 
-                // PostgreSQL specific: שימוש ב-SERIAL ל-auto increment
+                // PostgreSQL specific: Using SERIAL for auto increment
                 entity.Property(e => e.Id).UseIdentityByDefaultColumn();
             });
 
@@ -35,7 +35,7 @@ namespace ShoppingApp.Infrastructure.Data
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
                 entity.Property(e => e.Description).HasMaxLength(1000);
 
-                // PostgreSQL specific: שימוש בטיפוס המתאים לכסף
+                // Using the right type for the money
                 entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
                 entity.Property(e => e.Id).UseIdentityByDefaultColumn();
 
@@ -46,7 +46,7 @@ namespace ShoppingApp.Infrastructure.Data
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Seed data - שימוש ב-UTC time
+            // Seed data
             var now = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
             modelBuilder.Entity<Category>().HasData(
