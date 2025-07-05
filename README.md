@@ -180,11 +180,3 @@ Data remains available across container restarts.
 * Implement CI/CD (GitHub Actions) for automated testing/deploys
 * Add unit and integration tests
 * Integrate logging, metrics, and observability
-
-## Contributing
-
-Contributions are welcome! Please open an Issue or Pull Request on GitHub.
-
-## License
-
-Licensed under the MIT License.
