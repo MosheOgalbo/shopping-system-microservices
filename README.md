@@ -14,8 +14,7 @@
 * [Databases & Persistence](#databases--persistence)
 * [Health & Resilience](#health--resilience)
 * [Future Enhancements](#future-enhancements)
-* [Contributing](#contributing)
-* [License](#license)
+
 
 ## Overview
 
