@@ -22,9 +22,11 @@
 
 A demo shopping platform showcasing enterprise-grade microservices architecture with:
 
-- **server-net**: ASP .NET Core Web API handling orders/users with PostgreSQL
-- **server-node**: Express.js API managing products with MongoDB
+- **server-net**: ASP.NET Core Web API to manage products with PostgreSQL
+- **server-node**: Express.js API to handle orders/users with MongoDB
 - **shopping-client**: TypeScript SPA frontend (built with Vite) featuring a modern Hebrew interface
+
+*The frontend communicates with both backend services: fetching products from the ASP.NET Core service and submitting orders to the Node.js service.*
 
 All services run in Docker Compose for easy local development and testing, demonstrating expertise in polyglot programming, database design, and modern frontend development.
 
@@ -40,7 +42,7 @@ The orders screen provides a comprehensive order management interface featuring:
 - **👤 Customer Information**: Fields for first name, last name, delivery address, and email
 - **📋 Order Summary**: Shopping cart overview with selected items
 - **🎨 Modern UI**: Clean, responsive design with Hebrew RTL support
-- **📤 Order Confirmation**: Submit orders directly to the ASP.NET Core backend
+- **📤 Order Confirmation**: Submit orders directly to the Node.js backend
 
 ### 🛍️ Products Catalog Screen
 ![Products Screen](./imags/Products-screen.png)
@@ -50,10 +52,10 @@ The products screen offers a full-featured product browsing experience:
 - **📂 Category Filtering**: Filter products by categories
 - **💰 Price Sorting**: Sort products by price (ascending/descending)
 - **🖼️ Product Display**: Shows product images, names, and prices
-- **⚡ Real-time Data**: Fetches product data from the Node.js MongoDB backend
+- **⚡ Real-time Data**: Fetches product data from the ASP.NET Core PostgreSQL backend
 - **📱 Responsive Design**: Optimized for various screen sizes
 
-*The frontend seamlessly integrates with both microservices, calling the ASP.NET Core API for order management and the Node.js API for product catalog functionality.*
+*The frontend seamlessly integrates with both microservices, calling the ASP.NET Core API for product catalog and the Node.js API for order management.*
 
 ## ✨ Key Features
 
@@ -84,19 +86,19 @@ graph TB
     Client[🖥️ React Frontend<br/>Hebrew Interface<br/>Port: 5173]
 
     subgraph "🌐 API Layer"
-        OrdersAPI[⚙️ Orders Service<br/>ASP.NET Core<br/>Port: 5177]
-        ProductsAPI[📦 Products Service<br/>Node.js + Express<br/>Port: 5001]
+        ProductsAPI[📦 Products Service<br/>ASP.NET Core<br/>Port: 5177]
+        OrdersAPI[⚙️ Orders Service<br/>Node.js + Express<br/>Port: 5001]
     end
 
     subgraph "💾 Data Layer"
-        PostgresDB[(🐘 PostgreSQL<br/>Orders & Users)]
-        MongoDB[(🍃 MongoDB<br/>Products Catalog)]
+        PostgresDB[(🐘 PostgreSQL<br/>Products Catalog)]
+        MongoDB[(🍃 MongoDB<br/>Orders & Users)]
     end
 
-    Client --> OrdersAPI
     Client --> ProductsAPI
-    OrdersAPI --> PostgresDB
-    ProductsAPI --> MongoDB
+    Client --> OrdersAPI
+    ProductsAPI --> PostgresDB
+    OrdersAPI --> MongoDB
 
     classDef frontend fill:#61dafb,stroke:#333,stroke-width:2px
     classDef backend fill:#512bd4,stroke:#333,stroke-width:2px
@@ -105,8 +107,8 @@ graph TB
     classDef mongo fill:#47a248,stroke:#333,stroke-width:2px
 
     class Client frontend
-    class OrdersAPI backend
-    class ProductsAPI node
+    class ProductsAPI backend
+    class OrdersAPI node
     class PostgresDB database
     class MongoDB mongo
 ```
@@ -115,8 +117,8 @@ graph TB
 
 | Service | Framework | Port | Database | Health Endpoint | Responsibility |
 |---------|-----------|------|----------|-----------------|----------------|
-| **server-net** | ASP.NET Core | 5177 | PostgreSQL | `/health` | Order management, User data |
-| **server-node** | TypeScript/Express | 5001 | MongoDB | `/healthz` | Product catalog, Inventory |
+| **server-net** | ASP.NET Core | 5177 | PostgreSQL | `/health` | Product catalog, Inventory |
+| **server-node** | TypeScript/Express | 5001 | MongoDB | `/healthz` | Order management, User data |
 | **shopping-client** | React/Vite | 5173 | — | N/A | Hebrew UI, State management |
 
 The system follows a microservices architecture pattern with clear separation of concerns, where each service handles its own domain and database.
@@ -183,8 +185,8 @@ docker-compose ps
 | Service | URL | Description |
 |---------|-----|-------------|
 | **Frontend** | http://localhost:5173 | Modern Hebrew shopping interface |
-| **Orders API** | http://localhost:5177/api/orders | ASP.NET Core order management |
-| **Products API** | http://localhost:5001/api/products | Node.js product catalog |
+| **Products API** | http://localhost:5177/api/products | ASP.NET Core product catalog |
+| **Orders API** | http://localhost:5001/api/orders | Node.js order management |
 
 ### 🎯 Using the Application
 
@@ -196,7 +198,35 @@ docker-compose ps
 
 ## 📋 API Documentation
 
-### 🛒 Orders Service (ASP.NET Core)
+### 📦 Products Service (ASP.NET Core)
+
+#### Endpoints
+
+```http
+GET    /api/products         # Get all products
+GET    /api/products/{id}    # Get specific product
+POST   /api/products         # Create new product
+GET    /health               # Health check
+```
+
+#### Create Product Example
+
+```json
+POST /api/products
+Content-Type: application/json
+
+{
+  "Id": 2,
+  "Name": "Blue Shirt",
+  "Description": "High-quality cotton shirt",
+  "Price": 89.99,
+  "CategoryId": 2,
+  "CategoryName": "Clothing",
+  "CreatedAt": "2025-06-26T11:40:17.083613"
+}
+```
+
+### 🛒 Orders Service (Node.js)
 
 #### Endpoints
 
@@ -204,6 +234,7 @@ docker-compose ps
 GET    /api/orders           # Get all orders
 GET    /api/orders/{id}      # Get specific order
 POST   /api/orders           # Create new order
+GET    /healthz              # Health check
 ```
 
 #### Create Order Example
@@ -229,33 +260,6 @@ Content-Type: application/json
 }
 ```
 
-### 📦 Products Service (Node.js)
-
-#### Endpoints
-
-```http
-GET    /api/products         # Get all products
-GET    /api/products/:id     # Get specific product
-POST   /api/products         # Create new product
-```
-
-#### Create Product Example
-
-```json
-POST /api/products
-Content-Type: application/json
-
-{
-  "Id": 2,
-  "Name": "Blue Shirt",
-  "Description": "High-quality cotton shirt",
-  "Price": 89.99,
-  "CategoryId": 2,
-  "CategoryName": "Clothing",
-  "CreatedAt": "2025-06-26T11:40:17.083613"
-}
-```
-
 ---
 
 ## 🔧 Environment Configuration
@@ -268,15 +272,15 @@ Create `.env` files in each service directory:
 # server-net/.env
 POSTGRES_USER=admin
 POSTGRES_PASSWORD=your_secure_password
-DATABASE_URL=postgres://admin:your_secure_password@postgres:5432/ordersdb
+DATABASE_URL=postgres://admin:your_secure_password@postgres:5432/productsdb
 
 # server-node/.env
-MONGO_URI=mongodb://mongo:27017/products
+MONGO_URI=mongodb://mongo:27017/orders
 NODE_ENV=production
 
 # shopping-client/.env
-VITE_API_ORDERS=http://localhost:5177/api/orders
-VITE_API_PRODUCTS=http://localhost:5001/api/products
+VITE_API_PRODUCTS=http://localhost:5177/api/products
+VITE_API_ORDERS=http://localhost:5001/api/orders
 ```
 
 ---
@@ -287,10 +291,10 @@ VITE_API_PRODUCTS=http://localhost:5001/api/products
 
 ```bash
 # List all products
-curl -X GET http://localhost:5001/api/products
+curl -X GET http://localhost:5177/api/products
 
 # Create a new order
-curl -X POST http://localhost:5177/api/orders \
+curl -X POST http://localhost:5001/api/orders \
   -H "Content-Type: application/json" \
   -d '{
     "user": {
@@ -326,38 +330,40 @@ Data remains available across container restarts, ensuring development continuit
 
 ### Database Schemas
 
-#### PostgreSQL (Orders & Users)
+#### PostgreSQL (Products)
 ```sql
--- Users table
-CREATE TABLE Users (
+-- Products table
+CREATE TABLE Products (
     Id SERIAL PRIMARY KEY,
-    FirstName VARCHAR(100) NOT NULL,
-    LastName VARCHAR(100) NOT NULL,
-    Email VARCHAR(255) UNIQUE NOT NULL,
-    Address TEXT
-);
-
--- Orders table
-CREATE TABLE Orders (
-    Id SERIAL PRIMARY KEY,
-    UserId INTEGER REFERENCES Users(Id),
-    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    Status VARCHAR(50) DEFAULT 'Pending'
+    Name VARCHAR(255) NOT NULL,
+    Description TEXT,
+    Price DECIMAL(10,2) NOT NULL,
+    CategoryId INTEGER NOT NULL,
+    CategoryName VARCHAR(100) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
-#### MongoDB (Products)
+#### MongoDB (Orders & Users)
 ```javascript
-// Products collection
+// Orders collection
 {
   "_id": ObjectId("507f1f77bcf86cd799439011"),
-  "Id": 1,
-  "Name": "Blue Shirt",
-  "Description": "High-quality cotton shirt",
-  "Price": 89.99,
-  "CategoryId": 2,
-  "CategoryName": "Clothing",
-  "CreatedAt": ISODate("2025-06-26T11:40:17.083613")
+  "user": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "address": "123 Main St, City, Country"
+  },
+  "items": [
+    {
+      "productId": "507f1f77bcf86cd799439011",
+      "name": "Blue Shirt",
+      "quantity": 2
+    }
+  ],
+  "createdAt": ISODate("2025-06-26T11:40:17.083613"),
+  "status": "pending"
 }
 ```
 
@@ -368,10 +374,10 @@ CREATE TABLE Orders (
 ### Health Check Endpoints
 
 ```bash
-# Check Orders service health
+# Check Products service health
 curl http://localhost:5177/health
 
-# Check Products service health
+# Check Orders service health
 curl http://localhost:5001/healthz
 ```
 
@@ -450,7 +456,6 @@ npm run test
 5. Open a Pull Request
 
 ---
-
 
 <div align="center">
 
