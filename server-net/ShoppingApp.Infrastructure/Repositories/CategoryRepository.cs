@@ -28,6 +28,14 @@ namespace ShoppingApp.Infrastructure.Repositories
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
+        // מתודה חדשה לשליפה לפי שם
+        public async Task<Category?> GetByNameAsync(string name)
+        {
+            return await _context.Categories
+                .Include(c => c.Products)
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
+        }
+
         public async Task<Category> CreateAsync(Category category)
         {
             _context.Categories.Add(category);

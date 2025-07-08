@@ -87,7 +87,7 @@ namespace ShoppingApp.API.Controllers
         }
 
         /// <summary>
-        /// שליפת מוצרים לפי קטגוריה
+        /// שליפת מוצרים לפי ID קטגוריה
         /// </summary>
         [HttpGet("category/{categoryId}")]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsByCategory(int categoryId)
@@ -117,6 +117,42 @@ namespace ShoppingApp.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "שגיאה בשליפת מוצרים לקטגוריה {CategoryId}", categoryId);
+                return StatusCode(500, "שגיאה פנימית בשרת");
+            }
+        }
+
+        /// <summary>
+        /// שליפת מוצרים לפי שם קטגוריה
+        /// </summary>
+        [HttpGet("category/name/{categoryName}")]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsByCategoryName(string categoryName)
+        {
+            try
+            {
+                // בדיקה שהקטגוריה קיימת
+                var category = await _categoryRepository.GetByNameAsync(categoryName);
+                if (category == null)
+                {
+                    return NotFound($"קטגוריה עם שם '{categoryName}' לא נמצאה");
+                }
+
+                var products = await _productRepository.GetByCategoryIdAsync(category.Id);
+                var productDtos = products.Select(p => new ProductDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Price = p.Price,
+                    CategoryId = p.CategoryId,
+                    CategoryName = p.Category.Name,
+                    CreatedAt = p.CreatedAt
+                });
+
+                return Ok(productDtos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "שגיאה בשליפת מוצרים לקטגוריה {CategoryName}", categoryName);
                 return StatusCode(500, "שגיאה פנימית בשרת");
             }
         }
