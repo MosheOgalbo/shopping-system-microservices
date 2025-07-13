@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Product, BackendProduct } from '../../features/products/types';
+import {ProductsState} from '../types';
 
 // פונקציה להמרת נתונים מהבקאנד
 const transformBackendProduct = (backendProduct: BackendProduct): Product => ({
@@ -47,13 +48,7 @@ const mockProducts: Product[] = [
 
 ];
 
-interface ProductsState {
-  products: Product[];
-  selectedCategory: string;
-  searchQuery: string;
-  loading: boolean;
-  error: string | null;
-}
+
 
 const initialState: ProductsState = {
   products: mockProducts,

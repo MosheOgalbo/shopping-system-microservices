@@ -1,28 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CartItem } from './cartSlice';
-
-export interface Order {
-  id: string;
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    address: string;
-    phone?: string;
-  };
-  items: CartItem[];
-  totalAmount: number;
-  status: 'pending' | 'confirmed' | 'preparing' | 'delivered' | 'cancelled';
-  createdAt: string;
-  estimatedDelivery?: string;
-}
-
-interface OrderState {
-  currentOrder: Order | null;
-  orderHistory: Order[];
-  loading: boolean;
-  error: string | null;
-}
+import { Order ,OrderState} from '../types';
 
 const initialState: OrderState = {
   currentOrder: null,

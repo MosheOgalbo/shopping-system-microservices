@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { Product } from '../features/products/types';
 import { useAppDispatch } from '../hooks';
 import { addToCart } from '../store/slices/cartSlice';
+import {PropsProductCard} from '../types';
 
-interface Props {
-  product: Product;
-}
 
-const ProductCard: React.FC<Props> = ({ product }) => {
+const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
   const dispatch = useAppDispatch();
   const [isAdding, setIsAdding] = useState(false);
 

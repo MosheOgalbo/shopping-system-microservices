@@ -21,9 +21,9 @@ export interface BackendProduct {
 }
 
 // טיפוס לפריט בעגלה
-// export interface CartItem extends Product {
-//   quantity: number;
-// }
+export interface CartItem extends Product {
+  quantity: number;
+}
 
 // טיפוס לשליחת הזמנה לשרת
 export interface OrderItem {
@@ -62,20 +62,42 @@ export interface ProductsGridProps {
 }
 
 export interface ResultsInfoProps {
-  count: number;
-  searchTerm: string;
-  category: string;
+  count?: number;
+  searchTerm?: string;
+  category?: string;
 }
 
 export interface FilterBarProps {
-  categories: string[];
-  selected: string;
-  onCategoryChange: (category: string) => void;
+  categories: CategoryFilter[];
+  selectedCategoryId: number | null;
+  onCategoryChange: (categoryId: number | null) => void;
   sortBy: string;
-  onSortChange: (sort: string) => void;
+  onSortChange: (sortBy: string) => void;
+  categoriesLoading?: boolean;
 }
 
 export interface SearchInputProps {
   value: string;
   onChange: (term: string) => void;
+}
+
+export interface SuccessModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  orderId?: string;
+}
+
+export interface PropsProductCard {
+  product: Product;
+}
+
+export interface OrderSummaryProps {
+  items: CartItem[];
+  total: number;
+}
+
+export interface CategoryFilter {
+  Id: number;
+  Name: string;
+  icon?: string;
 }

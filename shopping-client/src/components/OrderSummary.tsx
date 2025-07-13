@@ -1,10 +1,6 @@
 import React from 'react';
-import { CartItem } from '../store/slices/cartSlice';
+import {OrderSummaryProps} from '../types/index';
 
-interface OrderSummaryProps {
-  items: CartItem[];
-  total: number;
-}
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({ items, total }) => {
   const isImageUrl = (image: string | undefined): boolean => {

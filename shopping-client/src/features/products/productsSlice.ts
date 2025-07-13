@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product, BackendProduct } from './types';
+import { Product, BackendProduct ,ProductsState} from './types';
 
 // פונקציה להמרת נתונים מהבקאנד
 const transformBackendProduct = (backendProduct: BackendProduct): Product => ({
@@ -39,12 +39,7 @@ const dummyProducts: Product[] = [
   { id: '3', name: 'מוצר ג', category: 'קטגוריה 2', price: 200 },
 ];
 
-interface ProductsState {
-  products: Product[];
-  selectedCategory: string;
-  loading: boolean;
-  error: string | null;
-}
+
 
 const initialState: ProductsState = {
   products: dummyProducts,

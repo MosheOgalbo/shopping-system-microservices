@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { toggleCart } from '../store/slices/cartSlice';
 
+
 const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

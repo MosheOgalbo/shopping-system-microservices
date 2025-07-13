@@ -1,22 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { Order } from '../store/slices/orderSlice';
-import { CartItem } from '../store/slices/cartSlice';
+import { Order } from '../store/types';
+import { CartItem } from '../store/types';
 import { API_ENDPOINTS } from '../util/constants';
+import {OrderRequest} from './types';
 
-// טיפוס הנתונים שנשלחים לשרת
-interface OrderRequest {
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    address: string;
-  };
-  items: {
-    productId: string;
-    name: string;
-    quantity: number;
-  }[];
-}
 
 // פונקציה להמרת פריטי עגלה לפורמט השרת
 const transformCartItemsToOrderItems = (cartItems: CartItem[]) => {

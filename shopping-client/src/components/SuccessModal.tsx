@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {SuccessModalProps} from '../types/index'
 
-interface SuccessModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  orderId?: string;
-}
 
 const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, orderId }) => {
   const navigate = useNavigate();

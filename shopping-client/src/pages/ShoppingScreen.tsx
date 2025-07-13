@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { setBackendProducts, setCategory, setLoading, setError } from '../features/products/productsSlice';
-import { useGetProductsQuery } from '../services/productsApi';
+import { setBackendProducts, setLoading, setError } from '../features/products/productsSlice';
+import { useGetProductsQuery, useGetProductsByCategoryQuery } from '../services/productsApi';
+import { useGetCategoriesQuery } from '../services/categoriesApi';
 import Header from '../components/Header';
 import SearchInput from '../components/SearchInput';
 import FilterBar from '../components/FilterBar';
@@ -10,32 +11,44 @@ import ProductsGrid from '../components/ProductsGrid';
 
 const ShoppingScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { products, selectedCategory, loading } = useAppSelector(s => s.products);
+  const { products, loading } = useAppSelector(s => s.products);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('name');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
-  const { data: backendProducts, error, isLoading } = useGetProductsQuery();
+  // קריאות API
+  const { data: categories = [], isLoading: categoriesLoading } = useGetCategoriesQuery();
+  const { data: allProducts, error: allProductsError, isLoading: allProductsLoading } = useGetProductsQuery(undefined, {
+    skip: selectedCategoryId !== null // דלג על הקריאה אם נבחרה קטגוריה ספציפית
+  });
 
+  const { data: categoryProducts, error: categoryProductsError, isLoading: categoryProductsLoading } = useGetProductsByCategoryQuery(selectedCategoryId!, {
+    skip: selectedCategoryId === null // דלג על הקריאה אם לא נבחרה קטגוריה
+  });
+
+  // עדכון המוצרים ב-Redux
   useEffect(() => {
-    if (backendProducts) {
-      dispatch(setBackendProducts(backendProducts));
+    const currentProducts = selectedCategoryId !== null ? categoryProducts : allProducts;
+    if (currentProducts) {
+      dispatch(setBackendProducts(currentProducts));
     }
-  }, [backendProducts, dispatch]);
+  }, [allProducts, categoryProducts, selectedCategoryId, dispatch]);
 
-
+  // עדכון מצב הטעינה והשגיאות
   useEffect(() => {
-    dispatch(setLoading(isLoading));
-    if (error) {
+    const isCurrentlyLoading = selectedCategoryId !== null ? categoryProductsLoading : allProductsLoading;
+    const currentError = selectedCategoryId !== null ? categoryProductsError : allProductsError;
+
+    dispatch(setLoading(isCurrentlyLoading));
+    if (currentError) {
       dispatch(setError('שגיאה בטעינת המוצרים'));
     }
-  }, [isLoading, error, dispatch]);
+  }, [allProductsLoading, categoryProductsLoading, allProductsError, categoryProductsError, selectedCategoryId, dispatch]);
 
-  const categories = ['כל הקטגוריות', ...Array.from(new Set(products.map(p => p.category)))];
-
+  // פילטור וסידור המוצרים
   const filtered = products.filter(p =>
-    (!selectedCategory || p.category === selectedCategory) &&
-    (p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     p.description?.toLowerCase().includes(searchTerm.toLowerCase()))
+    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sorted = [...filtered].sort((a, b) => {
@@ -45,6 +58,11 @@ const ShoppingScreen: React.FC = () => {
       default: return a.name.localeCompare(b.name);
     }
   });
+
+  // מציאת שם הקטגוריה הנבחרת
+  const selectedCategoryName = selectedCategoryId
+    ? categories.find(cat => cat.Id === selectedCategoryId)?.Name || ''
+    : '';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 font-hebrew">
@@ -62,10 +80,11 @@ const ShoppingScreen: React.FC = () => {
             <SearchInput value={searchTerm} onChange={setSearchTerm} />
             <FilterBar
               categories={categories}
-              selected={selectedCategory}
-              onCategoryChange={cat => dispatch(setCategory(cat))}
+              selectedCategoryId={selectedCategoryId}
+              onCategoryChange={setSelectedCategoryId}
               sortBy={sortBy}
               onSortChange={setSortBy}
+              categoriesLoading={categoriesLoading}
             />
           </div>
         </div>
@@ -85,7 +104,7 @@ const ShoppingScreen: React.FC = () => {
             <ResultsInfo
               count={sorted.length}
               searchTerm={searchTerm}
-              category={selectedCategory}
+              category={selectedCategoryName}
             />
             <ProductsGrid products={sorted} />
           </>

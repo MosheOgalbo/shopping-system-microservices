@@ -40,3 +40,10 @@ export interface OrderRequest {
   };
   items: OrderItem[];
 }
+
+export interface ProductsState {
+  products: Product[];
+  selectedCategory: string;
+  loading: boolean;
+  error: string | null;
+}
