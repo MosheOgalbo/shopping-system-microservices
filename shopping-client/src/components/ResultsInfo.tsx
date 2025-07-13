@@ -1,10 +1,5 @@
 import React from 'react';
-
-interface ResultsInfoProps {
-  count: number;
-  searchTerm: string;
-  category: string;
-}
+import {ResultsInfoProps} from '../types';
 
 const ResultsInfo: React.FC<ResultsInfoProps> = ({ count, searchTerm, category }) => (
   <div className="mb-6">

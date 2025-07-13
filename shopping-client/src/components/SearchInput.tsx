@@ -1,10 +1,6 @@
 import React from 'react';
 import { Search } from 'lucide-react';
-
-interface SearchInputProps {
-  value: string;
-  onChange: (term: string) => void;
-}
+import { SearchInputProps } from '../types';
 
 const SearchInput: React.FC<SearchInputProps> = ({ value, onChange }) => (
   <div className="flex-1 relative w-full">

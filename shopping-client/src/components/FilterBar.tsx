@@ -1,13 +1,6 @@
 import React from 'react';
 import { Filter, SortAsc } from 'lucide-react';
-
-interface FilterBarProps {
-  categories: string[];
-  selected: string;
-  onCategoryChange: (category: string) => void;
-  sortBy: string;
-  onSortChange: (sort: string) => void;
-}
+import { FilterBarProps } from '../types';
 
 const FilterBar: React.FC<FilterBarProps> = ({ categories, selected, onCategoryChange, sortBy, onSortChange }) => (
   <div className="flex-1 relative w-full flex flex-col md:flex-row items-center justify-between gap-4">
