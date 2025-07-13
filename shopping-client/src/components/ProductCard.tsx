@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Product } from '../store/slices/cartSlice';
+import { Product } from '../features/products/types';
 import { useAppDispatch } from '../hooks';
 import { addToCart } from '../store/slices/cartSlice';
 
@@ -19,13 +19,40 @@ const ProductCard: React.FC<Props> = ({ product }) => {
     setIsAdding(false);
   };
 
+  // פונקציה לבדיקה אם התמונה היא URL או אייקון
+  const isImageUrl = (image: string | undefined): boolean => {
+    return image?.startsWith('http') || image?.startsWith('data:') || false;
+  };
+
   return (
     <div className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2">
       {/* Product Image/Icon */}
       <div className="relative h-48 bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center overflow-hidden">
-        <div className="text-6xl group-hover:scale-125 transition-transform duration-300 filter group-hover:drop-shadow-lg">
-          {product.image || '📦'}
-        </div>
+        {isImageUrl(product.image) ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-300"
+            onError={(e) => {
+              // אם התמונה לא נטענת, החלף באייקון ברירת מחדל
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              target.nextElementSibling?.classList.remove('hidden');
+            }}
+          />
+        ) : (
+          <div className="text-6xl group-hover:scale-125 transition-transform duration-300 filter group-hover:drop-shadow-lg">
+            {product.image || '📦'}
+          </div>
+        )}
+
+        {/* Fallback icon - hidden by default */}
+        {isImageUrl(product.image) && (
+          <div className="hidden text-6xl group-hover:scale-125 transition-transform duration-300 filter group-hover:drop-shadow-lg">
+            📦
+          </div>
+        )}
+
         {/* Price Badge */}
         <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full font-bold text-sm shadow-lg">
           ₪{product.price.toFixed(2)}

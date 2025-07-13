@@ -10,6 +10,7 @@ namespace ShoppingApp.Core.Models.DTOs
         public decimal Price { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
+        public string? Image { get; set; }  // ** חדש **
         public DateTime CreatedAt { get; set; }
     }
 
@@ -28,6 +29,10 @@ namespace ShoppingApp.Core.Models.DTOs
 
         [Required]
         public int CategoryId { get; set; }
+
+        [StringLength(500, ErrorMessage = "URL התמונה ארוך מדי")]
+        [Url(ErrorMessage = "יש להזין URL תקין")]
+        public string? Image { get; set; }
     }
 
     public class UpdateProductDto
@@ -45,5 +50,10 @@ namespace ShoppingApp.Core.Models.DTOs
 
         [Required]
         public int CategoryId { get; set; }
+
+        // ** חדש **
+        [StringLength(500, ErrorMessage = "URL התמונה ארוך מדי")]
+        [Url(ErrorMessage = "יש להזין URL תקין")]
+        public string? Image{ get; set; }
     }
 }

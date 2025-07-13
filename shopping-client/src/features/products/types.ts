@@ -8,7 +8,6 @@ export interface Product {
   nameEn?: string;
 }
 
-
 export interface BackendProduct {
   Id: number;
   Name: string;
@@ -16,5 +15,28 @@ export interface BackendProduct {
   Price: number;
   CategoryId: number;
   CategoryName: string;
+  Image: string; // URL לתמונה
   CreatedAt: string;
+}
+
+// טיפוס לפריט בעגלה
+export interface CartItem extends Product {
+  quantity: number;
+}
+
+// טיפוס לשליחת הזמנה לשרת
+export interface OrderItem {
+  productId: string;
+  name: string;
+  quantity: number;
+}
+
+export interface OrderRequest {
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    address: string;
+  };
+  items: OrderItem[];
 }

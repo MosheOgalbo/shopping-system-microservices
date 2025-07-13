@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { API_ENDPOINTS } from '../util/constants';
 
 export interface BackendProduct {
   Id: number;
@@ -7,13 +8,14 @@ export interface BackendProduct {
   Price: number;
   CategoryId: number;
   CategoryName: string;
+  Image: string; // URL לתמונה
   CreatedAt: string;
 }
 
 export const productsApi = createApi({
   reducerPath: 'productsApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5177/api/',
+    baseUrl: API_ENDPOINTS.PRODUCTS,
     prepareHeaders: (headers) => {
       headers.set('Accept', 'application/json');
       headers.set('Content-Type', 'application/json');
@@ -25,7 +27,7 @@ export const productsApi = createApi({
     getProducts: builder.query<BackendProduct[], void>({
       queryFn: async (arg, queryApi, extraOptions, baseQuery) => {
         try {
-          const result = await baseQuery('http://localhost:5177/api/Products');
+          const result = await baseQuery('Products');
 
           if (result.error) {
             throw new Error('API Error');
@@ -41,21 +43,13 @@ export const productsApi = createApi({
 
           const mockProducts: BackendProduct[] = [
             {
-              Id: 2,
-              Name: "חולצה כחולה",
-              Description: "חולצת כותנה איכותית",
-              Price: 89.99,
-              CategoryId: 2,
-              CategoryName: "ביגוד",
-              CreatedAt: "2024-01-01T00:00:00Z"
-            },
-            {
               Id: 1,
               Name: "לפטופ Dell",
               Description: "מחשב נייד מתקדם",
               Price: 2999.99,
               CategoryId: 1,
               CategoryName: "אלקטרוניקה",
+              Image: "https://example.com/images/dell-laptop.jpg",
               CreatedAt: "2024-01-01T00:00:00Z"
             },
 

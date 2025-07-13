@@ -1,16 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product } from './cartSlice';
+import { Product, BackendProduct } from '../../features/products/types';
 
-const transformBackendProduct = (backendProduct: any): Product => ({
-  id: backendProduct.Id?.toString() || backendProduct.id?.toString(),
-  name: backendProduct.Name || backendProduct.name,
-  nameEn: (backendProduct.Name || backendProduct.name)?.toLowerCase().replace(/\s+/g, '-') || 'product',
-  category: backendProduct.CategoryName || backendProduct.category,
-  price: backendProduct.Price || backendProduct.price || 0,
-  description: backendProduct.Description || backendProduct.description,
-  image: getProductIcon(backendProduct.CategoryName || backendProduct.category)
+// פונקציה להמרת נתונים מהבקאנד
+const transformBackendProduct = (backendProduct: BackendProduct): Product => ({
+  id: backendProduct.Id.toString(),
+  name: backendProduct.Name,
+  nameEn: backendProduct.Name.toLowerCase().replace(/\s+/g, '-'),
+  category: backendProduct.CategoryName,
+  price: backendProduct.Price,
+  description: backendProduct.Description,
+  image: backendProduct.Image || getProductIcon(backendProduct.CategoryName) // משתמש בתמונה מהשרת או באייקון
 });
 
+// פונקציה לקבלת אייקון לפי קטגוריה (fallback)
 const getProductIcon = (category: string): string => {
   const iconMap: { [key: string]: string } = {
     'אלקטרוניקה': '📱',
@@ -42,15 +44,7 @@ const mockProducts: Product[] = [
     description: 'תפוחים אדומים טריים ומתוקים',
     image: '🍎'
   },
-  {
-    id: '2',
-    name: 'בננות',
-    nameEn: 'bananas',
-    category: 'פירות וירקות',
-    price: 8.50,
-    description: 'בננות בשלות ועסיסיות',
-    image: '🍌'
-  },
+
 ];
 
 interface ProductsState {
@@ -78,7 +72,7 @@ const productsSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
-    setBackendProducts(state, action: PayloadAction<any[]>) {
+    setBackendProducts(state, action: PayloadAction<BackendProduct[]>) {
       state.products = action.payload.map(transformBackendProduct);
       state.loading = false;
       state.error = null;

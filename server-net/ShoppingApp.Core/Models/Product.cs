@@ -21,6 +21,9 @@ namespace ShoppingApp.Core.Models
         [Required]
         public int CategoryId { get; set; }
 
+        [StringLength(500)]
+        public string? Image { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation property

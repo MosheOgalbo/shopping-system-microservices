@@ -1,8 +1,9 @@
 import React from 'react';
 import ProductCard from './ProductCard';
+import { Product } from '../features/products/types';
 
 interface ProductsGridProps {
-  products: any[];
+  products: Product[];
 }
 
 const ProductsGrid: React.FC<ProductsGridProps> = ({ products }) => (

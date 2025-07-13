@@ -34,6 +34,7 @@ namespace ShoppingApp.Infrastructure.Data
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
                 entity.Property(e => e.Description).HasMaxLength(1000);
+                entity.Property(e => e.Image).HasMaxLength(500);  // ** חדש **
 
                 // Using the right type for the money
                 entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
@@ -41,9 +42,9 @@ namespace ShoppingApp.Infrastructure.Data
 
                 // Foreign key relationship
                 entity.HasOne(p => p.Category)
-                      .WithMany(c => c.Products)
-                      .HasForeignKey(p => p.CategoryId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(c => c.Products)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
             });
 
             // Seed data
@@ -55,11 +56,35 @@ namespace ShoppingApp.Infrastructure.Data
                 new Category { Id = 3, Name = "ספרים", Description = "ספרים ומגזינים", CreatedAt = now }
             );
 
-            modelBuilder.Entity<Product>().HasData(
-                new Product { Id = 1, Name = "לפטופ Dell", Description = "מחשב נייד מתקדם", Price = 2999.99m, CategoryId = 1, CreatedAt = now },
-                new Product { Id = 2, Name = "חולצה כחולה", Description = "חולצת כותנה איכותית", Price = 89.99m, CategoryId = 2, CreatedAt = now },
-                new Product { Id = 3, Name = "ספר תכנות", Description = "ספר ללימוד תכנות", Price = 149.99m, CategoryId = 3, CreatedAt = now }
-            );
+           modelBuilder.Entity<Product>().HasData(
+    new Product {
+        Id = 1,
+        Name = "לפטופ Dell",
+        Description = "מחשב נייד מתקדם",
+        Price = 2999.99m,
+        CategoryId = 1,
+        Image = "https://example.com/images/dell-laptop.jpg",
+        CreatedAt = now
+    },
+    new Product {
+        Id = 2,
+        Name = "חולצה כחולה",
+        Description = "חולצת כותנה איכותית",
+        Price = 89.99m,
+        CategoryId = 2,
+        Image = "https://example.com/images/blue-shirt.jpg",
+        CreatedAt = now
+    },
+    new Product {
+        Id = 3,
+        Name = "ספר תכנות",
+        Description = "ספר ללימוד תכנות",
+        Price = 149.99m,
+        CategoryId = 3,
+        Image = "https://example.com/images/programming-book.jpg",
+        CreatedAt = now
+    }
+);
         }
     }
 }

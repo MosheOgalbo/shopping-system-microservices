@@ -40,7 +40,8 @@ namespace ShoppingApp.API.Controllers
                     Price = p.Price,
                     CategoryId = p.CategoryId,
                     CategoryName = p.Category.Name,
-                    CreatedAt = p.CreatedAt
+                    Image = p.Image,
+                    CreatedAt = p.CreatedAt,
                 });
 
                 return Ok(productDtos);
@@ -74,6 +75,7 @@ namespace ShoppingApp.API.Controllers
                     Price = product.Price,
                     CategoryId = product.CategoryId,
                     CategoryName = product.Category.Name,
+                    Image = product.Image,
                     CreatedAt = product.CreatedAt
                 };
 
@@ -109,6 +111,7 @@ namespace ShoppingApp.API.Controllers
                     Price = p.Price,
                     CategoryId = p.CategoryId,
                     CategoryName = p.Category.Name,
+                    Image = p.Image,
                     CreatedAt = p.CreatedAt
                 });
 
@@ -145,6 +148,7 @@ namespace ShoppingApp.API.Controllers
                     Price = p.Price,
                     CategoryId = p.CategoryId,
                     CategoryName = p.Category.Name,
+                    Image = p.Image,
                     CreatedAt = p.CreatedAt
                 });
 
@@ -176,7 +180,8 @@ namespace ShoppingApp.API.Controllers
                     Name = createProductDto.Name,
                     Description = createProductDto.Description,
                     Price = createProductDto.Price,
-                    CategoryId = createProductDto.CategoryId
+                    CategoryId = createProductDto.CategoryId,
+                    Image = createProductDto.Image
                 };
 
                 var createdProduct = await _productRepository.CreateAsync(product);
@@ -225,6 +230,7 @@ namespace ShoppingApp.API.Controllers
                 existingProduct.Description = updateProductDto.Description;
                 existingProduct.Price = updateProductDto.Price;
                 existingProduct.CategoryId = updateProductDto.CategoryId;
+                existingProduct.Image = updateProductDto.Image;
 
                 var updatedProduct = await _productRepository.UpdateAsync(existingProduct);
 

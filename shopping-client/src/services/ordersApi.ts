@@ -3,16 +3,29 @@ import { Order } from '../store/slices/orderSlice';
 import { CartItem } from '../store/slices/cartSlice';
 import { API_ENDPOINTS } from '../util/constants';
 
+// טיפוס הנתונים שנשלחים לשרת
 interface OrderRequest {
   user: {
     firstName: string;
     lastName: string;
     email: string;
     address: string;
-    phone?: string;
   };
-  items: CartItem[];
+  items: {
+    productId: string;
+    name: string;
+    quantity: number;
+  }[];
 }
+
+// פונקציה להמרת פריטי עגלה לפורמט השרת
+const transformCartItemsToOrderItems = (cartItems: CartItem[]) => {
+  return cartItems.map(item => ({
+    productId: item.id,
+    name: item.name,
+    quantity: item.quantity
+  }));
+};
 
 export const ordersApi = createApi({
   reducerPath: 'ordersApi',
@@ -26,15 +39,21 @@ export const ordersApi = createApi({
   }),
   tagTypes: ['Order'],
   endpoints: (builder) => ({
-    placeOrder: builder.mutation<Order, OrderRequest>({
+    placeOrder: builder.mutation<Order, { user: OrderRequest['user'], items: CartItem[] }>({
       queryFn: async (orderData, queryApi, extraOptions, baseQuery) => {
         try {
-          console.log('Sending order to Node.js server:', orderData);
+          // המרה של פריטי העגלה לפורמט השרת
+          const transformedOrderData: OrderRequest = {
+            user: orderData.user,
+            items: transformCartItemsToOrderItems(orderData.items)
+          };
+
+          console.log('Sending order to server:', transformedOrderData);
 
           const result = await baseQuery({
             url: 'orders/',
             method: 'POST',
-            body: orderData,
+            body: transformedOrderData,
           });
 
           if (result.error) {
@@ -49,7 +68,7 @@ export const ordersApi = createApi({
 
           throw new Error('No data received from server');
         } catch (error) {
-          console.warn('Node.js API unavailable, creating mock order:', error);
+          console.warn('API unavailable, creating mock order:', error);
 
           // Create mock order response
           const totalAmount = orderData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
