@@ -6,25 +6,18 @@ namespace ShoppingApp.Core.Models.DTOs
     public class ProductDto
     {
         public int Id { get; set; }
-
         // שם המוצר
         public string Name { get; set; }
-
         // תיאור המוצר (אופציונלי)
         public string? Description { get; set; }
-
         // מחיר המוצר
         public decimal Price { get; set; }
-
         // מזהה הקטגוריה שאליה שייך המוצר
         public int CategoryId { get; set; }
-
         // שם הקטגוריה (מוכן לתצוגה, ללא צורך בלקוח לשלוף בעצמו)
         public string CategoryName { get; set; }
-
         // כתובת התמונה של המוצר (אופציונלי)
         public string? Image { get; set; }
-
         // תאריך יצירת המוצר
         public DateTime CreatedAt { get; set; }
     }
