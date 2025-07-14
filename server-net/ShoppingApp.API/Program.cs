@@ -13,23 +13,27 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Retrieve the connection string from configuration
+// ======================
+// קריאת מחרוזת חיבור
+// ======================
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine($"Using DefaultConnection = '{connectionString}'");
 
-// ===== Add Services =====
-// Configure MVC controllers and JSON serialization options
+// ======================
+// רישום שירותים (DI)
+// ======================
+
+// מוסיף Controllers ומגדיר אופציות סידור ל-JSON
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        // Prevent infinite loops in object graphs during JSON serialization
+        // מונע לולאות אינסופיות בסידור JSON (במקרה של גרפים מקושרים)
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-
-        // Preserve original property names (disable camel-casing)
+        // שומר שמות מאפיינים מקוריים (לא משנה ל-camelCase)
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
 
-// Register Swagger/OpenAPI generator with XML comments support
+// מוסיף Swagger ליצירת דוקומנטציה אוטומטית ל-API
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -40,7 +44,7 @@ builder.Services.AddSwaggerGen(c =>
         Description = "API for managing categories and products"
     });
 
-    // Include XML comments if available for richer API documentation
+    // הוספת הערות XML (אם קיימות), לדוקומנטציה עשירה יותר
     var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     if (File.Exists(xmlPath))
@@ -49,29 +53,29 @@ builder.Services.AddSwaggerGen(c =>
     }
 });
 
-// Configure Kestrel to listen on all network interfaces (container port)
+// מגדיר את Kestrel שיאזין על כל הכתובות (טוב לדוקר או הפעלה מרוחקת)
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenAnyIP(8080);
 });
 
-// Configure EF Core to use PostgreSQL and specify migrations assembly
+// מוסיף EF Core עם PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString, npgsql =>
         npgsql.MigrationsAssembly("ShoppingApp.Infrastructure")
     )
 );
 
-// Register repository implementations for dependency injection
+// רישום ריפוזיטוריז ל-DI
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-// Configure CORS to allow front-end applications
+// הגדרת CORS — כדי לאפשר חיבור מה-Frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        // Consider moving origins to configuration for flexibility
+        // מומלץ בעתיד להזיז את הכתובות לקובץ הגדרות
         policy.WithOrigins(
             "http://localhost:3000",
             "https://localhost:3000",
@@ -84,33 +88,39 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Clear default logging providers and add console/debug logging
+// הגדרת לוגינג
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
 var app = builder.Build();
 
-// ===== Configure HTTP Request Pipeline =====
+// ======================
+// הגדרת ה-Pipeline
+// ======================
+
+// רק בסביבת Development — הצגת Swagger
 if (app.Environment.IsDevelopment())
 {
-    // Enable Swagger in development environment
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Shopping App API V1");
-        c.RoutePrefix = string.Empty; // Serve UI at app root
+        c.RoutePrefix = string.Empty; // פותח את ה-UI בשורש
     });
 }
 
-// Uncomment to enforce HTTPS
+// אם רוצים להעביר את כל התעבורה ל-HTTPS
 // app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
+
 app.UseAuthorization();
 app.MapControllers();
 
-// ===== Database Migration on Startup =====
+// ======================
+// הפעלת Migrations על ה-DB בזמן Startup
+// ======================
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

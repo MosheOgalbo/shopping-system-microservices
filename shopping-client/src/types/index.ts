@@ -91,13 +91,34 @@ export interface PropsProductCard {
   product: Product;
 }
 
-export interface OrderSummaryProps {
-  items: CartItem[];
-  total: number;
-}
+
 
 export interface CategoryFilter {
   Id: number;
   Name: string;
   icon?: string;
+}
+
+export interface FormFieldProps {
+  name: keyof FormData;
+  label: string;
+  placeholder: string;
+  type?: string;
+  value: string;
+  error: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export type FormData = {
+  firstName: string;
+  lastName: string;
+  address: string;
+  email: string;
+};
+
+export type FormErrors = Record<keyof FormData, string>;
+
+export interface OrderFormProps {
+  onSubmit: (data: FormData) => void;
+  isSubmitting: boolean;
 }

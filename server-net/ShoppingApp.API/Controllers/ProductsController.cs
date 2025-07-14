@@ -24,7 +24,7 @@ namespace ShoppingApp.API.Controllers
         }
 
         /// <summary>
-        /// שליפת כל המוצרים
+        /// מחזיר את כל המוצרים
         /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
@@ -32,6 +32,8 @@ namespace ShoppingApp.API.Controllers
             try
             {
                 var products = await _productRepository.GetAllAsync();
+
+                // מיפוי ל-DTO
                 var productDtos = products.Select(p => new ProductDto
                 {
                     Id = p.Id,
@@ -41,7 +43,7 @@ namespace ShoppingApp.API.Controllers
                     CategoryId = p.CategoryId,
                     CategoryName = p.Category.Name,
                     Image = p.Image,
-                    CreatedAt = p.CreatedAt,
+                    CreatedAt = p.CreatedAt
                 });
 
                 return Ok(productDtos);
@@ -54,7 +56,7 @@ namespace ShoppingApp.API.Controllers
         }
 
         /// <summary>
-        /// שליפת מוצר לפי ID
+        /// מחזיר מוצר לפי ID
         /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDto>> GetProduct(int id)
@@ -89,7 +91,7 @@ namespace ShoppingApp.API.Controllers
         }
 
         /// <summary>
-        /// שליפת מוצרים לפי ID קטגוריה
+        /// מחזיר מוצרים לפי ID קטגוריה
         /// </summary>
         [HttpGet("category/{categoryId}")]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsByCategory(int categoryId)
@@ -103,6 +105,7 @@ namespace ShoppingApp.API.Controllers
                 }
 
                 var products = await _productRepository.GetByCategoryIdAsync(categoryId);
+
                 var productDtos = products.Select(p => new ProductDto
                 {
                     Id = p.Id,
@@ -125,14 +128,13 @@ namespace ShoppingApp.API.Controllers
         }
 
         /// <summary>
-        /// שליפת מוצרים לפי שם קטגוריה
+        /// מחזיר מוצרים לפי שם קטגוריה
         /// </summary>
         [HttpGet("category/name/{categoryName}")]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsByCategoryName(string categoryName)
         {
             try
             {
-                // בדיקה שהקטגוריה קיימת
                 var category = await _categoryRepository.GetByNameAsync(categoryName);
                 if (category == null)
                 {
@@ -140,6 +142,7 @@ namespace ShoppingApp.API.Controllers
                 }
 
                 var products = await _productRepository.GetByCategoryIdAsync(category.Id);
+
                 var productDtos = products.Select(p => new ProductDto
                 {
                     Id = p.Id,
@@ -197,6 +200,7 @@ namespace ShoppingApp.API.Controllers
                     CreatedAt = createdProduct.CreatedAt
                 };
 
+                // מחזיר את המוצר החדש + Location Header
                 return CreatedAtAction(nameof(GetProduct), new { id = productDto.Id }, productDto);
             }
             catch (Exception ex)
@@ -207,7 +211,7 @@ namespace ShoppingApp.API.Controllers
         }
 
         /// <summary>
-        /// עדכון מוצר
+        /// עדכון מוצר קיים
         /// </summary>
         [HttpPut("{id}")]
         public async Task<ActionResult<ProductDto>> UpdateProduct(int id, UpdateProductDto updateProductDto)
@@ -268,6 +272,7 @@ namespace ShoppingApp.API.Controllers
                     return NotFound($"מוצר עם ID {id} לא נמצא");
                 }
 
+                // מחזיר 204 No Content
                 return NoContent();
             }
             catch (Exception ex)

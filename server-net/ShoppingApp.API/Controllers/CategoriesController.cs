@@ -19,7 +19,7 @@ namespace ShoppingApp.API.Controllers
         }
 
         /// <summary>
-        /// שליפת כל הקטגוריות
+        /// מחזיר את כל הקטגוריות
         /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories()
@@ -27,6 +27,7 @@ namespace ShoppingApp.API.Controllers
             try
             {
                 var categories = await _categoryRepository.GetAllAsync();
+
                 var categoryDtos = categories.Select(c => new CategoryDto
                 {
                     Id = c.Id,
@@ -46,7 +47,7 @@ namespace ShoppingApp.API.Controllers
         }
 
         /// <summary>
-        /// שליפת קטגוריה לפי ID
+        /// מחזיר קטגוריה לפי ID
         /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryDto>> GetCategory(int id)
@@ -85,7 +86,7 @@ namespace ShoppingApp.API.Controllers
         {
             try
             {
-                // בדיקה שהשם לא קיים כבר
+                // בדיקה אם קיים שם זהה (למניעת כפילויות)
                 if (await _categoryRepository.CategoryNameExistsAsync(createCategoryDto.Name))
                 {
                     return BadRequest("קטגוריה עם שם זה כבר קיימת");
@@ -108,6 +109,7 @@ namespace ShoppingApp.API.Controllers
                     ProductCount = 0
                 };
 
+                // מחזיר Location Header עם ה-URL של הקטגוריה החדשה
                 return CreatedAtAction(nameof(GetCategory), new { id = categoryDto.Id }, categoryDto);
             }
             catch (Exception ex)
@@ -118,7 +120,7 @@ namespace ShoppingApp.API.Controllers
         }
 
         /// <summary>
-        /// עדכון קטגוריה
+        /// עדכון קטגוריה קיימת
         /// </summary>
         [HttpPut("{id}")]
         public async Task<ActionResult<CategoryDto>> UpdateCategory(int id, UpdateCategoryDto updateCategoryDto)
@@ -131,7 +133,7 @@ namespace ShoppingApp.API.Controllers
                     return NotFound($"קטגוריה עם ID {id} לא נמצאה");
                 }
 
-                // בדיקה שהשם לא קיים כבר (למעט הקטגוריה הנוכחית)
+                // בדיקה לשם כפול בקטגוריות אחרות
                 if (await _categoryRepository.CategoryNameExistsAsync(updateCategoryDto.Name, id))
                 {
                     return BadRequest("קטגוריה עם שם זה כבר קיימת");
@@ -174,10 +176,10 @@ namespace ShoppingApp.API.Controllers
                     return NotFound($"קטגוריה עם ID {id} לא נמצאה");
                 }
 
-                // בדיקה אם יש מוצרים מקושרים לקטגוריה
+                // בדיקה אם יש מוצרים משויכים — לא ניתן למחוק קטגוריה כזו
                 if (category.Products.Any())
                 {
-                    return BadRequest("לא ניתן למחוק קטגוריה עם מוצרים. נא למחוק תחילה את המוצרים או להעביר אותם לקטגוריה אחרת");
+                    return BadRequest("לא ניתן למחוק קטגוריה עם מוצרים. יש למחוק קודם את המוצרים או להעביר לקטגוריה אחרת");
                 }
 
                 var deleted = await _categoryRepository.DeleteAsync(id);
@@ -186,6 +188,7 @@ namespace ShoppingApp.API.Controllers
                     return NotFound($"קטגוריה עם ID {id} לא נמצאה");
                 }
 
+                // מחזיר 204 No Content
                 return NoContent();
             }
             catch (Exception ex)
