@@ -58,6 +58,13 @@ English map of the orders API: purpose, key functions, why each file exists, and
 
 Earlier schema mistakes stored quantity as a string. Numeric `min/max` validation is required so “change quantity” from the UI is stored correctly and safely.
 
+## Catalog authorization
+
+| File | What it does | Key symbols | Why / impact |
+|---|---|---|---|
+| `src/services/catalog.ts` | Loads products from the .NET catalog and rewrites order lines | `fetchCatalogProducts`, `authorizeOrderItems` | Prevents trusting client-supplied name/price |
+| `src/services/catalog.test.ts` | Unit tests for price/name override | — | Guards tampering scenarios |
+
 ## Validation and types
 
 | File | What it does | Key symbols | Why / impact |

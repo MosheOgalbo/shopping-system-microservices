@@ -43,6 +43,7 @@ shopping-app/
 ├── docker-compose.yml
 ├── .github/workflows/tests.yml
 ├── .cursor/rules/
+├── e2e/                             # Playwright end-to-end tests
 ├── shopping-client/                 # React + Redux Toolkit
 │   ├── FILE_GUIDE.md
 │   ├── Dockerfile

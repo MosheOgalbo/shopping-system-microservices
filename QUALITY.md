@@ -86,3 +86,4 @@ Suggested reviewer narrative: this is a focused microservices demo with a clean 
 | Modern professional hooks? | Yes — typed Redux hooks + RTK Query + local `useState`/`useMemo` where appropriate |
 | Backend on current production libraries? | Yes — .NET 10 / EF Core 10 / Express 5 / Mongoose 8 / Zod 4 / Node 22 |
 | Professional assignment presentation? | Yes — matches the brief, runs cleanly, tested, documented |
+| E2E coverage? | Yes — Playwright covers checkout success, API failure, catalog price authority |

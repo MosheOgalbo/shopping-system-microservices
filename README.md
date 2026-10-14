@@ -53,6 +53,10 @@ docker compose up --build
 cd server-net && dotnet test
 cd server-node && npm test
 cd shopping-client && npm test
+
+# E2E (המערכת חייבת לרוץ ב-Docker)
+docker compose up --build -d
+cd e2e && npm ci && npx playwright install chromium && npm test
 ```
 
 ## פיתוח מקומי בלי Docker

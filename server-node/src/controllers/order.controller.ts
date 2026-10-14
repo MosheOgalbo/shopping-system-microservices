@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { User } from '../models/user.model';
 import { Order } from '../models/order.model';
 import { orderSchema } from '../validation/order.schema';
+import { authorizeOrderItems, fetchCatalogProducts } from '../services/catalog';
 
 export const createOrder = async (req: Request, res: Response) => {
   const parsed = orderSchema.safeParse(req.body);
@@ -12,7 +13,25 @@ export const createOrder = async (req: Request, res: Response) => {
     });
   }
 
+  const catalogBaseUrl = process.env.CATALOG_API_URL;
+  if (!catalogBaseUrl) {
+    return res.status(500).json({ error: 'Catalog service is not configured' });
+  }
+
   const { user: userData, items } = parsed.data;
+
+  let authorizedItems;
+  try {
+    const catalogProducts = await fetchCatalogProducts(catalogBaseUrl);
+    authorizedItems = authorizeOrderItems(items, catalogProducts);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Catalog validation failed';
+    if (message.startsWith('Unknown productId')) {
+      return res.status(400).json({ error: 'מוצר בהזמנה אינו קיים בקטלוג' });
+    }
+    console.error('Catalog enrichment failed', err);
+    return res.status(502).json({ error: 'לא ניתן לאמת את המוצרים מול הקטלוג' });
+  }
 
   let user = await User.findOne({ email: userData.email.toLowerCase() });
   if (!user) {
@@ -35,7 +54,7 @@ export const createOrder = async (req: Request, res: Response) => {
 
   const order = await Order.create({
     user: user._id,
-    items,
+    items: authorizedItems,
     status: 'created',
   });
 
@@ -43,20 +62,4 @@ export const createOrder = async (req: Request, res: Response) => {
     id: order._id.toString(),
     status: 'created',
   });
-};
-
-export const getOrdersByEmail = async (req: Request, res: Response) => {
-  const email = req.params.email?.toLowerCase();
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(404).json({ error: 'User not found' });
-  }
-
-  const orders = await Order.find({ user: user._id }).lean();
-  return res.json(orders.map(order => ({
-    id: order._id.toString(),
-    status: order.status,
-    items: order.items,
-    createdAt: order.createdAt,
-  })));
 };
