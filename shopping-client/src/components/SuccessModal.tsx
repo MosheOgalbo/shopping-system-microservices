@@ -1,21 +1,37 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useId, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {SuccessModalProps} from '../types/index'
-
+import { useTranslation } from 'react-i18next';
+import { SuccessModalProps } from '../types/index';
 
 const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, orderId }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  const titleId = useId();
+  const descriptionId = useId();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      // Auto close after 3 seconds and navigate to shopping
-      const timer = setTimeout(() => {
+    if (!isOpen) return undefined;
+
+    closeButtonRef.current?.focus();
+
+    const timer = window.setTimeout(() => {
+      onClose();
+      navigate('/shopping');
+    }, 3000);
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
         onClose();
         navigate('/shopping');
-      }, 3000);
+      }
+    };
 
-      return () => clearTimeout(timer);
-    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener('keydown', onKeyDown);
+    };
   }, [isOpen, onClose, navigate]);
 
   if (!isOpen) return null;
@@ -26,54 +42,48 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, orderId })
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center modal-backdrop animate-fadeIn">
-      <div className="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl animate-slideInFromRight">
-        {/* Success Icon */}
-        <div className="text-center mb-6">
-          <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-            <div className="text-3xl text-green-600 success-checkmark">✓</div>
+    <div className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 animate-fadeIn dark:bg-black/70">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={descriptionId}
+        className="mx-4 max-w-md rounded-2xl bg-white p-8 shadow-2xl animate-slideInFromRight dark:bg-slate-900 dark:ring-1 dark:ring-slate-700"
+      >
+        <div className="mb-6 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-emerald-950">
+            <div className="success-checkmark text-3xl text-green-600 dark:text-emerald-400" aria-hidden="true">✓</div>
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            ההזמנה נשלחה בהצלחה! 🎉
+          <h2 id={titleId} className="mb-2 text-2xl font-bold text-gray-800 dark:text-white">
+            {t('success.title')}
           </h2>
-          <p className="text-gray-600">
-            תודה רבה על ההזמנה שלך
-          </p>
+          <p className="text-gray-600 dark:text-slate-300">{t('success.thanks')}</p>
         </div>
 
-        {/* Order Details */}
         {orderId && (
-          <div className="bg-gray-50 rounded-lg p-4 mb-6 text-center">
-            <p className="text-sm text-gray-600 mb-1">מספר הזמנה:</p>
-            <p className="font-mono text-lg font-semibold text-blue-600">
-              {orderId}
-            </p>
+          <div className="mb-6 rounded-lg bg-gray-50 p-4 text-center dark:bg-slate-800">
+            <p className="mb-1 text-sm text-gray-600 dark:text-slate-300">{t('success.orderNumber')}</p>
+            <p className="font-mono text-lg font-semibold text-emerald-700 dark:text-emerald-300">{orderId}</p>
           </div>
         )}
 
-        {/* Success Message */}
-        <div className="text-center mb-6">
-          <p className="text-gray-700 leading-relaxed">
-            ההזמנה שלך התקבלה בהצלחה ותעובד בהקדם האפשרי.
-            <br />
-            תקבל עדכון במייל על סטטוס ההזמנה.
+        <div id={descriptionId} className="mb-6 text-center">
+          <p className="leading-relaxed whitespace-pre-line text-gray-700 dark:text-slate-200">
+            {t('success.body')}
           </p>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex flex-col gap-3">
           <button
+            ref={closeButtonRef}
+            type="button"
             onClick={handleContinueShopping}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+            className="w-full rounded-xl bg-emerald-700 px-6 py-3 font-semibold text-white shadow-lg transition hover:bg-emerald-800 dark:bg-emerald-600"
           >
-            המשך קניות 🛒
+            {t('success.continue')}
           </button>
 
-          <div className="text-center">
-            <p className="text-xs text-gray-500">
-              החלון יסגר אוטומטית בעוד 3 שניות...
-            </p>
-          </div>
+          <p className="text-center text-xs text-gray-500 dark:text-slate-400">{t('success.autoClose')}</p>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useGetProductsQuery, useGetProductsByCategoryQuery } from '../services/productsApi';
 import { useGetCategoriesQuery } from '../services/categoriesApi';
 import Header from '../components/Header';
@@ -7,9 +8,12 @@ import FilterBar from '../components/FilterBar';
 import ResultsInfo from '../components/ResultsInfo';
 import ProductsGrid from '../components/ProductsGrid';
 import CartPanel from '../components/CartPanel';
+import { translateCatalogLabel } from '../i18n/catalog';
+import { SearchSuggestion } from '../types';
 import { toProduct } from '../util/products';
 
 const ShoppingScreen: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('name');
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
@@ -26,10 +30,41 @@ const ShoppingScreen: React.FC = () => {
     [activeQuery.data]
   );
 
-  const filtered = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.description?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const suggestions: SearchSuggestion[] = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+    return products
+      .filter(product => {
+        if (!query) return true;
+        const translatedName = translateCatalogLabel(t, 'names', product.name).toLowerCase();
+        const translatedDescription = translateCatalogLabel(t, 'descriptions', product.description).toLowerCase();
+        return (
+          product.name.toLowerCase().includes(query) ||
+          product.description?.toLowerCase().includes(query) ||
+          translatedName.includes(query) ||
+          translatedDescription.includes(query)
+        );
+      })
+      .slice(0, 20)
+      .map(product => ({
+        id: product.id,
+        name: translateCatalogLabel(t, 'names', product.name),
+        category: translateCatalogLabel(t, 'categories', product.category),
+        price: product.price,
+      }));
+  }, [products, searchTerm, t]);
+
+  const filtered = products.filter(product => {
+    const query = searchTerm.toLowerCase();
+    if (!query) return true;
+    const translatedName = translateCatalogLabel(t, 'names', product.name).toLowerCase();
+    const translatedDescription = translateCatalogLabel(t, 'descriptions', product.description).toLowerCase();
+    return (
+      product.name.toLowerCase().includes(query) ||
+      product.description?.toLowerCase().includes(query) ||
+      translatedName.includes(query) ||
+      translatedDescription.includes(query)
+    );
+  });
 
   const sorted = [...filtered].sort((a, b) => {
     switch (sortBy) {
@@ -37,8 +72,11 @@ const ShoppingScreen: React.FC = () => {
         return a.price - b.price;
       case 'price-high':
         return b.price - a.price;
-      default:
-        return a.name.localeCompare(b.name, 'he');
+      default: {
+        const nameA = translateCatalogLabel(t, 'names', a.name);
+        const nameB = translateCatalogLabel(t, 'names', b.name);
+        return nameA.localeCompare(nameB, i18n.language);
+      }
     }
   });
 
@@ -46,44 +84,77 @@ const ShoppingScreen: React.FC = () => {
     ? categories.find(category => category.Id === selectedCategoryId)?.Name || ''
     : '';
 
+  const handleSelectSuggestion = (productId: string) => {
+    const product = products.find(item => item.id === productId);
+    if (product) {
+      setSearchTerm(translateCatalogLabel(t, 'names', product.name));
+    }
+
+    window.requestAnimationFrame(() => {
+      const card = document.getElementById(`product-${productId}`);
+      card?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card?.classList.add('ring-2', 'ring-emerald-500');
+      window.setTimeout(() => {
+        card?.classList.remove('ring-2', 'ring-emerald-500');
+      }, 1600);
+    });
+  };
+
+  const handleCategoryChange = (categoryId: number | null) => {
+    setSelectedCategoryId(categoryId);
+    setSearchTerm('');
+  };
+
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900">
+    <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <Header />
 
-      <section className="border-b border-slate-200 bg-white">
+      <section className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-          <div className="mb-8 text-right">
-            <p className="text-sm font-semibold text-emerald-700">רשימת קניות</p>
-            <h1 className="mt-1 text-3xl font-bold text-slate-950 sm:text-4xl">בחרו מוצרים לסל</h1>
-            <p className="mt-2 text-slate-600">הקטגוריות והמוצרים נטענים מהשרת. בחרו קטגוריה, עדכנו כמות, והוסיפו לסל.</p>
+          <div className="mb-8 text-start">
+            <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">{t('shopping.eyebrow')}</p>
+            <h1 className="mt-1 text-3xl font-bold text-slate-950 sm:text-4xl dark:text-white">{t('shopping.title')}</h1>
+            <p className="mt-2 text-slate-600 dark:text-slate-300">{t('shopping.subtitle')}</p>
           </div>
 
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-            <SearchInput value={searchTerm} onChange={setSearchTerm} />
-            <FilterBar
-              categories={categories}
-              selectedCategoryId={selectedCategoryId}
-              onCategoryChange={setSelectedCategoryId}
-              sortBy={sortBy}
-              onSortChange={setSortBy}
-              categoriesLoading={categoriesLoading}
-            />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
+              <SearchInput
+                value={searchTerm}
+                onChange={setSearchTerm}
+                suggestions={suggestions}
+                onSelectSuggestion={handleSelectSuggestion}
+                suggestionsReady={!activeQuery.isLoading && !activeQuery.isFetching}
+              />
+              <FilterBar
+                categories={categories}
+                selectedCategoryId={selectedCategoryId}
+                onCategoryChange={handleCategoryChange}
+                sortBy={sortBy}
+                onSortChange={setSortBy}
+                categoriesLoading={categoriesLoading}
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      <main className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <main
+        id="main-content"
+        className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_320px]"
+        tabIndex={-1}
+      >
         <div>
           {(activeQuery.isLoading || activeQuery.isFetching) && (
             <div className="py-16 text-center" role="status">
-              <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-700" />
-              <p className="text-slate-600">טוען מוצרים...</p>
+              <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-700 dark:border-slate-600" />
+              <p className="text-slate-600 dark:text-slate-300">{t('shopping.loading')}</p>
             </div>
           )}
 
           {(activeQuery.isError || categoriesError) && (
-            <div className="mb-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-800" role="alert">
-              לא הצלחנו לטעון את הקטלוג מהשרת. ודאו ששירות המוצרים פעיל ונסו לרענן.
+            <div className="mb-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-800 dark:border-rose-800 dark:bg-rose-950 dark:text-rose-200" role="alert">
+              {t('shopping.loadError')}
             </div>
           )}
 

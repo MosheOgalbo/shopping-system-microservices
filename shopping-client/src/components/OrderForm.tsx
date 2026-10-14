@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { VALIDATION_RULES, ERROR_MESSAGES } from '../util/constants';
+import { useTranslation } from 'react-i18next';
+import { VALIDATION_RULES } from '../util/constants';
 import FormField from './FormField';
 import FormHeader from './FormHeader';
 import SubmitButton from './SubmitButton';
 import { FormData, FormErrors, OrderFormProps } from '../types';
 
 const OrderForm: React.FC<OrderFormProps> = ({ onSubmit, isSubmitting }) => {
+  const { t } = useTranslation();
   const [form, setForm] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -39,36 +41,33 @@ const OrderForm: React.FC<OrderFormProps> = ({ onSubmit, isSubmitting }) => {
     };
 
     if (!form.firstName.trim()) {
-      newErrors.firstName = ERROR_MESSAGES.FIRST_NAME_REQUIRED;
+      newErrors.firstName = t('form.errors.firstNameRequired');
     } else if (form.firstName.trim().length < VALIDATION_RULES.MIN_NAME_LENGTH) {
-      newErrors.firstName = ERROR_MESSAGES.MIN_LENGTH.replace(
-        '{min}',
-        VALIDATION_RULES.MIN_NAME_LENGTH.toString()
-      );
+      newErrors.firstName = t('form.errors.minLength', {
+        min: VALIDATION_RULES.MIN_NAME_LENGTH,
+      });
     }
 
     if (!form.lastName.trim()) {
-      newErrors.lastName = ERROR_MESSAGES.LAST_NAME_REQUIRED;
+      newErrors.lastName = t('form.errors.lastNameRequired');
     } else if (form.lastName.trim().length < VALIDATION_RULES.MIN_NAME_LENGTH) {
-      newErrors.lastName = ERROR_MESSAGES.MIN_LENGTH.replace(
-        '{min}',
-        VALIDATION_RULES.MIN_NAME_LENGTH.toString()
-      );
+      newErrors.lastName = t('form.errors.minLength', {
+        min: VALIDATION_RULES.MIN_NAME_LENGTH,
+      });
     }
 
     if (!form.address.trim()) {
-      newErrors.address = ERROR_MESSAGES.ADDRESS_REQUIRED;
+      newErrors.address = t('form.errors.addressRequired');
     } else if (form.address.trim().length < VALIDATION_RULES.MIN_ADDRESS_LENGTH) {
-      newErrors.address = ERROR_MESSAGES.MIN_LENGTH.replace(
-        '{min}',
-        VALIDATION_RULES.MIN_ADDRESS_LENGTH.toString()
-      );
+      newErrors.address = t('form.errors.minLength', {
+        min: VALIDATION_RULES.MIN_ADDRESS_LENGTH,
+      });
     }
 
     if (!form.email.trim()) {
-      newErrors.email = ERROR_MESSAGES.EMAIL_REQUIRED;
+      newErrors.email = t('form.errors.emailRequired');
     } else if (!VALIDATION_RULES.EMAIL_REGEX.test(form.email)) {
-      newErrors.email = ERROR_MESSAGES.INVALID_EMAIL;
+      newErrors.email = t('form.errors.invalidEmail');
     }
 
     setErrors(newErrors);
@@ -82,36 +81,36 @@ const OrderForm: React.FC<OrderFormProps> = ({ onSubmit, isSubmitting }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 bg-white rounded-2xl shadow-xl p-6 h-fit">
+    <form onSubmit={handleSubmit} className="h-fit space-y-6 rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-900 dark:shadow-none dark:ring-1 dark:ring-slate-700">
       <FormHeader />
       <FormField
         name="firstName"
-        label="שם פרטי"
-        placeholder="הכנס שם פרטי"
+        label={t('form.firstName')}
+        placeholder={t('form.firstNamePlaceholder')}
         value={form.firstName}
         error={errors.firstName}
         onChange={handleChange}
       />
       <FormField
         name="lastName"
-        label="שם משפחה"
-        placeholder="הכנס שם משפחה"
+        label={t('form.lastName')}
+        placeholder={t('form.lastNamePlaceholder')}
         value={form.lastName}
         error={errors.lastName}
         onChange={handleChange}
       />
       <FormField
         name="address"
-        label="כתובת משלוח"
-        placeholder="רחוב, מספר בית, עיר"
+        label={t('form.address')}
+        placeholder={t('form.addressPlaceholder')}
         value={form.address}
         error={errors.address}
         onChange={handleChange}
       />
       <FormField
         name="email"
-        label="כתובת מייל"
-        placeholder="example@email.com"
+        label={t('form.email')}
+        placeholder={t('form.emailPlaceholder')}
         type="email"
         value={form.email}
         error={errors.email}

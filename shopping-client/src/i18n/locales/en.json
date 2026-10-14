@@ -1,0 +1,149 @@
+{
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "backToShopping": "Back to shopping page",
+    "cartItems": "Shopping cart - {{count}} items",
+    "decreaseQty": "Decrease quantity of {{name}}",
+    "increaseQty": "Increase quantity of {{name}}",
+    "addToCart": "Add product to cart: {{name}}",
+    "decreaseCartQty": "Decrease cart quantity of {{name}}",
+    "increaseCartQty": "Increase cart quantity of {{name}}",
+    "searchHelp": "Type to search products. Results update in real time.",
+    "categorySelect": "Select category",
+    "sortSelect": "Select sort option",
+    "productsGrid": "Products grid",
+    "searchIcon": "Search icon",
+    "cartPanel": "Shopping cart",
+    "language": "Language selection",
+    "closeDialog": "Close",
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode",
+    "mainNav": "Main navigation",
+    "theme": "Color theme"
+  },
+  "header": {
+    "logo": "FreshCart",
+    "subtitle": "Online grocery shopping",
+    "documentTitle": "FreshCart — Online Grocery",
+    "shopping": "Shop",
+    "order": "Checkout",
+    "items": "items"
+  },
+  "language": {
+    "he": "עברית",
+    "en": "English",
+    "ar": "العربية"
+  },
+  "shopping": {
+    "eyebrow": "Shopping list",
+    "title": "Choose products for your cart",
+    "subtitle": "Categories and products load from the server. Pick a category, set quantity, and add to cart.",
+    "loading": "Loading products...",
+    "loadError": "We could not load the catalog from the server. Make sure the products service is running and try refreshing."
+  },
+  "search": {
+    "placeholder": "Search products...",
+    "label": "Search products",
+    "suggestionsLabel": "Product selection table",
+    "columnProduct": "Product",
+    "columnCategory": "Category",
+    "columnPrice": "Price",
+    "noSuggestions": "No products to show for the selected category"
+  },
+  "filter": {
+    "allCategories": "All categories",
+    "sortByName": "Sort by name",
+    "sortPriceLow": "Price: low to high",
+    "sortPriceHigh": "Price: high to low"
+  },
+  "results": {
+    "none": "No products found",
+    "one": "Found 1 product",
+    "many": "Found {{count}} products",
+    "forTerm": "for \"{{term}}\"",
+    "inCategory": "in category \"{{category}}\"",
+    "statusLabel": "Search results: {{summary}}"
+  },
+  "products": {
+    "emptyTitle": "No products found",
+    "emptyHint": "Try changing the search terms or filter",
+    "quantity": "Quantity",
+    "addToCart": "Add to cart",
+    "added": "Added to cart"
+  },
+  "cart": {
+    "title": "My cart",
+    "items": "{{count}} items",
+    "empty": "No products in the cart yet. Choose a category, set a quantity, and add a product.",
+    "remove": "Remove",
+    "total": "Total",
+    "checkout": "Continue to checkout"
+  },
+  "order": {
+    "eyebrow": "Order summary",
+    "title": "Complete your order",
+    "subtitle": "Enter your name, address, and email. Cart items appear next to the form.",
+    "emptyCartAlert": "The cart is empty — nothing to order",
+    "serverRejected": "The server did not confirm saving the order",
+    "submitError": "Error submitting the order. The order was not saved."
+  },
+  "form": {
+    "personalDetails": "Personal details",
+    "firstName": "First name",
+    "firstNamePlaceholder": "Enter first name",
+    "lastName": "Last name",
+    "lastNamePlaceholder": "Enter last name",
+    "address": "Shipping address",
+    "addressPlaceholder": "Street, number, city",
+    "email": "Email address",
+    "emailPlaceholder": "example@email.com",
+    "submit": "Confirm order",
+    "submitting": "Sending...",
+    "errors": {
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "addressRequired": "Address is required",
+      "emailRequired": "Email is required",
+      "minLength": "At least {{min}} characters",
+      "invalidEmail": "Invalid email"
+    }
+  },
+  "orderSummary": {
+    "title": "Order summary",
+    "total": "Total to pay:",
+    "empty": "Cart is empty",
+    "emptySubtitle": "Add products to start an order"
+  },
+  "success": {
+    "title": "Order sent successfully!",
+    "thanks": "Thank you for your order",
+    "orderNumber": "Order number:",
+    "body": "Your order was received and will be processed as soon as possible.\nYou will get an email update about the order status.",
+    "continue": "Continue shopping",
+    "autoClose": "This window will close automatically in 3 seconds..."
+  },
+  "catalog": {
+    "categories": {
+      "אלקטרוניקה": "Electronics",
+      "ביגוד": "Clothing",
+      "ספרים": "Books"
+    },
+    "names": {
+      "לפטופ Dell": "Dell Laptop",
+      "אוזניות אלחוטיות": "Wireless Headphones",
+      "חולצה כחולה": "Blue Shirt",
+      "ז'קט קלאסי": "Classic Jacket",
+      "ספר תכנות": "Programming Book",
+      "מארז ספרים": "Book Bundle"
+    },
+    "descriptions": {
+      "מחשב נייד לעבודה וללימודים": "Laptop for work and study",
+      "אוזניות עם ביטול רעשים": "Headphones with noise cancellation",
+      "חולצת כותנה איכותית": "Quality cotton shirt",
+      "חולצת כותנה": "Cotton shirt",
+      "ז'קט קל לעונת המעבר": "Light jacket for transitional weather",
+      "ספר ללימוד תכנות מעשי": "Book for practical programming",
+      "שלושה ספרים נבחרים": "Three selected books"
+    }
+  }
+}

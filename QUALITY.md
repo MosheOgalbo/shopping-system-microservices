@@ -76,7 +76,7 @@ Also production-minded: connect Mongo before listen, health endpoints, reject in
 5. **Tests + CI** — unit/integration coverage across all three parts and a GitHub Actions workflow.
 6. **Documentation** — root README for humans, structure/quality/agents docs for reviewers and AI tools, per-service file guides.
 
-Suggested reviewer narrative: this is a focused microservices demo with a clean Hebrew RTL UX, not an overbuilt platform. That is the right level for this assignment.
+Suggested reviewer narrative: this is a focused microservices demo with Hebrew/English/Arabic i18n (RTL/LTR), basic accessibility (labels, live regions, dialog, skip link), and a clean shopping UX — not an overbuilt platform. That is the right level for this assignment.
 
 ## Verdict
 

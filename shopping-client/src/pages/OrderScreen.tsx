@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { clearCart } from '../store/slices/cartSlice';
 import Header from '../components/Header';
@@ -7,7 +8,6 @@ import OrderForm from '../components/OrderForm';
 import OrderSummary from '../components/OrderSummary';
 import { usePlaceOrderMutation } from '../services/ordersApi';
 
-// ממשק עבור נתוני טופס ההזמנה
 interface FormData {
   firstName: string;
   lastName: string;
@@ -15,75 +15,59 @@ interface FormData {
   email: string;
 }
 
-// קומפוננטת מסך ההזמנה
 const OrderScreen: React.FC = () => {
-  // בחירת פריטי העגלה מהסטור
+  const { t } = useTranslation();
   const cartItems = useAppSelector(state => state.cart.items);
-
   const dispatch = useAppDispatch();
-  // שימוש במוטציה להגשת הזמנה
   const [placeOrder, { isLoading: isSubmitting }] = usePlaceOrderMutation();
-  // מצב מקומי להצגת מודל ההצלחה
   const [showSuccess, setShowSuccess] = useState(false);
-  // מצב מקומי לשמירת מזהה ההזמנה
   const [orderId, setOrderId] = useState<string>('');
-  // מצב מקומי לשמירת שגיאות
   const [error, setError] = useState<string | null>(null);
 
-  // חישוב הסכום הכולל של ההזמנה
   const totalPrice = cartItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
-  // טיפול בהגשת טופס ההזמנה
   const handleFormSubmit = async (formData: FormData) => {
-    // בדיקה אם העגלה ריקה
     if (cartItems.length === 0) {
-      alert('העגלה ריקה - אין מה להזמין');
+      alert(t('order.emptyCartAlert'));
       return;
     }
 
     try {
-      // שליחת בקשה להזמנה לשרת
       const result = await placeOrder({ user: formData, items: cartItems }).unwrap();
       if (!result.id) {
-        setError('השרת לא אישר את שמירת ההזמנה');
+        setError(t('order.serverRejected'));
         return;
       }
       setOrderId(result.id);
-      // ניקוי העגלה
       dispatch(clearCart());
-      // הצגת מודל ההצלחה
       setShowSuccess(true);
     } catch (err: unknown) {
       const data = typeof err === 'object' && err !== null && 'data' in err
         ? (err as { data?: { error?: string } }).data
         : undefined;
-      setError(data?.error || 'שגיאה בשליחת ההזמנה. ההזמנה לא נשמרה.');
+      setError(data?.error || t('order.submitError'));
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-100">
-      {/* כותרת העמוד */}
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-950">
       <Header />
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="mb-8 text-right">
-          <p className="text-sm font-semibold text-emerald-700">סיכום ההזמנה</p>
-          <h1 className="mt-1 text-3xl font-bold text-slate-950">השלמת ההזמנה</h1>
-          <p className="mt-2 text-slate-600">מלאו שם, כתובת ומייל. רשימת המוצרים מהסל מוצגת לצד הטופס.</p>
+      <main id="main-content" className="container mx-auto max-w-4xl px-4 py-8" tabIndex={-1}>
+        <div className="mb-8 text-start">
+          <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">{t('order.eyebrow')}</p>
+          <h1 className="mt-1 text-3xl font-bold text-slate-950 dark:text-white">{t('order.title')}</h1>
+          <p className="mt-2 text-slate-600 dark:text-slate-300">{t('order.subtitle')}</p>
         </div>
-        {/* הצגת הודעת שגיאה במידה וקיימת */}
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+          <div className="mb-6 rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700 dark:border-rose-800 dark:bg-rose-950 dark:text-rose-200" role="alert">
             {error}
           </div>
         )}
-        {/* גריד המכיל את טופס ההזמנה וסיכום ההזמנה */}
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid gap-8 md:grid-cols-2">
           <OrderForm onSubmit={handleFormSubmit} isSubmitting={isSubmitting} />
           <OrderSummary items={cartItems} total={totalPrice} />
         </div>
-      </div>
-      {/* מודל הצלחת הזמנה */}
+      </main>
       <SuccessModal
         isOpen={showSuccess}
         onClose={() => setShowSuccess(false)}

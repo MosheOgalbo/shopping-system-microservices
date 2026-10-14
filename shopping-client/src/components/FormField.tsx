@@ -1,7 +1,6 @@
 import React from 'react';
-import {FormFieldProps } from '../types';
+import { FormFieldProps } from '../types';
 
-// קומפוננטת שדה טופס עבור הזמנה
 const FormField: React.FC<FormFieldProps> = ({
   name,
   label,
@@ -12,7 +11,7 @@ const FormField: React.FC<FormFieldProps> = ({
   onChange,
 }) => (
   <div>
-    <label htmlFor={name} className="block text-sm font-semibold text-gray-700 mb-2">
+    <label htmlFor={name} className="mb-2 block text-sm font-semibold text-gray-700 dark:text-slate-200">
       {label} *
     </label>
     <input
@@ -22,15 +21,18 @@ const FormField: React.FC<FormFieldProps> = ({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      className={`w-full px-4 py-3 text-gray-700 border-2 rounded-lg focus:outline-none focus:ring-2 transition duration-200 ${
-        error ? 'border-red-500 focus:ring-red-200 bg-red-50' : 'border-slate-300 focus:ring-emerald-200'
+      className={`w-full rounded-lg border-2 px-4 py-3 text-gray-700 transition duration-200 focus:outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 ${
+        error
+          ? 'border-red-500 bg-red-50 focus:ring-red-200 dark:bg-rose-950'
+          : 'border-slate-300 focus:ring-emerald-200 dark:border-slate-600'
       }`}
       aria-invalid={!!error}
+      aria-required="true"
       aria-describedby={error ? `${name}-error` : undefined}
     />
     {error && (
-      <p id={`${name}-error`} className="text-red-500 text-sm mt-1 flex items-center" role="alert">
-        <span className="ml-1">⚠️</span> {error}
+      <p id={`${name}-error`} className="mt-1 flex items-center text-sm text-red-500 dark:text-rose-300" role="alert">
+        <span className="me-1" aria-hidden="true">⚠️</span> {error}
       </p>
     )}
   </div>

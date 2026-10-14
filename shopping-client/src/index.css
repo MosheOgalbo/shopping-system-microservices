@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 html,
 body,
 #root {
@@ -10,8 +12,26 @@ body {
   margin: 0;
   background: #f1f5f9;
   color: #0f172a;
-  font-family: "Rubik", "Segoe UI", sans-serif;
+  font-family: "Rubik", "Noto Sans Arabic", "Segoe UI", sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.dark body {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+html[dir="rtl"] body {
   text-align: right;
+}
+
+html[dir="ltr"] body {
+  text-align: left;
+}
+
+html[lang="ar"] body {
+  font-family: "Noto Sans Arabic", "Rubik", "Segoe UI", sans-serif;
+  line-height: 1.7;
 }
 
 #root {
@@ -26,4 +46,48 @@ select {
 
 img {
   max-width: 100%;
+  display: block;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.focus\:not-sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+:focus-visible {
+  outline: 2px solid #047857;
+  outline-offset: 2px;
+}
+
+html.dark :focus-visible {
+  outline-color: #34d399;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

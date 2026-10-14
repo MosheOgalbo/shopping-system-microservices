@@ -1,8 +1,9 @@
 import React from 'react';
 import { Filter, SortAsc } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { translateCatalogLabel } from '../i18n/catalog';
 import { FilterBarProps } from '../types';
 
-// קבועים למיון - מונעים טעויות כתיב ומקלים על תחזוקה
 const SORT_OPTIONS = {
   NAME: 'name',
   PRICE_LOW: 'price-low',
@@ -11,15 +12,6 @@ const SORT_OPTIONS = {
 
 const ALL_CATEGORIES = 'all';
 
-/**
- * רכיב FilterBar - מספק אפשרויות סינון ומיון למוצרים
- * @param categories - רשימת קטגוריות זמינות
- * @param selectedCategoryId - מזהה הקטגוריה הנבחרת
- * @param onCategoryChange - פונקציה לטיפול בשינוי קטגוריה
- * @param sortBy - סוג המיון הנוכחי
- * @param onSortChange - פונקציה לטיפול בשינוי מיון
- * @param categoriesLoading - האם הקטגוריות נטענות
- */
 const FilterBar: React.FC<FilterBarProps> = ({
   categories,
   selectedCategoryId,
@@ -28,73 +20,66 @@ const FilterBar: React.FC<FilterBarProps> = ({
   onSortChange,
   categoriesLoading = false
 }) => {
-  /**
-   * מטפל בשינוי קטגוריה - ממיר את הערך לפורמט המתאים
-   */
+  const { t } = useTranslation();
+
   const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
-    const categoryId = value === ALL_CATEGORIES ? null : parseInt(value);
+    const categoryId = value === ALL_CATEGORIES ? null : parseInt(value, 10);
     onCategoryChange(categoryId);
   };
 
-  /**
-   * מטפל בשינוי אופציית המיון
-   */
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onSortChange(event.target.value);
   };
 
-  // סגנונות משותפים לשדות הבחירה
   const selectStyles = `
-    w-full pl-4 pr-10 py-3 border text-gray-900 border-gray-200 rounded-xl
-    focus:ring-2 focus:ring-primary-500 focus:border-transparent
+    w-full ps-4 pe-10 py-3 border text-gray-900 border-gray-200 rounded-xl
+    focus:ring-2 focus:ring-emerald-500 focus:border-transparent
     transition-all duration-300 appearance-none bg-white
     disabled:opacity-50 disabled:cursor-not-allowed
+    dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100
   `;
 
-  // סגנונות משותפים לאייקונים
-  const iconStyles = "absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5";
+  const iconStyles = 'pointer-events-none absolute end-3 top-1/2 w-5 h-5 -translate-y-1/2 text-gray-400 dark:text-slate-400';
 
   return (
-    <div className="flex-1 relative w-full flex flex-col md:flex-row items-center justify-between gap-4">
-      {/* בחירת קטגוריה */}
-      <div className="flex-1 relative w-full">
-        <Filter className={iconStyles} />
+    <div className="relative flex w-full flex-1 flex-col items-center justify-between gap-4 md:flex-row">
+      <div className="relative w-full flex-1">
+        <Filter className={iconStyles} aria-hidden="true" />
         <select
           value={selectedCategoryId || ALL_CATEGORIES}
           onChange={handleCategoryChange}
           disabled={categoriesLoading}
           className={selectStyles}
-          aria-label="בחירת קטגוריה"
+          aria-label={t('a11y.categorySelect')}
         >
-          <option value={ALL_CATEGORIES}>כל הקטגוריות</option>
+          <option value={ALL_CATEGORIES}>{t('filter.allCategories')}</option>
           {categories.map(category => (
             <option key={category.Id} value={category.Id}>
-              {category.icon && `${category.icon} `}{category.Name}
+              {category.icon && `${category.icon} `}
+              {translateCatalogLabel(t, 'categories', category.Name)}
             </option>
           ))}
         </select>
 
-        {/* אינדיקטור טעינה לקטגוריות */}
         {categoriesLoading && (
-          <div className="absolute left-8 top-1/2 transform -translate-y-1/2">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600" />
+          <div className="absolute start-8 top-1/2 -translate-y-1/2">
+            <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-blue-600" />
           </div>
         )}
       </div>
 
-      {/* בחירת מיון */}
-      <div className="flex-1 relative w-full">
-        <SortAsc className={iconStyles} />
+      <div className="relative w-full flex-1">
+        <SortAsc className={iconStyles} aria-hidden="true" />
         <select
           value={sortBy}
           onChange={handleSortChange}
           className={selectStyles}
-          aria-label="בחירת סוג מיון"
+          aria-label={t('a11y.sortSelect')}
         >
-          <option value={SORT_OPTIONS.NAME}>מיין לפי שם</option>
-          <option value={SORT_OPTIONS.PRICE_LOW}>מחיר נמוך לגבוה</option>
-          <option value={SORT_OPTIONS.PRICE_HIGH}>מחיר גבוה לנמוך</option>
+          <option value={SORT_OPTIONS.NAME}>{t('filter.sortByName')}</option>
+          <option value={SORT_OPTIONS.PRICE_LOW}>{t('filter.sortPriceLow')}</option>
+          <option value={SORT_OPTIONS.PRICE_HIGH}>{t('filter.sortPriceHigh')}</option>
         </select>
       </div>
     </div>

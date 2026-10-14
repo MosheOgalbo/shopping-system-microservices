@@ -76,9 +76,19 @@ export interface FilterBarProps {
   categoriesLoading?: boolean;
 }
 
+export interface SearchSuggestion {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+}
+
 export interface SearchInputProps {
   value: string;
   onChange: (term: string) => void;
+  suggestions?: SearchSuggestion[];
+  onSelectSuggestion?: (productId: string) => void;
+  suggestionsReady?: boolean;
 }
 
 export interface SuccessModalProps {

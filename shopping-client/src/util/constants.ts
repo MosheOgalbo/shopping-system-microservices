@@ -12,8 +12,8 @@ export const ROUTES_Header = {
 } as const;
 
 export const TEXTS_Header = {
-  LOGO: 'סופר מרקט',
-  SUBTITLE: 'הזמנות אונליין',
+  LOGO: 'FreshCart',
+  SUBTITLE: 'קניות מכולת אונליין',
   SHOPPING: 'קניות',
   ORDER: 'המשך הזמנה',
   ITEMS: 'פריטים'
