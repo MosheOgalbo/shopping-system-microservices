@@ -13,9 +13,15 @@ export function createApp() {
   const app = express();
   app.use(express.json());
 
+  const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,http://localhost:5001')
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(Boolean);
+
+  const allowAnyOrigin = corsOrigins.length === 1 && corsOrigins[0] === '*';
   app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5001'],
-    credentials: true,
+    origin: allowAnyOrigin ? true : corsOrigins,
+    credentials: !allowAnyOrigin,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Accept'],
   }));

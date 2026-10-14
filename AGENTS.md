@@ -79,4 +79,4 @@ cd shopping-client && npm run build
 - Authentication / JWT
 - Payments
 - Elasticsearch mapping (MongoDB satisfies the NoSQL requirement)
-- Kubernetes / cloud deployment manifests
+- Elasticsearch mapping beyond the homework MongoDB option (optional demos may still document AWS/K8s)

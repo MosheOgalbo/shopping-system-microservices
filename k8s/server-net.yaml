@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-net
+  namespace: freshcart
+  labels:
+    app: server-net
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server-net
+  template:
+    metadata:
+      labels:
+        app: server-net
+    spec:
+      containers:
+        - name: server-net
+          image: freshcart/server-net:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: freshcart-config
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: freshcart-secrets
+                  key: ConnectionStrings__DefaultConnection
+          resources:
+            requests:
+              cpu: "200m"
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 40
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-net
+  namespace: freshcart
+spec:
+  selector:
+    app: server-net
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

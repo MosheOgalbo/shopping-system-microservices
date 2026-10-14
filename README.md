@@ -11,6 +11,8 @@
 | [`shopping-client/FILE_GUIDE.md`](./shopping-client/FILE_GUIDE.md) | Frontend file-by-file guide |
 | [`server-net/FILE_GUIDE.md`](./server-net/FILE_GUIDE.md) | Catalog API file-by-file guide |
 | [`server-node/FILE_GUIDE.md`](./server-node/FILE_GUIDE.md) | Orders API file-by-file guide |
+| [`k8s/README.md`](./k8s/README.md) | Kubernetes local deploy |
+| [`aws/README.md`](./aws/README.md) | AWS ECR + EKS deploy |
 
 שלושה רכיבים, לפי מטלת הבית:
 
@@ -46,6 +48,21 @@ docker compose up --build
 2. בוחרים קטגוריה, משנים כמות, ולוחצים **הוסף מוצר לסל**. הסל מוצג באותו מסך.
 3. **המשך הזמנה** פותח טופס עם שם פרטי, שם משפחה, כתובת מלאה ומייל, ואת רשימת המוצרים.
 4. **אשר הזמנה** שומר ב-MongoDB את פרטי הלקוח ואת מערך המוצרים. אם השמירה נכשלת, המערכת מציגה שגיאה ולא מנקה את הסל.
+
+## Kubernetes / AWS
+
+```bash
+# Local Kubernetes
+chmod +x k8s/*.sh
+./k8s/deploy.sh
+
+# AWS EKS (requires AWS CLI + eksctl + cluster)
+chmod +x aws/*.sh
+export AWS_REGION=eu-west-1
+./aws/deploy-eks.sh
+```
+
+Details: [`k8s/README.md`](./k8s/README.md), [`aws/README.md`](./aws/README.md).
 
 ## בדיקות
 
