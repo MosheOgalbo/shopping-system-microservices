@@ -76,9 +76,9 @@ cd e2e && npm ci && npx playwright install chromium && npm test
 
 ## Local development without Docker
 
-- SQL Server on port `1433`, user `sa`, password `YourStrongPassword123!`.
-- MongoDB at `mongodb://root:example@localhost:27017/orders?authSource=admin`.
+Copy `.env.example` to `.env` and set local SQL Server and MongoDB passwords there. Compose reads that file. Do not commit `.env`.
+
+- SQL Server on port `1433`, user `sa`. Pass `ConnectionStrings__DefaultConnection` from the same password when running the catalog API outside Compose.
+- MongoDB on port `27017`. Set `MONGO_URI` for the orders API outside Compose.
 - `dotnet run --project server-net/ShoppingApp.API`
 - `npm run dev` inside `server-node` and `shopping-client`.
-
-Those passwords are for local demos only.

@@ -17,8 +17,8 @@ English map of the catalog API: purpose, key types/methods, why each file exists
 | File | What it does | Key symbols | Why / impact |
 |---|---|---|---|
 | `Program.cs` | App composition root | `AddDbContext`, `UseSqlServer`, CORS, Swagger, `MigrateAsync`, `/health` | Wires DI, DB, middleware; starts listening |
-| `Controllers/CategoriesController.cs` | Category CRUD/read endpoints | `GetCategories`, `GetCategory`, `CreateCategory`, `UpdateCategory`, `DeleteCategory` | Supplies category list + admin-style ops |
-| `Controllers/ProductsController.cs` | Product endpoints | `GetProducts`, `GetProduct`, `GetProductsByCategory`, `CreateProduct`, … | Main catalog feed for the React screen |
+| `Controllers/CategoriesController.cs` | Category read endpoints | `GetCategories`, `GetCategory` | Supplies the category filter. Writes are not exposed |
+| `Controllers/ProductsController.cs` | Product read endpoints | `GetProducts`, `GetProduct`, `GetProductsByCategory` | Main catalog feed for the React screen |
 | `appsettings.json` | Default SQL connection + logging | `ConnectionStrings:DefaultConnection` | Local/non-Compose config baseline |
 | `appsettings.Development.json` | Dev logging overrides | — | Quieter Microsoft framework logs in Development |
 | `Properties/launchSettings.json` | Local launch URLs | `http://localhost:5177` | `dotnet run` profile for the API |
@@ -30,7 +30,7 @@ English map of the catalog API: purpose, key types/methods, why each file exists
 - `GET /api/Categories` → filter dropdown data.
 - `GET /api/Products` → full catalog on shopping page load.
 - `GET /api/Products/category/{id}` → category-filtered catalog.
-- Delete category rejects categories that still have products (business rule in controller).
+- `POST`, `PUT`, and `DELETE` are not mapped. The assignment only needs catalog reads.
 
 ## ShoppingApp.Core (domain)
 
@@ -40,8 +40,7 @@ English map of the catalog API: purpose, key types/methods, why each file exists
 | `Models/Category.cs` | Category entity | `Id`, `Name`, `Description`, `Products` | Relational parent of products |
 | `Models/Product.cs` | Product entity | `Price`, `CategoryId`, `Image` | Catalog item persisted in SQL Server |
 | `Models/DTOs/CategoryDto.cs` | API-facing category shape | `ProductCount` | Avoids leaking full entity graphs |
-| `Models/DTOs/ProductDto.cs` | API-facing product shape | `CategoryName`, `Image` | Stable JSON for React |
-| `Class1.cs` | Empty scaffold leftover | — | Harmless; can be deleted later |
+| `Models/DTOs/ProductDto.cs` | API-facing product shape | `CategoryName`, `Image`, `FromEntity` | Stable JSON for React |
 
 ## ShoppingApp.Infrastructure (data access)
 
@@ -55,7 +54,7 @@ English map of the catalog API: purpose, key types/methods, why each file exists
 | `Repositories/ProductRepository.cs` | Product EF implementation | `Include(p => p.Category)` | Ensures `CategoryName` is available for DTOs |
 | `Migrations/20261014115319_InitialSqlServer.cs` | Initial SQL Server schema + seed | `Up`/`Down` | Creates tables on first run |
 | `Migrations/*Designer.cs` / `ApplicationDbContextModelSnapshot.cs` | EF model snapshots | — | Required by EF tooling |
-| `Class1.cs` | Empty scaffold leftover | — | Harmless; can be deleted later |
+| `Data/ApplicationDbContextFactory.cs` | EF design-time factory | `IDesignTimeDbContextFactory` | Lets `dotnet ef` build the context without starting the API |
 
 ### Notable design choices
 

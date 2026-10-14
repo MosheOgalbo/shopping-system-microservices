@@ -5,7 +5,6 @@ export interface Product {
   price: number;
   description?: string;
   image?: string;
-  nameEn?: string;
 }
 
 export interface BackendProduct {
@@ -39,11 +38,4 @@ export interface OrderRequest {
     address: string;
   };
   items: OrderItem[];
-}
-
-export interface ProductsState {
-  products: Product[];
-  selectedCategory: string;
-  loading: boolean;
-  error: string | null;
 }

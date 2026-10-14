@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import helmet from 'helmet';
 import { connectDB } from './config/db';
 import orderRoutes from './routes/order.routes';
 import swaggerUi from 'swagger-ui-express';
@@ -11,7 +12,8 @@ dotenv.config();
 
 export function createApp() {
   const app = express();
-  app.use(express.json());
+  app.use(helmet({ contentSecurityPolicy: false }));
+  app.use(express.json({ limit: '100kb' }));
 
   const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,http://localhost:5001')
     .split(',')
@@ -34,7 +36,7 @@ export function createApp() {
         version: '1.0.0',
         description: 'Order API for the shopping application',
       },
-      servers: [{ url: 'http://localhost:5001' }],
+      servers: [{ url: process.env.PUBLIC_URL || `http://localhost:${process.env.PORT || 5001}` }],
     },
     apis: ['./src/routes/*.ts'],
   };

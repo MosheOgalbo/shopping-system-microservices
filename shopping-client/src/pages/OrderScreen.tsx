@@ -27,8 +27,9 @@ const OrderScreen: React.FC = () => {
   const totalPrice = cartItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   const handleFormSubmit = async (formData: FormData) => {
+    setError(null);
     if (cartItems.length === 0) {
-      alert(t('order.emptyCartAlert'));
+      setError(t('order.emptyCartAlert'));
       return;
     }
 

@@ -10,7 +10,7 @@ The browser application: catalog, cart, and checkout. It talks to the catalog AP
 | `index.html` | Document shell, tab title, favicon, theme bootstrap before React loads |
 | `public/favicon.svg` | Browser-tab icon |
 | `src/main.tsx` | Mounts the app |
-| `src/App.jsx` | Router for `/shopping` and `/order`, skip link |
+| `src/App.tsx` | Router for `/shopping` and `/order`, skip link |
 | `src/index.css` | Tailwind, RTL/LTR text alignment, dark palette, focus and reduced-motion rules |
 
 Compose points the APIs at `localhost`. Kubernetes and AWS builds use `/api/` so Ingress can route one host.

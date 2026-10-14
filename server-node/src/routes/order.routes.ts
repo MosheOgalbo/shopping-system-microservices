@@ -14,8 +14,6 @@ const router = Router();
  *       400:
  *         description: Invalid order
  */
-router.post('/', (req, res, next) => {
-  Promise.resolve(createOrder(req, res)).catch(next);
-});
+router.post('/', createOrder);
 
 export default router;

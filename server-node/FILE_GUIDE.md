@@ -37,7 +37,7 @@ English map of the orders API: purpose, key functions, why each file exists, and
 
 1. Parse body with Zod (`orderSchema`).
 2. Reject empty carts / bad quantities / invalid user fields with `400`.
-3. Find or create `User` by email.
+3. Find or create `User` by email, and refresh name and address when that email already exists.
 4. Create `Order` with `items[]` and `status: "created"`.
 5. Respond `201` with `{ id, status }` — the contract the React client expects.
 

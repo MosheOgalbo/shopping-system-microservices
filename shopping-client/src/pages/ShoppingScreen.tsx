@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { useGetProductsQuery, useGetProductsByCategoryQuery } from '../services/productsApi';
 import { useGetCategoriesQuery } from '../services/categoriesApi';
@@ -11,6 +12,24 @@ import CartPanel from '../components/CartPanel';
 import { translateCatalogLabel } from '../i18n/catalog';
 import { SearchSuggestion } from '../types';
 import { toProduct } from '../util/products';
+
+function matchesSearch(
+  product: { name: string; description?: string },
+  rawQuery: string,
+  t: TFunction
+): boolean {
+  const query = rawQuery.trim().toLowerCase();
+  if (!query) return true;
+
+  const translatedName = translateCatalogLabel(t, 'names', product.name).toLowerCase();
+  const translatedDescription = translateCatalogLabel(t, 'descriptions', product.description).toLowerCase();
+  return (
+    product.name.toLowerCase().includes(query) ||
+    product.description?.toLowerCase().includes(query) ||
+    translatedName.includes(query) ||
+    translatedDescription.includes(query)
+  );
+}
 
 const ShoppingScreen: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -31,19 +50,8 @@ const ShoppingScreen: React.FC = () => {
   );
 
   const suggestions: SearchSuggestion[] = useMemo(() => {
-    const query = searchTerm.trim().toLowerCase();
     return products
-      .filter(product => {
-        if (!query) return true;
-        const translatedName = translateCatalogLabel(t, 'names', product.name).toLowerCase();
-        const translatedDescription = translateCatalogLabel(t, 'descriptions', product.description).toLowerCase();
-        return (
-          product.name.toLowerCase().includes(query) ||
-          product.description?.toLowerCase().includes(query) ||
-          translatedName.includes(query) ||
-          translatedDescription.includes(query)
-        );
-      })
+      .filter(product => matchesSearch(product, searchTerm, t))
       .slice(0, 20)
       .map(product => ({
         id: product.id,
@@ -53,18 +61,7 @@ const ShoppingScreen: React.FC = () => {
       }));
   }, [products, searchTerm, t]);
 
-  const filtered = products.filter(product => {
-    const query = searchTerm.toLowerCase();
-    if (!query) return true;
-    const translatedName = translateCatalogLabel(t, 'names', product.name).toLowerCase();
-    const translatedDescription = translateCatalogLabel(t, 'descriptions', product.description).toLowerCase();
-    return (
-      product.name.toLowerCase().includes(query) ||
-      product.description?.toLowerCase().includes(query) ||
-      translatedName.includes(query) ||
-      translatedDescription.includes(query)
-    );
-  });
+  const filtered = products.filter(product => matchesSearch(product, searchTerm, t));
 
   const sorted = [...filtered].sort((a, b) => {
     switch (sortBy) {

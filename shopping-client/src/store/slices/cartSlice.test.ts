@@ -27,6 +27,12 @@ describe('cartSlice', () => {
     expect(emptied.items).toHaveLength(0);
   });
 
+  it('caps quantity at 99', () => {
+    const withItem = cartReducer(undefined, addToCart({ product: shirt, quantity: 90 }));
+    const capped = cartReducer(withItem, updateQuantity({ id: shirt.id, quantity: 150 }));
+    expect(capped.items[0].quantity).toBe(99);
+  });
+
   it('clears the cart', () => {
     const withItem = cartReducer(undefined, addToCart({ product: shirt, quantity: 1 }));
     expect(cartReducer(withItem, clearCart()).items).toHaveLength(0);

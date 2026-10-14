@@ -28,7 +28,6 @@ export function toProduct(backendProduct: BackendProduct): Product {
   return {
     id: backendProduct.Id.toString(),
     name: backendProduct.Name,
-    nameEn: backendProduct.Name.toLowerCase().replace(/\s+/g, '-'),
     category: backendProduct.CategoryName,
     price: backendProduct.Price,
     description: backendProduct.Description,

@@ -40,51 +40,5 @@ namespace ShoppingApp.Infrastructure.Repositories
                 .OrderBy(p => p.Name)
                 .ToListAsync();
         }
-
-        // יצירת מוצר חדש במסד הנתונים
-        public async Task<Product> CreateAsync(Product product)
-        {
-            _context.Products.Add(product);    // הוספה לקונטקסט
-            await _context.SaveChangesAsync(); // שמירה במסד הנתונים
-
-            // טעינת הקטגוריה אחרי הוספה עבור החזרת התוצר המלא
-            await _context.Entry(product)
-                .Reference(p => p.Category)
-                .LoadAsync();
-
-            return product;
-        }
-
-        // עדכון מוצר קיים
-        public async Task<Product> UpdateAsync(Product product)
-        {
-            _context.Entry(product).State = EntityState.Modified; // סימון האובייקט לעדכון
-            await _context.SaveChangesAsync();
-
-            // טעינת הקטגוריה לאחר העדכון לחזרה מלאה
-            await _context.Entry(product)
-                .Reference(p => p.Category)
-                .LoadAsync();
-
-            return product;
-        }
-
-        // מחיקת מוצר לפי ID. מחזיר true אם המחיקה בוצעה, false אם לא נמצא מוצר
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
-                return false;
-
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        // בדיקה אם מוצר עם מזהה מסוים קיים במסד הנתונים
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _context.Products.AnyAsync(p => p.Id == id);
-        }
     }
 }

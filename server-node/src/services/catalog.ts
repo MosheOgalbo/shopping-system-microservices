@@ -18,9 +18,17 @@ export interface AuthorizedItem {
   price: number;
 }
 
+const catalogCache = new Map<string, { expiresAt: number; products: CatalogProduct[] }>();
+const CATALOG_CACHE_MS = 15_000;
+
 export async function fetchCatalogProducts(catalogBaseUrl: string): Promise<CatalogProduct[]> {
   const url = `${catalogBaseUrl.replace(/\/$/, '')}/Products`;
-  const response = await fetch(url);
+  const cached = catalogCache.get(url);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.products;
+  }
+
+  const response = await fetch(url, { signal: AbortSignal.timeout(5_000) });
   if (!response.ok) {
     throw new Error(`Catalog request failed with status ${response.status}`);
   }
@@ -30,6 +38,7 @@ export async function fetchCatalogProducts(catalogBaseUrl: string): Promise<Cata
     throw new Error('Catalog response is invalid');
   }
 
+  catalogCache.set(url, { expiresAt: Date.now() + CATALOG_CACHE_MS, products });
   return products;
 }
 

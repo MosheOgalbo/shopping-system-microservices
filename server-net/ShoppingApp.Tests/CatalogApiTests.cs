@@ -72,12 +72,18 @@ public class CatalogApiTests : IClassFixture<CatalogApiFactory>
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
-    [Fact]
-    public async Task DeleteCategoryWithProducts_ReturnsBadRequest()
+    [Theory]
+    [InlineData("POST", "/api/Products")]
+    [InlineData("PUT", "/api/Products/1")]
+    [InlineData("DELETE", "/api/Products/1")]
+    [InlineData("POST", "/api/Categories")]
+    [InlineData("PUT", "/api/Categories/1")]
+    [InlineData("DELETE", "/api/Categories/1")]
+    public async Task CatalogWrites_AreNotExposed(string method, string path)
     {
-        var response = await _client.DeleteAsync("/api/Categories/1");
+        var response = await _client.SendAsync(new HttpRequestMessage(new HttpMethod(method), path));
 
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.MethodNotAllowed, response.StatusCode);
     }
 
     private sealed class CategoryResponse

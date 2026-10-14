@@ -11,29 +11,11 @@ export const ROUTES_Header = {
   ORDER: '/order'
 } as const;
 
-export const TEXTS_Header = {
-  LOGO: 'FreshCart',
-  SUBTITLE: 'קניות מכולת אונליין',
-  SHOPPING: 'קניות',
-  ORDER: 'המשך הזמנה',
-  ITEMS: 'פריטים'
-} as const;
-
 // קבועים לולידציה עבור הזמנה
 export const VALIDATION_RULES = {
   MIN_NAME_LENGTH: 2,
   MIN_ADDRESS_LENGTH: 5,
   EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-} as const;
-
-// הודעות שגיאה
-export const ERROR_MESSAGES = {
-  FIRST_NAME_REQUIRED: 'שם פרטי הוא שדה חובה',
-  LAST_NAME_REQUIRED: 'שם משפחה הוא שדה חובה',
-  ADDRESS_REQUIRED: 'כתובת היא שדה חובה',
-  EMAIL_REQUIRED: 'מייל הוא שדה חובה',
-  MIN_LENGTH: 'לפחות {min} תווים',
-  INVALID_EMAIL: 'מייל לא תקין'
 } as const;
 
 export const TEXTS_OrderSummary = {

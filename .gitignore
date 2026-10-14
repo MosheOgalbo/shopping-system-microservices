@@ -25,6 +25,11 @@ dist-ssr
 
 .fake
 
+# Local demo credentials. Copy .env.example to .env.
+.env
+.env.*
+!.env.example
+
 # Playwright
 e2e/test-results/
 e2e/playwright-report/

@@ -82,6 +82,26 @@ describe('orders API', () => {
     ]);
   });
 
+  it('updates the saved address when the same email orders again', async () => {
+    const first = await request(app).post('/api/orders').send(payload);
+    expect(first.status).toBe(201);
+
+    const second = await request(app).post('/api/orders').send({
+      user: {
+        ...payload.user,
+        firstName: 'יוסף',
+        address: 'הרצל 10, תל אביב',
+      },
+      items: [{ productId: '3', name: 'fake shirt', quantity: 1, price: 1 }],
+    });
+    expect(second.status).toBe(201);
+
+    const users = await User.find({ email: 'yossi@example.com' }).lean();
+    expect(users).toHaveLength(1);
+    expect(users[0].firstName).toBe('יוסף');
+    expect(users[0].address).toBe('הרצל 10, תל אביב');
+  });
+
   it('rejects an invalid order without saving it', async () => {
     const response = await request(app).post('/api/orders').send({
       user: { firstName: 'א', lastName: 'לוי', email: 'bad', address: 'קצר' },

@@ -9,7 +9,7 @@ namespace ShoppingApp.Core.Models
 
         [Required]
         [StringLength(200)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [StringLength(1000)]
         public string? Description { get; set; }
@@ -29,6 +29,6 @@ namespace ShoppingApp.Core.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public virtual Category Category { get; set; }
+        public virtual Category Category { get; set; } = null!;
     }
 }

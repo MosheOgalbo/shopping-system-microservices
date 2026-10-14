@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "Shopping App API",
         Version = "v1",
-        Description = "API for managing categories and products"
+        Description = "Read-only API for categories and products"
     });
 });
 
@@ -59,13 +59,13 @@ builder.Services.AddCors(options =>
         {
             policy.AllowAnyOrigin()
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .WithMethods(HttpMethods.Get, HttpMethods.Options);
             return;
         }
 
         policy.WithOrigins(allowedOrigins)
             .AllowAnyHeader()
-            .AllowAnyMethod()
+            .WithMethods(HttpMethods.Get, HttpMethods.Options)
             .AllowCredentials();
     });
 });
@@ -91,9 +91,8 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
-if (!IsEfDesignTime())
+using (var scope = app.Services.CreateScope())
 {
-    using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("Database");
 
@@ -118,12 +117,5 @@ if (!IsEfDesignTime())
 }
 
 app.Run();
-
-static bool IsEfDesignTime()
-{
-    return Environment.GetCommandLineArgs()
-        .Any(arg => arg.Contains("ef.dll", StringComparison.OrdinalIgnoreCase)
-            || arg.Contains("dotnet-ef", StringComparison.OrdinalIgnoreCase));
-}
 
 public partial class Program { }

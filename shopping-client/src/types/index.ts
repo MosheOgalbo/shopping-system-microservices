@@ -6,7 +6,6 @@ export interface Product {
   price: number;
   description?: string;
   image?: string;
-  nameEn?: string;
 }
 
 export interface BackendProduct {
@@ -53,7 +52,6 @@ export interface BackendCategory {
 export interface Category {
   id: number;
   name: string;
-  nameEn: string;
   icon?: string;
 }
 

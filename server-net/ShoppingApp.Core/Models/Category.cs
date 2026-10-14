@@ -9,7 +9,7 @@ namespace ShoppingApp.Core.Models
         // שם הקטגוריה - חובה, עד 100 תווים
         [Required]
         [StringLength(100)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         // תיאור הקטגוריה - אופציונלי, עד 500 תווים
         [StringLength(500)]

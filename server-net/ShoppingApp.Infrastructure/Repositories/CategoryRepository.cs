@@ -40,46 +40,10 @@ namespace ShoppingApp.Infrastructure.Repositories
                 .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
         }
 
-        // מוסיף קטגוריה חדשה למסד הנתונים ושומר שינויים
-        public async Task<Category> CreateAsync(Category category)
-        {
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
-            return category;
-        }
-
-        // מעדכן קטגוריה קיימת ושומר את השינויים במסד הנתונים
-        public async Task<Category> UpdateAsync(Category category)
-        {
-            _context.Entry(category).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return category;
-        }
-
-        // מוחק קטגוריה לפי מזהה; מחזיר true אם המחיקה הצליחה, אחרת false
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-                return false;
-
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
         // בודק האם קיימת קטגוריה עם מזהה מסוים
         public async Task<bool> ExistsAsync(int id)
         {
             return await _context.Categories.AnyAsync(c => c.Id == id);
-        }
-
-        // בודק אם שם קטגוריה קיים, עם אפשרות לא לכלול קטגוריה מסוימת לפי מזהה (למשל בעדכון שם)
-        public async Task<bool> CategoryNameExistsAsync(string name, int? excludeId = null)
-        {
-            return await _context.Categories
-                .AnyAsync(c => c.Name.ToLower() == name.ToLower() &&
-                              (excludeId == null || c.Id != excludeId));
         }
     }
 }

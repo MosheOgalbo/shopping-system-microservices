@@ -65,7 +65,8 @@ const CartPanel: React.FC = () => {
                     <button
                       type="button"
                       aria-label={t('a11y.increaseCartQty', { name: displayName })}
-                      className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 dark:border-slate-500 dark:text-slate-100"
+                      className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-500 dark:text-slate-100"
+                      disabled={item.quantity >= 99}
                       onClick={() => dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }))}
                     >
                       +
