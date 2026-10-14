@@ -2,8 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ShoppingApp.Infrastructure.Data;
 
 #nullable disable
@@ -17,30 +17,30 @@ namespace ShoppingApp.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "10.0.13")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("ShoppingApp.Core.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -77,28 +77,28 @@ namespace ShoppingApp.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Image")
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -115,30 +115,60 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 1,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מחשב נייד מתקדם",
-                            Image = "https://example.com/images/dell-laptop.jpg",
+                            Description = "מחשב נייד לעבודה וללימודים",
+                            Image = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80",
                             Name = "לפטופ Dell",
                             Price = 2999.99m
                         },
                         new
                         {
                             Id = 2,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "אוזניות עם ביטול רעשים",
+                            Image = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80",
+                            Name = "אוזניות אלחוטיות",
+                            Price = 349.00m
+                        },
+                        new
+                        {
+                            Id = 3,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "חולצת כותנה איכותית",
-                            Image = "https://example.com/images/blue-shirt.jpg",
+                            Image = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80",
                             Name = "חולצה כחולה",
                             Price = 89.99m
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 4,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "ז'קט קל לעונת המעבר",
+                            Image = "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&q=80",
+                            Name = "ז'קט קלאסי",
+                            Price = 249.00m
+                        },
+                        new
+                        {
+                            Id = 5,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "ספר ללימוד תכנות",
-                            Image = "https://example.com/images/programming-book.jpg",
+                            Description = "ספר ללימוד תכנות מעשי",
+                            Image = "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800&q=80",
                             Name = "ספר תכנות",
                             Price = 149.99m
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoryId = 3,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "שלושה ספרים נבחרים",
+                            Image = "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&q=80",
+                            Name = "מארז ספרים",
+                            Price = 119.00m
                         });
                 });
 
@@ -147,7 +177,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                     b.HasOne("ShoppingApp.Core.Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");

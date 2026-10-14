@@ -21,6 +21,7 @@ export interface OrderRequest {
     productId: string;
     name: string;
     quantity: number;
+    price?: number;
   }[];
 }
 

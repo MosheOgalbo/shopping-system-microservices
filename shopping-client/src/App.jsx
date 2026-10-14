@@ -4,13 +4,13 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import ShoppingScreen from './pages/ShoppingScreen';
 import OrderScreen from './pages/OrderScreen';
- import './App.css';
+import './App.css';
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
-         <div  dir="rtl" className=" min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex justify-center items-center">
+        <div dir="rtl" className="min-h-screen bg-slate-100">
           <Routes>
             <Route path="/" element={<Navigate to="/shopping" />} />
             <Route path="/shopping" element={<ShoppingScreen />} />

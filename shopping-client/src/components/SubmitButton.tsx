@@ -11,7 +11,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({ isSubmitting }) => (
     className={`w-full py-4 rounded-xl font-bold text-white text-lg transition transform ${
       isSubmitting
         ? 'bg-gray-400 cursor-not-allowed'
-        : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:scale-105 shadow-lg'
+        : 'bg-emerald-700 hover:bg-emerald-800 shadow-sm'
     }`}
   >
     {isSubmitting ? 'שולח...' : 'אשר הזמנה'}

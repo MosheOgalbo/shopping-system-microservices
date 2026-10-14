@@ -17,12 +17,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ items, total }) => {
 
     return (
     <div className="bg-white rounded-2xl shadow-xl p-6 h-fit">
-      <h3 className="text-indigo-900 text-2xl font-bold mb-4 flex items-center">
+      <h3 className="mb-4 flex items-center text-2xl font-bold text-slate-900">
         <span className="ml-2">🛒</span> {TEXTS_OrderSummary.TITLE}
       </h3>
 
       {items.length > 0 ? (
-        <div className="text-indigo-900 space-y-4">
+        <div className="space-y-4 text-slate-900">
           {/* רשימת המוצרים */}
           {items.map(item => (
             <RenderOrderItem key={item.id} item={item} />
@@ -31,7 +31,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ items, total }) => {
           {/* סכום כולל */}
           <div className="border-t-2 pt-4 mt-6 flex justify-between font-bold text-xl">
             <span>{TEXTS_OrderSummary.TOTAL}</span>
-            <span className="text-amber-400">₪{total.toFixed(2)}</span>
+            <span className="text-emerald-800">₪{total.toFixed(2)}</span>
           </div>
         </div>
       ) : (

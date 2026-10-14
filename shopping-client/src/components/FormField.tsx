@@ -23,7 +23,7 @@ const FormField: React.FC<FormFieldProps> = ({
       value={value}
       onChange={onChange}
       className={`w-full px-4 py-3 text-gray-700 border-2 rounded-lg focus:outline-none focus:ring-2 transition duration-200 ${
-        error ? 'border-red-500 focus:ring-red-200 bg-red-50' : 'border-black focus:ring-blue-200'
+        error ? 'border-red-500 focus:ring-red-200 bg-red-50' : 'border-slate-300 focus:ring-emerald-200'
       }`}
       aria-invalid={!!error}
       aria-describedby={error ? `${name}-error` : undefined}

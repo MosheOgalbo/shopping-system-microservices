@@ -1,29 +1,29 @@
-version: '3.8'
-
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: shopping-app-postgres-1
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    container_name: shopping-app-sqlserver
     environment:
-      POSTGRES_DB: ShoppingAppDb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: YourStrongPassword123!
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YourStrongPassword123!"
+      MSSQL_PID: "Developer"
     ports:
-      - "5432:5432"
+      - "1433:1433"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "(/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q \"SELECT 1\" || /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q \"SELECT 1\")"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 20
+      start_period: 40s
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - sqlserver-data:/var/opt/mssql
     networks:
       - app-network
     restart: unless-stopped
 
   mongo:
-    image: mongo:6
-    container_name: shopping-app-mongo-1
+    image: mongo:7
+    container_name: shopping-app-mongo
     ports:
       - "27017:27017"
     volumes:
@@ -32,10 +32,10 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.runCommand('ping').ok"]
+      test: ["CMD", "mongosh", "-u", "root", "-p", "example", "--authenticationDatabase", "admin", "--eval", "db.runCommand({ ping: 1 }).ok"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
     networks:
       - app-network
     restart: unless-stopped
@@ -45,13 +45,12 @@ services:
       context: ./server-net
       dockerfile: Dockerfile
     depends_on:
-      postgres:
+      sqlserver:
         condition: service_healthy
     environment:
-      # PostgreSQL connection string
-      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=ShoppingAppDb;Username=postgres;Password=YourStrongPassword123!
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:8080
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=ShoppingAppDb;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=True;Encrypt=True"
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
     ports:
       - "5177:8080"
     networks:
@@ -66,8 +65,8 @@ services:
       mongo:
         condition: service_healthy
     environment:
-      - MONGO_URI=mongodb://root:example@mongo:27017/test?authSource=admin
-      - PORT=5000
+      MONGO_URI: mongodb://root:example@mongo:27017/orders?authSource=admin
+      PORT: 5000
     ports:
       - "5001:5000"
     networks:
@@ -78,16 +77,17 @@ services:
     build:
       context: ./shopping-client
       dockerfile: Dockerfile
+      args:
+        VITE_API_PRODUCTS: http://localhost:5177/api/
+        VITE_API_ORDERS: http://localhost:5001/api/
     ports:
       - "5173:5173"
-    environment:
-      - NODE_ENV=production
     networks:
       - app-network
     restart: unless-stopped
 
 volumes:
-  postgres-data:
+  sqlserver-data:
   mongo-data:
 
 networks:

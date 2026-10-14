@@ -1,6 +1,8 @@
+const withTrailingSlash = (url: string) => (url.endsWith('/') ? url : `${url}/`);
+
 export const API_ENDPOINTS = {
-  PRODUCTS: 'http://localhost:5177/api/',
-  ORDERS: 'http://localhost:5001/api/',
+  PRODUCTS: withTrailingSlash(import.meta.env.VITE_API_PRODUCTS || 'http://localhost:5177/api/'),
+  ORDERS: withTrailingSlash(import.meta.env.VITE_API_ORDERS || 'http://localhost:5001/api/'),
 };
 
 // קבועים לנתיבים - מונעים טעויות כתיב
@@ -13,7 +15,7 @@ export const TEXTS_Header = {
   LOGO: 'סופר מרקט',
   SUBTITLE: 'הזמנות אונליין',
   SHOPPING: 'קניות',
-  ORDER: 'הזמנה',
+  ORDER: 'המשך הזמנה',
   ITEMS: 'פריטים'
 } as const;
 

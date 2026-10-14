@@ -13,7 +13,7 @@ const ProductsGrid: React.FC<ProductsGridProps> = ({ products }) => {
    * פונקציה לרינדור הודעת "לא נמצאו מוצרים"
    * מציגה הודעה ידידותית כאשר המערך ריק
    */
-  const renderEmptyState = (): JSX.Element => (
+  const renderEmptyState = (): React.ReactElement => (
     <div className="text-center py-12 col-span-full">
       {/* אייקון חיפוש */}
       <div className="text-6xl mb-4" role="img" aria-label="אייקון חיפוש">
@@ -36,7 +36,7 @@ const ProductsGrid: React.FC<ProductsGridProps> = ({ products }) => {
    * פונקציה לרינדור רשת המוצרים
    * יוצרת כרטיס מוצר עבור כל מוצר במערך
    */
-  const renderProductsGrid = (): JSX.Element[] => (
+  const renderProductsGrid = (): React.ReactElement[] => (
     products.map(product => (
       <ProductCard
         key={product.id}

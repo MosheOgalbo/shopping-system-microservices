@@ -1,38 +1,39 @@
 import { Schema, model } from 'mongoose';
 
-// Hebrew/English and spaces only
-const nameRegex = /^[A-Za-z\u0590-\u05FF ]+$/;
-
+const nameRegex = /^[\p{L}\s'-]+$/u;
 
 const userSchema = new Schema({
-firstName: {
+  firstName: {
     type: String,
     required: true,
     minlength: [2, 'First name must be at least 2 characters'],
+    maxlength: 50,
     match: [nameRegex, 'First name contains invalid characters'],
-    trim: true
+    trim: true,
   },
-   lastName: {
+  lastName: {
     type: String,
     required: true,
     minlength: [2, 'Last name must be at least 2 characters'],
+    maxlength: 50,
     match: [nameRegex, 'Last name contains invalid characters'],
-    trim: true
+    trim: true,
   },
   email: {
     type: String,
     required: true,
     unique: true,
-    match: [/.+@.+\..+/, 'Email must be valid'],
     lowercase: true,
-    trim: true
+    trim: true,
+    maxlength: 200,
   },
   address: {
     type: String,
     required: true,
     minlength: [5, 'Address must be at least 5 characters'],
-    trim: true
-  }
+    maxlength: 300,
+    trim: true,
+  },
 });
 
 export const User = model('User', userSchema);

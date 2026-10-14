@@ -2,154 +2,84 @@ import React, { useState } from 'react';
 import { useAppDispatch } from '../hooks';
 import { addToCart } from '../store/slices/cartSlice';
 import { PropsProductCard } from '../types';
+import { isImageUrl } from '../util/products';
 
-/**
- * קומפוננטה להצגת כרטיס מוצר
- * מציגה פרטי מוצר ומאפשרת הוספה לעגלת קניות
- * @param product - אובייקט המוצר שיוצג
- */
 const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
-  // Redux dispatch hook לשליחת actions
   const dispatch = useAppDispatch();
+  const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
 
-  // מצב מקומי לטיפול בטעינה בעת הוספה לעגלה
-  const [isAdding, setIsAdding] = useState<boolean>(false);
-
-  /**
-   * פונקציה לטיפול בלחיצה על כפתור "הוסף לעגלה"
-   * מוסיפה את המוצר לעגלת הקניות עם אפקט טעינה
-   */
-  const handleAddToCart = async (): Promise<void> => {
-    try {
-      setIsAdding(true);
-
-      // שליחת action להוספת מוצר לעגלה
-      dispatch(addToCart(product));
-
-      // השהיה קצרה לחוויית משתמש טובה יותר
-      await new Promise(resolve => setTimeout(resolve, 300));
-    } catch (error) {
-      console.error('Error adding product to cart:', error);
-    } finally {
-      setIsAdding(false);
-    }
-  };
-
-  /**
-   * פונקציה לבדיקה אם התמונה היא URL תקין או אייקון
-   * @param image - מחרוזת התמונה לבדיקה
-   * @returns האם המחרוזת היא URL תקין
-   */
-  const isImageUrl = (image: string | undefined): boolean => {
-    if (!image) return false;
-
-    return image.startsWith('http') || image.startsWith('data:');
-  };
-
-  /**
-   * פונקציה לטיפול בשגיאות טעינת תמונה
-   * מחליפה תמונה שנכשלה באייקון ברירת מחדל
-   */
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>): void => {
-    const target = e.target as HTMLImageElement;
-    const fallbackIcon = target.nextElementSibling as HTMLElement;
-
-    // הסתרת התמונה הכושלת
-    target.style.display = 'none';
-
-    // הצגת אייקון ברירת המחדל
-    if (fallbackIcon) {
-      fallbackIcon.classList.remove('hidden');
-    }
+  const handleAddToCart = () => {
+    dispatch(addToCart({ product, quantity }));
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 1200);
   };
 
   return (
-    <div className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2">
-
-      {/* אזור התמונה/אייקון של המוצר */}
-      <div className="relative h-48 bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center overflow-hidden">
-
-        {/* הצגת תמונה אם זה URL תקין */}
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+      <div className="relative h-52 bg-slate-100">
         {isImageUrl(product.image) ? (
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-300"
-            onError={handleImageError}
+            className="h-full w-full object-cover"
           />
         ) : (
-          // הצגת אייקון אם זה לא URL
-          <div className="text-6xl group-hover:scale-125 transition-transform duration-300 filter group-hover:drop-shadow-lg">
+          <div className="flex h-full items-center justify-center text-6xl" aria-hidden="true">
             {product.image || '📦'}
           </div>
         )}
-
-        {/* אייקון גיבוי - מוסתר כברירת מחדל */}
-        {isImageUrl(product.image) && (
-          <div className="hidden text-6xl group-hover:scale-125 transition-transform duration-300 filter group-hover:drop-shadow-lg">
-            📦
-          </div>
-        )}
-
-        {/* תג מחיר */}
-        <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full font-bold text-sm shadow-lg">
+        <span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-sm font-bold text-slate-900 shadow">
           ₪{product.price.toFixed(2)}
-        </div>
+        </span>
       </div>
 
-      {/* אזור פרטי המוצר */}
-      <div className="p-6">
-
-        {/* כותרת ותיאור המוצר */}
-        <div className="mb-4">
-          <h2 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors duration-300">
-            {product.name}
-          </h2>
-
-          {/* תיאור המוצר (אופציונלי) */}
-          {product.description && (
-            <p className="text-gray-600 text-sm leading-relaxed">
-              {product.description}
-            </p>
-          )}
-        </div>
-
-        {/* תג קטגוריה */}
+      <div className="flex flex-1 flex-col p-5 text-right">
         <div className="mb-4">
           {product.category && (
-            <span className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">
-              {product.category}
-            </span>
+            <p className="mb-2 text-xs font-semibold tracking-wide text-emerald-700">{product.category}</p>
+          )}
+          <h2 className="text-lg font-bold text-slate-900">{product.name}</h2>
+          {product.description && (
+            <p className="mt-2 text-sm leading-6 text-slate-600">{product.description}</p>
           )}
         </div>
 
-        {/* כפתור הוספה לעגלה */}
-        <button
-          onClick={handleAddToCart}
-          disabled={isAdding}
-          className={`w-full py-3 px-4 rounded-xl font-semibold text-white transition-all duration-300 transform ${
-            isAdding
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
-          }`}
-          aria-label={isAdding ? 'מוסיף מוצר לעגלה' : `הוסף ${product.name} לעגלה`}
-        >
-          {isAdding ? (
-            // מצב טעינה
-            <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-              מוסיף לעגלה...
+        <div className="mt-auto space-y-3">
+          <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+            <span className="text-sm font-medium text-slate-600">כמות</span>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                aria-label={`הקטן כמות של ${product.name}`}
+                className="h-8 w-8 rounded-full border border-slate-300 bg-white text-lg leading-none text-slate-800"
+                onClick={() => setQuantity(value => Math.max(1, value - 1))}
+              >
+                −
+              </button>
+              <span className="min-w-6 text-center font-semibold text-slate-900" aria-live="polite">{quantity}</span>
+              <button
+                type="button"
+                aria-label={`הגדל כמות של ${product.name}`}
+                className="h-8 w-8 rounded-full border border-slate-300 bg-white text-lg leading-none text-slate-800"
+                onClick={() => setQuantity(value => Math.min(99, value + 1))}
+              >
+                +
+              </button>
             </div>
-          ) : (
-            // מצב רגיל
-            <div className="flex items-center justify-center">
-              <span className="mr-2">🛒</span>
-              הוסף לעגלה
-            </div>
-          )}
-        </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className="w-full rounded-xl bg-emerald-700 px-4 py-3 font-semibold text-white transition hover:bg-emerald-800"
+            aria-label={`הוסף מוצר לסל: ${product.name}`}
+          >
+            {added ? 'נוסף לסל' : 'הוסף מוצר לסל'}
+          </button>
+        </div>
       </div>
-    </div>
+    </article>
   );
 };
 

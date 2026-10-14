@@ -47,7 +47,7 @@ const RenderOrderItem: React.FC<RenderOrderItemProps> = ({ item }) => {
       </div>
 
       {/* מחיר כולל לפריט */}
-      <span className="font-bold text-red-400">
+      <span className="font-bold text-slate-900">
         ₪{(item.price * item.quantity).toFixed(2)}
       </span>
     </div>

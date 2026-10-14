@@ -34,24 +34,8 @@ const getProductIcon = (category: string): string => {
   return '📦';
 };
 
-// Mock products with Hebrew names
-const mockProducts: Product[] = [
-  {
-    id: '1',
-    name: 'תפוחים אדומים',
-    nameEn: 'red-apples',
-    category: 'פירות וירקות',
-    price: 15.90,
-    description: 'תפוחים אדומים טריים ומתוקים',
-    image: '🍎'
-  },
-
-];
-
-
-
 const initialState: ProductsState = {
-  products: mockProducts,
+  products: [],
   selectedCategory: '',
   searchQuery: '',
   loading: false,

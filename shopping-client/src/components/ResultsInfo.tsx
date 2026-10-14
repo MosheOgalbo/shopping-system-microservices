@@ -14,7 +14,7 @@ const ResultsInfo: React.FC<ResultsInfoProps> = ({ count, searchTerm, category }
    * פונקציה לרינדור טקסט מונח החיפוש
    * מציגה את מונח החיפוש אם הוא קיים
    */
-  const renderSearchTerm = (): JSX.Element | null => {
+  const renderSearchTerm = (): React.ReactElement | null => {
     if (!searchTerm) return null;
 
     return (
@@ -28,7 +28,7 @@ const ResultsInfo: React.FC<ResultsInfoProps> = ({ count, searchTerm, category }
    * פונקציה לרינדור טקסט הקטגוריה
    * מציגה את הקטגוריה אם היא נבחרה
    */
-  const renderCategory = (): JSX.Element | null => {
+  const renderCategory = (): React.ReactElement | null => {
     if (!category) return null;
 
     return (

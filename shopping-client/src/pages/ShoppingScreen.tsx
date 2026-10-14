@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { setBackendProducts, setLoading, setError } from '../features/products/productsSlice';
+import React, { useMemo, useState } from 'react';
 import { useGetProductsQuery, useGetProductsByCategoryQuery } from '../services/productsApi';
 import { useGetCategoriesQuery } from '../services/categoriesApi';
 import Header from '../components/Header';
@@ -8,101 +6,60 @@ import SearchInput from '../components/SearchInput';
 import FilterBar from '../components/FilterBar';
 import ResultsInfo from '../components/ResultsInfo';
 import ProductsGrid from '../components/ProductsGrid';
+import CartPanel from '../components/CartPanel';
+import { toProduct } from '../util/products';
 
-/**
- * רכיב מסך הקניות הראשי
- * מטפל בהצגת מוצרים, חיפוש, סינון וסידור
- */
 const ShoppingScreen: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { products, loading } = useAppSelector(s => s.products);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('name');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
-  const [searchTerm, setSearchTerm] = useState(''); // מילת חיפוש
-  const [sortBy, setSortBy] = useState('name'); // קריטריון מיון
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null); // קטגוריה נבחרת
-
-  // קריאות API באמצעות RTK Query
-
-  // טעינת רשימת קטגוריות
-  const { data: categories = [], isLoading: categoriesLoading } = useGetCategoriesQuery();
-
-  // טעינת כל המוצרים (רק כאשר לא נבחרה קטגוריה ספציפית)
-  const { data: allProducts, error: allProductsError, isLoading: allProductsLoading } = useGetProductsQuery(undefined, {
-    skip: selectedCategoryId !== null // דלג על הקריאה אם נבחרה קטגוריה ספציפית
+  const { data: categories = [], isLoading: categoriesLoading, isError: categoriesError } = useGetCategoriesQuery();
+  const allProductsQuery = useGetProductsQuery(undefined, { skip: selectedCategoryId !== null });
+  const categoryProductsQuery = useGetProductsByCategoryQuery(selectedCategoryId ?? 0, {
+    skip: selectedCategoryId === null,
   });
 
-  // טעינת מוצרים לפי קטגוריה (רק כאשר נבחרה קטגוריה)
-  const { data: categoryProducts, error: categoryProductsError, isLoading: categoryProductsLoading } = useGetProductsByCategoryQuery(selectedCategoryId!, {
-    skip: selectedCategoryId === null // דלג על הקריאה אם לא נבחרה קטגוריה
-  });
-
-  // Effect לעדכון המוצרים ב-Redux Store
-  useEffect(() => {
-    // בחירת המוצרים הנכונים בהתאם לקטגוריה הנבחרת
-    const currentProducts = selectedCategoryId !== null ? categoryProducts : allProducts;
-
-    if (currentProducts) {
-      // עדכון המוצרים ב-store
-      dispatch(setBackendProducts(currentProducts));
-    }
-  }, [allProducts, categoryProducts, selectedCategoryId, dispatch]);
-
-  useEffect(() => {
-    // קביעת מצב הטעינה הנוכחי בהתאם לקטגוריה הנבחרת
-    const isCurrentlyLoading = selectedCategoryId !== null ? categoryProductsLoading : allProductsLoading;
-    const currentError = selectedCategoryId !== null ? categoryProductsError : allProductsError;
-    // עדכון מצב הטעינה
-    dispatch(setLoading(isCurrentlyLoading));
-    // טיפול בשגיאות
-    if (currentError) {
-      dispatch(setError('שגיאה בטעינת המוצרים'));
-    }
-  }, [allProductsLoading, categoryProductsLoading, allProductsError, categoryProductsError, selectedCategoryId, dispatch]);
-
-  const filtered = products.filter(p =>
-    // חיפוש בשם המוצר
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    // חיפוש בתיאור המוצר (אם קיים)
-    p.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  const activeQuery = selectedCategoryId !== null ? categoryProductsQuery : allProductsQuery;
+  const products = useMemo(
+    () => (activeQuery.data ?? []).map(toProduct),
+    [activeQuery.data]
   );
 
-  // סידור המוצרים המסוננים לפי הקריטריון הנבחר
+  const filtered = products.filter(product =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const sorted = [...filtered].sort((a, b) => {
     switch (sortBy) {
       case 'price-low':
-        return a.price - b.price; // מחיר מהנמוך לגבוה
+        return a.price - b.price;
       case 'price-high':
-        return b.price - a.price; // מחיר מהגבוה לנמוך
+        return b.price - a.price;
       default:
-        return a.name.localeCompare(b.name); // מיון אלפביתי לפי שם
+        return a.name.localeCompare(b.name, 'he');
     }
   });
 
-  // מציאת שם הקטגוריה הנבחרת להצגה
   const selectedCategoryName = selectedCategoryId
-    ? categories.find(cat => cat.Id === selectedCategoryId)?.Name || ''
+    ? categories.find(category => category.Id === selectedCategoryId)?.Name || ''
     : '';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 font-hebrew">
-      {/* כותרת עליונה */}
+    <div className="min-h-screen bg-slate-100 text-slate-900">
       <Header />
 
-      {/* אזור חיפוש וסינון */}
-      <div className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          {/* כותרת ראשית */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold rainbow-text mb-2">חנות המוצרים שלנו</h1>
-            <p className="text-gray-600 text-lg">גלה את המוצרים הטובים ביותר במחירים מעולים</p>
+      <section className="border-b border-slate-200 bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+          <div className="mb-8 text-right">
+            <p className="text-sm font-semibold text-emerald-700">רשימת קניות</p>
+            <h1 className="mt-1 text-3xl font-bold text-slate-950 sm:text-4xl">בחרו מוצרים לסל</h1>
+            <p className="mt-2 text-slate-600">הקטגוריות והמוצרים נטענים מהשרת. בחרו קטגוריה, עדכנו כמות, והוסיפו לסל.</p>
           </div>
 
-          {/* שורת חיפוש וסינון */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 max-w-5xl mx-auto">
-            {/* שדה חיפוש */}
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
             <SearchInput value={searchTerm} onChange={setSearchTerm} />
-
-            {/* פס סינון ומיון */}
             <FilterBar
               categories={categories}
               selectedCategoryId={selectedCategoryId}
@@ -113,33 +70,36 @@ const ShoppingScreen: React.FC = () => {
             />
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* אזור התוצאות ורשת המוצרים */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* מצב טעינה */}
-        {loading && (
-          <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">טוען מוצרים...</p>
-          </div>
-        )}
+      <main className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div>
+          {(activeQuery.isLoading || activeQuery.isFetching) && (
+            <div className="py-16 text-center" role="status">
+              <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-700" />
+              <p className="text-slate-600">טוען מוצרים...</p>
+            </div>
+          )}
 
-        {/* תוצאות וגריד מוצרים */}
-        {!loading && (
-          <>
-            {/* מידע על התוצאות */}
-            <ResultsInfo
-              count={sorted.length}
-              searchTerm={searchTerm}
-              category={selectedCategoryName}
-            />
+          {(activeQuery.isError || categoriesError) && (
+            <div className="mb-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-800" role="alert">
+              לא הצלחנו לטעון את הקטלוג מהשרת. ודאו ששירות המוצרים פעיל ונסו לרענן.
+            </div>
+          )}
 
-            {/* רשת המוצרים */}
-            <ProductsGrid products={sorted} />
-          </>
-        )}
-      </div>
+          {!activeQuery.isLoading && !activeQuery.isFetching && (
+            <>
+              <ResultsInfo
+                count={sorted.length}
+                searchTerm={searchTerm}
+                category={selectedCategoryName}
+              />
+              <ProductsGrid products={sorted} />
+            </>
+          )}
+        </div>
+        <CartPanel />
+      </main>
     </div>
   );
 };

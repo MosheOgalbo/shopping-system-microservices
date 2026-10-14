@@ -22,7 +22,7 @@ const OrderScreen: React.FC = () => {
 
   const dispatch = useAppDispatch();
   // שימוש במוטציה להגשת הזמנה
-  const [placeOrder, { isLoading: isSubmitting, error: mutationError }] = usePlaceOrderMutation();
+  const [placeOrder, { isLoading: isSubmitting }] = usePlaceOrderMutation();
   // מצב מקומי להצגת מודל ההצלחה
   const [showSuccess, setShowSuccess] = useState(false);
   // מצב מקומי לשמירת מזהה ההזמנה
@@ -43,29 +43,33 @@ const OrderScreen: React.FC = () => {
 
     try {
       // שליחת בקשה להזמנה לשרת
-      console.log('Sending payload:', JSON.stringify({ user: formData, items: cartItems }, null, 2));
       const result = await placeOrder({ user: formData, items: cartItems }).unwrap();
-      // שמירת מזהה ההזמנה
+      if (!result.id) {
+        setError('השרת לא אישר את שמירת ההזמנה');
+        return;
+      }
       setOrderId(result.id);
       // ניקוי העגלה
       dispatch(clearCart());
       // הצגת מודל ההצלחה
       setShowSuccess(true);
-    } catch (err: any) {
-      // טיפול בשגיאות
-      console.error('Error details:', err);
-      setError(`שגיאה בשליחת ההזמנה: ${err.data?.error || err.message}`);
+    } catch (err: unknown) {
+      const data = typeof err === 'object' && err !== null && 'data' in err
+        ? (err as { data?: { error?: string } }).data
+        : undefined;
+      setError(data?.error || 'שגיאה בשליחת ההזמנה. ההזמנה לא נשמרה.');
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-slate-100">
       {/* כותרת העמוד */}
       <Header />
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="text-center mb-8">
-          <h1 className="rainbow-text text-4xl font-bold mb-2">השלמת ההזמנה</h1>
-          <p className="text-gray-600">מלא את הפרטים שלך כדי להשלים את ההזמנה</p>
+        <div className="mb-8 text-right">
+          <p className="text-sm font-semibold text-emerald-700">סיכום ההזמנה</p>
+          <h1 className="mt-1 text-3xl font-bold text-slate-950">השלמת ההזמנה</h1>
+          <p className="mt-2 text-slate-600">מלאו שם, כתובת ומייל. רשימת המוצרים מהסל מוצגת לצד הטופס.</p>
         </div>
         {/* הצגת הודעת שגיאה במידה וקיימת */}
         {error && (

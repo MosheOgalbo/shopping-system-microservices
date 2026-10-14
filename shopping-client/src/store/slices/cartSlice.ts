@@ -13,12 +13,13 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addToCart(state, action: PayloadAction<Product>) {
-      const existing = state.items.find(item => item.id === action.payload.id);
+    addToCart(state, action: PayloadAction<{ product: Product; quantity: number }>) {
+      const quantity = Math.min(99, Math.max(1, Math.floor(action.payload.quantity || 1)));
+      const existing = state.items.find(item => item.id === action.payload.product.id);
       if (existing) {
-        existing.quantity += 1;
+        existing.quantity = Math.min(99, existing.quantity + quantity);
       } else {
-        state.items.push({ ...action.payload, quantity: 1 });
+        state.items.push({ ...action.payload.product, quantity });
       }
     },
     removeFromCart(state, action: PayloadAction<string>) {
