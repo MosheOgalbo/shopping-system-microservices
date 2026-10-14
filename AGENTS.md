@@ -18,7 +18,7 @@ Preserve the assignment contract unless the user explicitly asks to change it.
 |---|---|
 | `README.md` | How to run / test |
 | `PROJECT_STRUCTURE.md` | Directory tree and service roles |
-| `QUALITY.md` | Stack versions and quality rationale |
+| `QUALITY.md` | System behavior, contracts, and stack |
 | `shopping-client/FILE_GUIDE.md` | Frontend file-by-file map |
 | `server-net/FILE_GUIDE.md` | Catalog API file-by-file map |
 | `server-node/FILE_GUIDE.md` | Orders API file-by-file map |

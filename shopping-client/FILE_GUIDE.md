@@ -1,99 +1,65 @@
-# shopping-client — File Guide
+# shopping-client
 
-English map of every important frontend file: purpose, key functions/exports, why it exists, and project impact.
+The browser application: catalog, cart, and checkout. It talks to the catalog API for products and to the orders API to save an order.
 
-## Root / config
+## Runtime
 
-| File | What it does | Key symbols | Why / impact |
-|---|---|---|---|
-| `package.json` | Dependencies and scripts (`dev`, `build`, `test`) | React 19, RTK, Vite, Vitest | Defines the client runtime and toolchain |
-| `package-lock.json` | Locked dependency tree | — | Reproducible installs in Docker/CI |
-| `Dockerfile` | Builds static assets and serves them | build args `VITE_API_*` | Production UI image used by Compose |
-| `.dockerignore` | Excludes `node_modules`/`dist` from image context | — | Faster, cleaner builds |
-| `vite.config.js` | Vite + React + Tailwind + Vitest config | `defineConfig`, `test.setupFiles` | Dev server, production bundle, test runner |
-| `tsconfig.json` | TypeScript compiler options | `strict`, `jsx: react-jsx` | Type safety across `.ts`/`.tsx` |
-| `tailwind.config.js` | Tailwind theme hooks (v4 mostly CSS-driven) | — | Styling system entry |
-| `eslint.config.js` | Lint rules | — | Catches hook/rule mistakes |
-| `index.html` | SPA shell, Hebrew `lang`/`dir`, Rubik font | `#root` | Browser entry document |
-| `README.md` | Vite template notes (legacy) | — | Prefer root docs for product guidance |
-| `FILE_GUIDE.md` | This file | — | AI/human navigation |
+| File | Role |
+|---|---|
+| `Dockerfile` | Builds the static app. `VITE_API_PRODUCTS` and `VITE_API_ORDERS` are baked in at build time |
+| `index.html` | Document shell, tab title, favicon, theme bootstrap before React loads |
+| `public/favicon.svg` | Browser-tab icon |
+| `src/main.tsx` | Mounts the app |
+| `src/App.jsx` | Router for `/shopping` and `/order`, skip link |
+| `src/index.css` | Tailwind, RTL/LTR text alignment, dark palette, focus and reduced-motion rules |
 
-## Entry and app shell
+Compose points the APIs at `localhost`. Kubernetes and AWS builds use `/api/` so Ingress can route one host.
 
-| File | What it does | Key symbols | Why / impact |
-|---|---|---|---|
-| `src/main.tsx` | Mounts React into `#root` | `ReactDOM.createRoot` | Bootstraps the SPA (store is provided inside `App`) |
-| `src/App.jsx` | Redux `Provider`, router, RTL wrapper, routes | `BrowserRouter`, `/shopping`, `/order` | Owns navigation between the two required screens |
-| `src/App.css` | Minimal root width helper | `#root` | Keeps layout full-width |
-| `src/index.css` | Tailwind import + global typography/RTL body styles | `@import "tailwindcss"` | Visual baseline for a clean Hebrew UI |
-| `src/vite-env.d.ts` | Typed `import.meta.env` for API URLs | `VITE_API_PRODUCTS`, `VITE_API_ORDERS` | Compile-time env typing |
+## Screens
 
-## Pages (route screens)
+| File | Role |
+|---|---|
+| `src/pages/ShoppingScreen.tsx` | Loads categories and products, applies search/sort/category, renders the grid and cart |
+| `src/pages/OrderScreen.tsx` | Checkout form, order summary, error banner, success only after `{ id, status }` |
 
-| File | What it does | Key symbols | Why / impact |
-|---|---|---|---|
-| `src/pages/ShoppingScreen.tsx` | Screen 1: catalog, filters, cart panel | `useGetProductsQuery`, `useGetCategoriesQuery`, `useMemo`, category `skip` | Implements “load categories/products on open”, filter, quantity/add via cards |
-| `src/pages/OrderScreen.tsx` | Screen 2: checkout form + summary | `usePlaceOrderMutation`, `clearCart`, success/error state | Sends order only after validation; clears cart only after real success |
+## UI modules
 
-## Components
+| File | Role |
+|---|---|
+| `components/Header.tsx` | Brand, navigation, language, theme, cart totals |
+| `components/BrandLogo.tsx` | Header mark |
+| `components/LanguageSwitcher.tsx` | Language control; closed state shows `ע` / `E` / `ع` |
+| `components/ThemeToggle.tsx` | Light / dark |
+| `components/DocumentDirection.tsx` | Sets `html lang`, `dir`, and document title |
+| `components/SearchInput.tsx` | Search combobox and product table |
+| `components/FilterBar.tsx` | Category and sort |
+| `components/ProductCard.tsx` | Quantity and add to cart |
+| `components/ProductsGrid.tsx` | Result grid |
+| `components/CartPanel.tsx` | Visible cart on the shopping screen |
+| `components/OrderForm.tsx` | Required name, address, and email |
+| `components/OrderSummary.tsx` | Lines chosen on the previous screen |
+| `components/SuccessModal.tsx` | Dialog after a saved order id |
 
-| File | What it does | Key symbols | Why / impact |
-|---|---|---|---|
-| `Header.tsx` | Brand, nav links, cart totals | `useAppSelector`, route links | Persistent navigation and cart count |
-| `CartPanel.tsx` | Side cart with qty controls and continue CTA | `updateQuantity`, `removeFromCart`, navigate `/order` | Makes cart visible on screen 1 (assignment UX) |
-| `ProductCard.tsx` | Product image/details, qty stepper, add button | `useState`, `addToCart({ product, quantity })` | Core “choose product + quantity + add to cart” interaction |
-| `ProductsGrid.tsx` | Responsive product grid / empty state | `renderProductsGrid`, `renderEmptyState` | Layout for catalog results |
-| `FilterBar.tsx` | Category select + sort select | `onCategoryChange`, `onSortChange` | Category filtering required by the brief |
-| `SearchInput.tsx` | Controlled search field | `value`/`onChange` | Client-side product search |
-| `ResultsInfo.tsx` | “N products found” summary | `count`, `searchTerm`, `category` | Feedback after filter/search |
-| `OrderForm.tsx` | Required customer fields + validation | `validate`, `handleSubmit` | Enforces name/address/email before submit |
-| `FormField.tsx` | Labeled input with error text | `htmlFor`, `aria-invalid` | Accessible form building block |
-| `FormHeader.tsx` | “Personal details” heading | — | Visual section marker |
-| `SubmitButton.tsx` | “Confirm order” / loading state | `isSubmitting` | Primary checkout action |
-| `OrderSummary.tsx` | Selected products + total | `items`, `total` | Shows previous-screen cart on screen 2 |
-| `RenderOrderItem.tsx` | One line item in the summary | image/icon + qty × price | Readable order list |
-| `RenderEmptyCart.tsx` | Empty cart placeholder | — | Prevents blank summary state |
-| `SuccessModal.tsx` | Success dialog + auto-return | `useEffect` timer, `orderId` | Confirms persistence with real id |
+## Language, theme, and HTTP
 
-## Services (RTK Query)
+| Path | Role |
+|---|---|
+| `src/i18n/index.ts` | i18next setup, persisted language, RTL list |
+| `src/i18n/locales/*.json` | Hebrew, English, Arabic copy and catalog labels |
+| `src/i18n/catalog.ts` | Translates seeded category, name, and description strings |
+| `src/theme/index.ts` | Theme persistence and `dark` class |
+| `services/productsApi.ts` | `GET Products` and `GET Products/category/{id}` |
+| `services/categoriesApi.ts` | `GET Categories` |
+| `services/ordersApi.ts` | `POST orders` with cart lines |
+| `store/slices/cartSlice.ts` | Add, change quantity, remove, clear |
+| `util/products.ts` | Maps PascalCase catalog DTOs to UI products |
+| `util/constants.ts` | API base URLs and validation lengths |
 
-| File | What it does | Key symbols | Why / impact |
-|---|---|---|---|
-| `services/productsApi.ts` | Catalog HTTP API | `getProducts`, `getProductsByCategory` | Source of truth for products from .NET |
-| `services/categoriesApi.ts` | Categories HTTP API | `getCategories`, `transformResponse` | Loads category list for the filter |
-| `services/ordersApi.ts` | Order mutation | `placeOrder`, maps cart → `{ productId, name, quantity, price }` | Only success path is a real API response |
-| `services/types.ts` | Wire types for APIs | `BackendProduct`, `OrderRequest`, `Category` | Keeps client/server field names aligned |
+## Tests
 
-## State management
-
-| File | What it does | Key symbols | Why / impact |
-|---|---|---|---|
-| `store/index.ts` | Configures Redux store + middleware | `configureStore`, RTK Query middleware | Central app state |
-| `store/types.ts` | Store domain types | `CartItem`, `Order`, `ProductsState` | Shared typing for slices |
-| `store/slices/cartSlice.ts` | Cart mutations | `addToCart`, `updateQuantity`, `removeFromCart`, `clearCart` | Local cart required between the two screens |
-| `store/slices/productsSlice.ts` | Legacy/local products slice | `setBackendProducts`, etc. | Kept for compatibility; shopping screen now prefers RTK Query data |
-| `store/slices/orderSlice.ts` | Optional order history state | `setCurrentOrder`, `addToOrderHistory` | Available for future order history UI |
-| `features/products/productsSlice.ts` | Feature-folder product slice | `setBackendProducts`, `toProduct` | Alternate feature-oriented slice (historical structure) |
-| `features/products/types.ts` | Feature product types | `Product`, `BackendProduct` | Types used by transformers/tests |
-
-## Hooks, utils, types, tests
-
-| File | What it does | Key symbols | Why / impact |
-|---|---|---|---|
-| `hooks/index.ts` | Typed Redux hooks | `useAppDispatch`, `useAppSelector` | Prevents untyped store access |
-| `util/constants.ts` | API bases, routes, validation messages | `API_ENDPOINTS`, `VALIDATION_RULES` | Single place for URLs and copy |
-| `util/products.ts` | Backend → UI product mapping | `toProduct`, `categoryIcon`, `isImageUrl` | Normalizes .NET PascalCase DTOs for React |
-| `types/index.ts` | Shared UI/prop types | `FormData`, `PropsProductCard`, etc. | Component contract typing |
-| `test/setup.ts` | Vitest + Testing Library cleanup | `afterEach(cleanup)` | Stable component tests |
-| `util/products.test.ts` | Transformer tests | — | Guards image/url fallback behavior |
-| `store/slices/cartSlice.test.ts` | Cart reducer tests | — | Guards quantity merge/clear rules |
-| `components/OrderForm.test.tsx` | Form validation/submit tests | — | Guards required fields |
-| `components/ProductCard.test.tsx` | Add-to-cart interaction test | — | Guards quantity → cart path |
-
-## How the frontend pieces fit together
-
-1. `App.jsx` routes to `ShoppingScreen` or `OrderScreen`.
-2. Shopping screen queries .NET via RTK Query and renders cards + `CartPanel`.
-3. Cards dispatch into `cartSlice`.
-4. Order screen reads cart, validates form locally, mutates Node API.
-5. On success, cart clears and the modal shows the server order id.
+| File | Proves |
+|---|---|
+| `components/ProductCard.test.tsx` | Chosen quantity is what enters the cart |
+| `components/OrderForm.test.tsx` | Empty required fields block submit |
+| `store/slices/cartSlice.test.ts` | Cart merge and clear rules |
+| `util/products.test.ts` | Catalog DTO mapping |

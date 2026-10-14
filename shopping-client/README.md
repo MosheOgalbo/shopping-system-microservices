@@ -1,13 +1,19 @@
 # shopping-client
 
-React 19 + Redux Toolkit + Vite frontend for the shopping assignment.
+FreshCart browser app for the catalog and checkout screens.
 
-- Run with the full stack: from repo root, `docker compose up --build`
-- Local dev: `npm install && npm run dev`
-- Tests: `npm test`
+```bash
+# from the repository root
+docker compose up --build
+```
 
-For architecture and file-by-file details, see:
+Local UI only (APIs must already be running):
 
-- [`../PROJECT_STRUCTURE.md`](../PROJECT_STRUCTURE.md)
-- [`FILE_GUIDE.md`](./FILE_GUIDE.md)
-- [`../QUALITY.md`](../QUALITY.md)
+```bash
+npm install
+npm run dev
+```
+
+Tests: `npm test`.
+
+See the repository [`README.md`](../README.md) and [`FILE_GUIDE.md`](./FILE_GUIDE.md).

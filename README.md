@@ -1,86 +1,84 @@
-# מערכת קניות
+# FreshCart
 
-## Documentation (English)
+Three-service shopping system: a React client, a .NET catalog API on SQL Server, and a Node orders API on MongoDB.
+
+| Service | Stack | Responsibility |
+|---|---|---|
+| `shopping-client` | React, Redux Toolkit, Vite | Catalog, cart, checkout UI |
+| `server-net` | .NET 10, EF Core, SQL Server | Categories and products |
+| `server-node` | Node.js, Express, MongoDB | Persist a real order |
+
+MongoDB satisfies the NoSQL requirement. Elasticsearch is not used.
+
+## Documentation
 
 | File | Contents |
 |---|---|
-| [`PROJECT_STRUCTURE.md`](./PROJECT_STRUCTURE.md) | Directory tree, service order, responsibilities |
-| [`QUALITY.md`](./QUALITY.md) | React 19, hooks, backend library currency, professionalism |
-| [`AGENTS.md`](./AGENTS.md) | Instructions for AI coding tools |
-| [`CLAUDE.md`](./CLAUDE.md) | Short AI entrypoint |
-| [`shopping-client/FILE_GUIDE.md`](./shopping-client/FILE_GUIDE.md) | Frontend file-by-file guide |
-| [`server-net/FILE_GUIDE.md`](./server-net/FILE_GUIDE.md) | Catalog API file-by-file guide |
-| [`server-node/FILE_GUIDE.md`](./server-node/FILE_GUIDE.md) | Orders API file-by-file guide |
-| [`k8s/README.md`](./k8s/README.md) | Kubernetes local deploy |
-| [`aws/README.md`](./aws/README.md) | AWS ECR + EKS deploy |
+| [`PROJECT_STRUCTURE.md`](./PROJECT_STRUCTURE.md) | Repository layout and request flow |
+| [`QUALITY.md`](./QUALITY.md) | System contracts, behavior, and stack |
+| [`shopping-client/FILE_GUIDE.md`](./shopping-client/FILE_GUIDE.md) | Client modules |
+| [`server-net/FILE_GUIDE.md`](./server-net/FILE_GUIDE.md) | Catalog API |
+| [`server-node/FILE_GUIDE.md`](./server-node/FILE_GUIDE.md) | Orders API |
+| [`k8s/README.md`](./k8s/README.md) | Local Kubernetes |
+| [`aws/README.md`](./aws/README.md) | ECR and EKS |
+| [`e2e/README.md`](./e2e/README.md) | Playwright suite |
+| [`AGENTS.md`](./AGENTS.md) | Constraints for coding agents |
 
-שלושה רכיבים, לפי מטלת הבית:
-
-| רכיב | טכנולוגיה | תפקיד |
-|---|---|---|
-| `shopping-client` | React + Redux Toolkit | מסך רשימת הקניות ומסך סיכום ההזמנה |
-| `server-net` | .NET 10, Entity Framework Core, SQL Server | קטגוריות ומוצרים |
-| `server-node` | Node.js, Express, MongoDB | שמירת ההזמנה |
-
-MongoDB הוא מסד NoSQL המותר במטלה. אין צורך בקובץ mapping של Elasticsearch.
-
-## הרצה
-
-נדרש Docker.
+## Run with Docker
 
 ```bash
 docker compose up --build
 ```
 
-| שירות | כתובת |
+| Service | URL |
 |---|---|
-| ממשק | http://localhost:5173 |
-| קטלוג | http://localhost:5177/api/Products |
-| הזמנות | http://localhost:5001/api/orders |
-| בדיקת קטלוג | http://localhost:5177/health |
-| בדיקת הזמנות | http://localhost:5001/health |
+| UI | http://localhost:5173 |
+| Catalog | http://localhost:5177/api/Products |
+| Orders | http://localhost:5001/api/orders |
+| Catalog health | http://localhost:5177/health |
+| Orders health | http://localhost:5001/health |
 
-העלייה הראשונה של SQL Server יכולה לקחת דקה-שתיים.
+The first SQL Server start can take one to two minutes.
 
-## שימוש
+## Product flow
 
-1. במסך הקניות נטענות הקטגוריות והמוצרים.
-2. בוחרים קטגוריה, משנים כמות, ולוחצים **הוסף מוצר לסל**. הסל מוצג באותו מסך.
-3. **המשך הזמנה** פותח טופס עם שם פרטי, שם משפחה, כתובת מלאה ומייל, ואת רשימת המוצרים.
-4. **אשר הזמנה** שומר ב-MongoDB את פרטי הלקוח ואת מערך המוצרים. אם השמירה נכשלת, המערכת מציגה שגיאה ולא מנקה את הסל.
+1. The shopping screen loads categories and products from the catalog API.
+2. Category, search, and sort narrow the catalog. Quantity is chosen on the product card, then **Add to cart**.
+3. The cart stays on the same screen. **Continue to checkout** opens the order screen.
+4. Checkout requires first name, last name, full address, and email, and lists the selected products.
+5. **Confirm order** posts to the orders API. MongoDB stores the customer and the item array. The UI shows success only after `{ id, status }` returns. A failed save keeps the cart and shows an error.
 
-## Kubernetes / AWS
+The UI supports Hebrew (default, RTL), English (LTR), and Arabic (RTL), plus light and dark themes. Language and theme are stored in the browser.
+
+## Kubernetes and AWS
 
 ```bash
-# Local Kubernetes
 chmod +x k8s/*.sh
 ./k8s/deploy.sh
 
-# AWS EKS (requires AWS CLI + eksctl + cluster)
 chmod +x aws/*.sh
 export AWS_REGION=eu-west-1
 ./aws/deploy-eks.sh
 ```
 
-Details: [`k8s/README.md`](./k8s/README.md), [`aws/README.md`](./aws/README.md).
+See [`k8s/README.md`](./k8s/README.md) and [`aws/README.md`](./aws/README.md).
 
-## בדיקות
+## Tests
 
 ```bash
 cd server-net && dotnet test
 cd server-node && npm test
 cd shopping-client && npm test
 
-# E2E (המערכת חייבת לרוץ ב-Docker)
 docker compose up --build -d
 cd e2e && npm ci && npx playwright install chromium && npm test
 ```
 
-## פיתוח מקומי בלי Docker
+## Local development without Docker
 
-- SQL Server על פורט `1433`, משתמש `sa`, סיסמה `YourStrongPassword123!`.
-- MongoDB על `mongodb://root:example@localhost:27017/orders?authSource=admin`.
+- SQL Server on port `1433`, user `sa`, password `YourStrongPassword123!`.
+- MongoDB at `mongodb://root:example@localhost:27017/orders?authSource=admin`.
 - `dotnet run --project server-net/ShoppingApp.API`
-- `npm run dev` בתוך `server-node` ובתוך `shopping-client`.
+- `npm run dev` inside `server-node` and `shopping-client`.
 
-סיסמאות אלה מיועדות להרצה מקומית בלבד.
+Those passwords are for local demos only.

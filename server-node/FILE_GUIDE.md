@@ -30,8 +30,8 @@ English map of the orders API: purpose, key functions, why each file exists, and
 
 | File | What it does | Key symbols | Why / impact |
 |---|---|---|---|
-| `src/routes/order.routes.ts` | Route table for orders | `POST /`, `GET /:email` | Maps URLs to controllers; Swagger annotations |
-| `src/controllers/order.controller.ts` | Business handlers | `createOrder`, `getOrdersByEmail` | Validates, upserts user, stores order, returns `{ id, status }` |
+| `src/routes/order.routes.ts` | Route table for orders | `POST /` | Maps create-order to the controller; no public email lookup |
+| `src/controllers/order.controller.ts` | Business handler | `createOrder` | Validates, authorizes catalog prices, upserts user, stores order, returns `{ id, status }` |
 
 ### `createOrder` flow
 
@@ -41,11 +41,7 @@ English map of the orders API: purpose, key functions, why each file exists, and
 4. Create `Order` with `items[]` and `status: "created"`.
 5. Respond `201` with `{ id, status }` — the contract the React client expects.
 
-### `getOrdersByEmail` flow
-
-1. Locate user by email.
-2. Return lean order documents with normalized `id` fields.
-3. Used for verification/demo and tests.
+Public lookup by email is not exposed. Email is stored on the user document and used only to find or create that user during checkout.
 
 ## Data models
 
