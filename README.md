@@ -1,5 +1,17 @@
 # מערכת קניות
 
+## Documentation (English)
+
+| File | Contents |
+|---|---|
+| [`PROJECT_STRUCTURE.md`](./PROJECT_STRUCTURE.md) | Directory tree, service order, responsibilities |
+| [`QUALITY.md`](./QUALITY.md) | React 19, hooks, backend library currency, professionalism |
+| [`AGENTS.md`](./AGENTS.md) | Instructions for AI coding tools |
+| [`CLAUDE.md`](./CLAUDE.md) | Short AI entrypoint |
+| [`shopping-client/FILE_GUIDE.md`](./shopping-client/FILE_GUIDE.md) | Frontend file-by-file guide |
+| [`server-net/FILE_GUIDE.md`](./server-net/FILE_GUIDE.md) | Catalog API file-by-file guide |
+| [`server-node/FILE_GUIDE.md`](./server-node/FILE_GUIDE.md) | Orders API file-by-file guide |
+
 שלושה רכיבים, לפי מטלת הבית:
 
 | רכיב | טכנולוגיה | תפקיד |

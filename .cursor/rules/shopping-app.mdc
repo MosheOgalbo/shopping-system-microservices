@@ -1,0 +1,15 @@
+---
+description: Shopping-app assignment constraints for Cursor agents
+alwaysApply: true
+---
+
+# Shopping App Rules
+
+- Three services must remain: `shopping-client` (React + Redux Toolkit), `server-net` (.NET 10 + SQL Server + EF), `server-node` (Express + MongoDB).
+- Do not reintroduce mock/fallback successful orders when APIs fail.
+- Keep order create response as `{ id, status }`.
+- Prefer RTK Query for HTTP and typed Redux hooks in the client.
+- Validate orders on the server (Zod) in addition to client checks.
+- Keep Hebrew RTL user-facing copy unless asked otherwise.
+- Documentation for AI tools and file guides stays in English.
+- Read `AGENTS.md`, `PROJECT_STRUCTURE.md`, and the relevant `FILE_GUIDE.md` before large changes.
