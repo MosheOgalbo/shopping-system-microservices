@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import { translateCatalogLabel } from '../i18n/catalog';
 import { removeFromCart, updateQuantity } from '../store/slices/cartSlice';
 
-const CartPanel: React.FC = () => {
+const CartPanel: React.FC<{ variant?: 'page' | 'drawer' }> = ({ variant = 'page' }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -13,9 +13,16 @@ const CartPanel: React.FC = () => {
   const count = items.reduce((sum, item) => sum + item.quantity, 0);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+  const inDrawer = variant === 'drawer';
+  const PanelTag = inDrawer ? 'div' : 'aside';
+
   return (
-    <aside
-      className="h-fit rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-6 dark:border-slate-700 dark:bg-slate-900"
+    <PanelTag
+      className={
+        inDrawer
+          ? 'flex flex-col'
+          : 'h-fit rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:sticky md:top-6 dark:border-slate-700 dark:bg-slate-900'
+      }
       aria-label={t('a11y.cartPanel')}
     >
       <div className="mb-4 flex items-center justify-between gap-3">
@@ -46,6 +53,7 @@ const CartPanel: React.FC = () => {
                   <button
                     type="button"
                     className="shrink-0 text-sm text-rose-700 dark:text-rose-400"
+                    aria-label={t('a11y.removeFromCart', { name: displayName })}
                     onClick={() => dispatch(removeFromCart(item.id))}
                   >
                     {t('cart.remove')}
@@ -82,7 +90,7 @@ const CartPanel: React.FC = () => {
         </ul>
       )}
 
-      <div className="mt-5 border-t border-slate-200 pt-4 dark:border-slate-700">
+      <div className={`mt-5 border-t border-slate-200 pt-4 dark:border-slate-700 ${inDrawer ? 'sticky bottom-0 bg-white dark:bg-slate-900' : ''}`}>
         <div className="mb-4 flex items-center justify-between text-lg font-bold text-slate-900 dark:text-white">
           <span>{t('cart.total')}</span>
           <span>₪{total.toFixed(2)}</span>
@@ -90,13 +98,17 @@ const CartPanel: React.FC = () => {
         <button
           type="button"
           disabled={items.length === 0}
-          onClick={() => navigate('/order')}
+          title={items.length === 0 ? t('order.emptyCartAlert') : undefined}
+          onClick={() => {
+            if (items.length === 0) return;
+            navigate('/order');
+          }}
           className="w-full rounded-xl bg-slate-900 px-4 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:bg-slate-300 dark:bg-emerald-600 dark:disabled:bg-slate-700"
         >
           {t('cart.checkout')}
         </button>
       </div>
-    </aside>
+    </PanelTag>
   );
 };
 

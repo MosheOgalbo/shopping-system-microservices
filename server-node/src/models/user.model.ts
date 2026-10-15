@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 
-const nameRegex = /^[\p{L}\s'-]+$/u;
+const nameRegex = /^(?=.*\p{L})[\p{L}\s'-]+$/u;
+const addressRegex = /^(?=.*[\p{L}\p{N}])[\p{L}\p{N}\s,.'#/’-]+$/u;
 
 const userSchema = new Schema({
   firstName: {
@@ -32,6 +33,7 @@ const userSchema = new Schema({
     required: true,
     minlength: [5, 'Address must be at least 5 characters'],
     maxlength: 300,
+    match: [addressRegex, 'Address contains invalid characters'],
     trim: true,
   },
 });

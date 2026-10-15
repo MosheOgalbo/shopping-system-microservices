@@ -26,7 +26,7 @@ Compose points the APIs at `localhost`. Kubernetes and AWS builds use `/api/` so
 
 | File | Role |
 |---|---|
-| `components/Header.tsx` | Brand, navigation, language, theme, cart totals |
+| `components/Header.tsx` | Brand, navigation, language, and theme. The wide-layout checkout link appears only when the cart has items. Small screens open a side drawer: theme, language, cart card, then shopping. The cart icon shows a count badge and a summary popover |
 | `components/BrandLogo.tsx` | Header mark |
 | `components/LanguageSwitcher.tsx` | Language control; closed state shows `ע` / `E` / `ع` |
 | `components/ThemeToggle.tsx` | Light / dark |
@@ -35,7 +35,8 @@ Compose points the APIs at `localhost`. Kubernetes and AWS builds use `/api/` so
 | `components/FilterBar.tsx` | Category and sort |
 | `components/ProductCard.tsx` | Quantity and add to cart |
 | `components/ProductsGrid.tsx` | Result grid |
-| `components/CartPanel.tsx` | Visible cart on the shopping screen |
+| `components/CartPanel.tsx` | Cart lines and checkout. Beside the products from the `md` breakpoint, and inside a side drawer on smaller screens |
+| `components/SideDrawer.tsx` | Accessible side dialog used by the menu and the mobile cart |
 | `components/OrderForm.tsx` | Required name, address, and email |
 | `components/OrderSummary.tsx` | Lines chosen on the previous screen |
 | `components/SuccessModal.tsx` | Dialog after a saved order id |

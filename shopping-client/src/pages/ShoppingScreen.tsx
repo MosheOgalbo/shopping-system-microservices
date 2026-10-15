@@ -144,7 +144,7 @@ const ShoppingScreen: React.FC = () => {
         <div>
           {(activeQuery.isLoading || activeQuery.isFetching) && (
             <div className="py-16 text-center" role="status">
-              <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-700 dark:border-slate-600" />
+              <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-700 dark:border-slate-600" aria-hidden="true" />
               <p className="text-slate-600 dark:text-slate-300">{t('shopping.loading')}</p>
             </div>
           )}
@@ -166,7 +166,9 @@ const ShoppingScreen: React.FC = () => {
             </>
           )}
         </div>
-        <CartPanel />
+        <div className="hidden md:block">
+          <CartPanel />
+        </div>
       </main>
     </div>
   );

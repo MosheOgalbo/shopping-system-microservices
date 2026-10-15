@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useDialogFocus } from '../hooks/useDialogFocus';
 import { SuccessModalProps } from '../types/index';
 
 const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, orderId }) => {
@@ -8,12 +9,11 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, orderId })
   const navigate = useNavigate();
   const titleId = useId();
   const descriptionId = useId();
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useDialogFocus(isOpen, dialogRef);
 
   useEffect(() => {
     if (!isOpen) return undefined;
-
-    closeButtonRef.current?.focus();
 
     const timer = window.setTimeout(() => {
       onClose();
@@ -44,11 +44,13 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, orderId })
   return (
     <div className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 animate-fadeIn dark:bg-black/70">
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
-        className="mx-4 max-w-md rounded-2xl bg-white p-8 shadow-2xl animate-slideInFromRight dark:bg-slate-900 dark:ring-1 dark:ring-slate-700"
+        tabIndex={-1}
+        className="mx-4 max-w-md rounded-2xl bg-white p-8 shadow-2xl outline-none animate-slideInFromRight dark:bg-slate-900 dark:ring-1 dark:ring-slate-700"
       >
         <div className="mb-6 text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-emerald-950">
@@ -75,7 +77,6 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, orderId })
 
         <div className="flex flex-col gap-3">
           <button
-            ref={closeButtonRef}
             type="button"
             onClick={handleContinueShopping}
             className="w-full rounded-xl bg-emerald-700 px-6 py-3 font-semibold text-white shadow-lg transition hover:bg-emerald-800 dark:bg-emerald-600"

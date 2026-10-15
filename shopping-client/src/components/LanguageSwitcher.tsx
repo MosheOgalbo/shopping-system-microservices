@@ -7,7 +7,7 @@ import {
   type AppLanguage,
 } from '../i18n';
 
-const LanguageSwitcher: React.FC = () => {
+const LanguageSwitcher: React.FC<{ id?: string }> = ({ id = 'language-switcher' }) => {
   const { i18n, t } = useTranslation();
   const current = (SUPPORTED_LANGUAGES.includes(i18n.language as AppLanguage)
     ? i18n.language
@@ -24,11 +24,11 @@ const LanguageSwitcher: React.FC = () => {
       >
         {LANGUAGE_SHORT_CODES[current]}
       </span>
-      <label className="sr-only" htmlFor="language-switcher">
+      <label className="sr-only" htmlFor={id}>
         {t('a11y.language')}
       </label>
       <select
-        id="language-switcher"
+        id={id}
         value={current}
         onChange={event => {
           void i18n.changeLanguage(event.target.value);

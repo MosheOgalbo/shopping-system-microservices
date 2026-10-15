@@ -114,6 +114,8 @@ export interface FormFieldProps {
   type?: string;
   value: string;
   error: string;
+  maxLength?: number;
+  autoComplete?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 

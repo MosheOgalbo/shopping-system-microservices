@@ -19,7 +19,12 @@
     "switchToDark": "Switch to dark mode",
     "switchToLight": "Switch to light mode",
     "mainNav": "Main navigation",
-    "theme": "Color theme"
+    "theme": "Color theme",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menu": "Menu",
+    "cartSummary": "Cart summary",
+    "removeFromCart": "Remove {{name}} from the cart"
   },
   "header": {
     "logo": "FreshCart",
@@ -77,7 +82,8 @@
     "empty": "No products in the cart yet. Choose a category, set a quantity, and add a product.",
     "remove": "Remove",
     "total": "Total",
-    "checkout": "Continue to checkout"
+    "checkout": "Continue to checkout",
+    "openPanel": "Show cart"
   },
   "order": {
     "eyebrow": "Order summary",
@@ -105,7 +111,10 @@
       "addressRequired": "Address is required",
       "emailRequired": "Email is required",
       "minLength": "At least {{min}} characters",
-      "invalidEmail": "Invalid email"
+      "maxLength": "At most {{max}} characters",
+      "invalidEmail": "Invalid email",
+      "invalidName": "Name can contain only letters, spaces, hyphens, or apostrophes",
+      "invalidAddress": "Address can contain only letters, numbers, and address punctuation"
     }
   },
   "orderSummary": {

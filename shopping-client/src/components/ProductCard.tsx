@@ -72,7 +72,8 @@ const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
               <button
                 type="button"
                 aria-label={t('a11y.decreaseQty', { name: displayName })}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 bg-white text-lg leading-none text-slate-800 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-100"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 bg-white text-lg leading-none text-slate-800 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-100"
+                disabled={quantity <= 1}
                 onClick={() => setQuantity(value => Math.max(1, value - 1))}
               >
                 −
@@ -86,7 +87,8 @@ const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
               <button
                 type="button"
                 aria-label={t('a11y.increaseQty', { name: displayName })}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 bg-white text-lg leading-none text-slate-800 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-100"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 bg-white text-lg leading-none text-slate-800 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-100"
+                disabled={quantity >= 99}
                 onClick={() => setQuantity(value => Math.min(99, value + 1))}
               >
                 +

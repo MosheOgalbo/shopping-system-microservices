@@ -81,6 +81,30 @@ html.dark :focus-visible {
   outline-color: #34d399;
 }
 
+@keyframes drawer-from-start {
+  from { transform: translate3d(calc(var(--drawer-direction) * -100%), 0, 0); }
+}
+
+@keyframes drawer-from-end {
+  from { transform: translate3d(calc(var(--drawer-direction) * 100%), 0, 0); }
+}
+
+html[dir='ltr'] {
+  --drawer-direction: 1;
+}
+
+html[dir='rtl'] {
+  --drawer-direction: -1;
+}
+
+.drawer-from-start {
+  animation: drawer-from-start 220ms ease-out;
+}
+
+.drawer-from-end {
+  animation: drawer-from-end 220ms ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

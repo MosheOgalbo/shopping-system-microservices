@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { VALIDATION_RULES } from '../util/constants';
+import { customerIssues, FieldIssue, normalizeCustomer } from '../util/orderValidation';
 import FormField from './FormField';
 import FormHeader from './FormHeader';
 import SubmitButton from './SubmitButton';
@@ -32,56 +33,49 @@ const OrderForm: React.FC<OrderFormProps> = ({ onSubmit, isSubmitting }) => {
     }
   };
 
-  const validate = (): boolean => {
+  const messageFor = (field: keyof FormData, issue: FieldIssue): string => {
+    if (issue === 'required') {
+      return t(`form.errors.${field}Required`);
+    }
+    if (issue === 'tooShort') {
+      const min = field === 'address' ? VALIDATION_RULES.MIN_ADDRESS_LENGTH : VALIDATION_RULES.MIN_NAME_LENGTH;
+      return t('form.errors.minLength', { min });
+    }
+    if (issue === 'tooLong') {
+      const max = field === 'address'
+        ? VALIDATION_RULES.MAX_ADDRESS_LENGTH
+        : field === 'email'
+          ? VALIDATION_RULES.MAX_EMAIL_LENGTH
+          : VALIDATION_RULES.MAX_NAME_LENGTH;
+      return t('form.errors.maxLength', { max });
+    }
+    if (field === 'email') return t('form.errors.invalidEmail');
+    if (field === 'address') return t('form.errors.invalidAddress');
+    return t('form.errors.invalidName');
+  };
+
+  const validate = (): FormData | null => {
+    const issues = customerIssues(form);
     const newErrors: FormErrors = {
-      firstName: '',
-      lastName: '',
-      address: '',
-      email: '',
+      firstName: issues.firstName ? messageFor('firstName', issues.firstName) : '',
+      lastName: issues.lastName ? messageFor('lastName', issues.lastName) : '',
+      address: issues.address ? messageFor('address', issues.address) : '',
+      email: issues.email ? messageFor('email', issues.email) : '',
     };
-
-    if (!form.firstName.trim()) {
-      newErrors.firstName = t('form.errors.firstNameRequired');
-    } else if (form.firstName.trim().length < VALIDATION_RULES.MIN_NAME_LENGTH) {
-      newErrors.firstName = t('form.errors.minLength', {
-        min: VALIDATION_RULES.MIN_NAME_LENGTH,
-      });
-    }
-
-    if (!form.lastName.trim()) {
-      newErrors.lastName = t('form.errors.lastNameRequired');
-    } else if (form.lastName.trim().length < VALIDATION_RULES.MIN_NAME_LENGTH) {
-      newErrors.lastName = t('form.errors.minLength', {
-        min: VALIDATION_RULES.MIN_NAME_LENGTH,
-      });
-    }
-
-    if (!form.address.trim()) {
-      newErrors.address = t('form.errors.addressRequired');
-    } else if (form.address.trim().length < VALIDATION_RULES.MIN_ADDRESS_LENGTH) {
-      newErrors.address = t('form.errors.minLength', {
-        min: VALIDATION_RULES.MIN_ADDRESS_LENGTH,
-      });
-    }
-
-    if (!form.email.trim()) {
-      newErrors.email = t('form.errors.emailRequired');
-    } else if (!VALIDATION_RULES.EMAIL_REGEX.test(form.email)) {
-      newErrors.email = t('form.errors.invalidEmail');
-    }
-
     setErrors(newErrors);
-    return Object.values(newErrors).every(error => !error);
+    if (Object.values(newErrors).some(Boolean)) return null;
+    return normalizeCustomer(form);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (!validate()) return;
-    onSubmit(form);
+    const customer = validate();
+    if (!customer) return;
+    onSubmit(customer);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="h-fit space-y-6 rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-900 dark:shadow-none dark:ring-1 dark:ring-slate-700">
+    <form noValidate onSubmit={handleSubmit} className="h-fit space-y-6 rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-900 dark:shadow-none dark:ring-1 dark:ring-slate-700">
       <FormHeader />
       <FormField
         name="firstName"
@@ -89,6 +83,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ onSubmit, isSubmitting }) => {
         placeholder={t('form.firstNamePlaceholder')}
         value={form.firstName}
         error={errors.firstName}
+        maxLength={VALIDATION_RULES.MAX_NAME_LENGTH}
+        autoComplete="given-name"
         onChange={handleChange}
       />
       <FormField
@@ -97,6 +93,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ onSubmit, isSubmitting }) => {
         placeholder={t('form.lastNamePlaceholder')}
         value={form.lastName}
         error={errors.lastName}
+        maxLength={VALIDATION_RULES.MAX_NAME_LENGTH}
+        autoComplete="family-name"
         onChange={handleChange}
       />
       <FormField
@@ -105,6 +103,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ onSubmit, isSubmitting }) => {
         placeholder={t('form.addressPlaceholder')}
         value={form.address}
         error={errors.address}
+        maxLength={VALIDATION_RULES.MAX_ADDRESS_LENGTH}
+        autoComplete="street-address"
         onChange={handleChange}
       />
       <FormField
@@ -114,6 +114,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ onSubmit, isSubmitting }) => {
         type="email"
         value={form.email}
         error={errors.email}
+        maxLength={VALIDATION_RULES.MAX_EMAIL_LENGTH}
+        autoComplete="email"
         onChange={handleChange}
       />
       <SubmitButton isSubmitting={isSubmitting} />

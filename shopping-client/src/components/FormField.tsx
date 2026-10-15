@@ -8,6 +8,8 @@ const FormField: React.FC<FormFieldProps> = ({
   type = 'text',
   value,
   error,
+  maxLength,
+  autoComplete,
   onChange,
 }) => (
   <div>
@@ -20,6 +22,8 @@ const FormField: React.FC<FormFieldProps> = ({
       name={name}
       placeholder={placeholder}
       value={value}
+      maxLength={maxLength}
+      autoComplete={autoComplete}
       onChange={onChange}
       className={`w-full rounded-lg border-2 px-4 py-3 text-gray-700 transition duration-200 focus:outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 ${
         error

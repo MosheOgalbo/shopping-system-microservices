@@ -19,7 +19,12 @@
     "switchToDark": "מעבר למצב לילה",
     "switchToLight": "מעבר למצב יום",
     "mainNav": "ניווט ראשי",
-    "theme": "ערכת נושא"
+    "theme": "ערכת נושא",
+    "openMenu": "פתיחת תפריט",
+    "closeMenu": "סגירת תפריט",
+    "menu": "תפריט",
+    "cartSummary": "סיכום עגלה",
+    "removeFromCart": "הסר את {{name}} מהסל"
   },
   "header": {
     "logo": "FreshCart",
@@ -77,7 +82,8 @@
     "empty": "עדיין אין מוצרים בסל. בחרו קטגוריה, כמות, והוסיפו מוצר.",
     "remove": "הסר",
     "total": "סה״כ",
-    "checkout": "המשך הזמנה"
+    "checkout": "המשך הזמנה",
+    "openPanel": "הצג את הסל"
   },
   "order": {
     "eyebrow": "סיכום ההזמנה",
@@ -105,7 +111,10 @@
       "addressRequired": "כתובת היא שדה חובה",
       "emailRequired": "מייל הוא שדה חובה",
       "minLength": "לפחות {{min}} תווים",
-      "invalidEmail": "מייל לא תקין"
+      "maxLength": "עד {{max}} תווים",
+      "invalidEmail": "מייל לא תקין",
+      "invalidName": "השם יכול להכיל אותיות, רווח, מקף או גרש בלבד",
+      "invalidAddress": "הכתובת יכולה להכיל אותיות, ספרות וסימני כתובת בלבד"
     }
   },
   "orderSummary": {

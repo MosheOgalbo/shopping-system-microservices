@@ -14,8 +14,13 @@ export const ROUTES_Header = {
 // קבועים לולידציה עבור הזמנה
 export const VALIDATION_RULES = {
   MIN_NAME_LENGTH: 2,
+  MAX_NAME_LENGTH: 50,
   MIN_ADDRESS_LENGTH: 5,
-  EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  MAX_ADDRESS_LENGTH: 300,
+  MAX_EMAIL_LENGTH: 200,
+  NAME_PATTERN: /^(?=.*\p{L})[\p{L}\s'-]+$/u,
+  ADDRESS_PATTERN: /^(?=.*[\p{L}\p{N}])[\p{L}\p{N}\s,.'#/’-]+$/u,
+  EMAIL_PATTERN: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u,
 } as const;
 
 export const TEXTS_OrderSummary = {
