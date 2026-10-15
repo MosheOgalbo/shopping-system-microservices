@@ -26,6 +26,7 @@ export interface ProductsGridProps {
 
 export interface ResultsInfoProps {
   count?: number;
+  total?: number;
   searchTerm?: string;
   category?: string;
 }

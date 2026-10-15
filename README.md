@@ -16,6 +16,7 @@ MongoDB satisfies the NoSQL requirement. Elasticsearch is not used.
 
 | File | Contents |
 |---|---|
+| [`ARCHITECTURE.md`](./ARCHITECTURE.md) | Why each service and technology is used (Hebrew) |
 | [`PROJECT_STRUCTURE.md`](./PROJECT_STRUCTURE.md) | Repository layout and request flow |
 | [`QUALITY.md`](./QUALITY.md) | System contracts, behavior, and stack |
 | [`shopping-client/FILE_GUIDE.md`](./shopping-client/FILE_GUIDE.md) | Client modules |

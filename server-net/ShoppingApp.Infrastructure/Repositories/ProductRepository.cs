@@ -4,6 +4,8 @@ using ShoppingApp.Infrastructure.Data;
 
 namespace ShoppingApp.Infrastructure.Repositories
 {
+    public readonly record struct ProductPage(IReadOnlyList<Product> Items, int Total);
+
     public class ProductRepository : IProductRepository
     {
         private readonly ApplicationDbContext _context;
@@ -44,6 +46,30 @@ namespace ShoppingApp.Infrastructure.Repositories
                 .Where(product => ids.Contains(product.Id))
                 .ToListAsync();
         }
+
+        public async Task<ProductPage> GetPageAsync(int skip, int take, string? sort)
+        {
+            var query = CatalogQuery();
+            var total = await query.CountAsync();
+            var items = await ApplySort(query, sort).Skip(skip).Take(take).ToListAsync();
+            return new ProductPage(items, total);
+        }
+
+        public async Task<IReadOnlyList<Product>> SearchAsync(string term, string? sort)
+        {
+            var query = CatalogQuery().Where(product =>
+                product.Name.Contains(term) ||
+                (product.Description != null && product.Description.Contains(term)));
+            return await ApplySort(query, sort).ToListAsync();
+        }
+
+        private static IOrderedQueryable<Product> ApplySort(IQueryable<Product> query, string? sort) =>
+            sort switch
+            {
+                "price-low" => query.OrderBy(product => product.Price).ThenBy(product => product.Name),
+                "price-high" => query.OrderByDescending(product => product.Price).ThenBy(product => product.Name),
+                _ => query.OrderBy(product => product.Name)
+            };
 
         private IQueryable<Product> CatalogQuery() =>
             _context.Products

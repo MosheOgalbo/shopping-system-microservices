@@ -1,7 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import { useGetCategoriesQuery, useGetProductsByCategoryQuery, useGetProductsQuery } from '../services/catalogApi';
+import {
+  useGetCategoriesQuery,
+  useGetProductPageQuery,
+  useGetProductSearchQuery,
+  useGetProductsByCategoryQuery,
+  useGetProductsQuery,
+} from '../services/catalogApi';
 import Header from '../components/Header';
 import SearchInput from '../components/SearchInput';
 import FilterBar from '../components/FilterBar';
@@ -30,6 +36,8 @@ function matchesSearch(
   );
 }
 
+const PAGE_SIZE = 20;
+
 const ShoppingScreen: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
@@ -37,50 +45,120 @@ const ShoppingScreen: React.FC = () => {
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState('name');
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [skip, setSkip] = useState(0);
+  const [browseKey, setBrowseKey] = useState(0);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const loadingMoreRef = useRef(false);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedSearch(searchTerm), 200);
     return () => window.clearTimeout(timer);
   }, [searchTerm]);
 
+  const browsing = selectedCategoryId === null && debouncedSearch.trim() === '';
+  const searchingAll = selectedCategoryId === null && debouncedSearch.trim() !== '';
+  const hebrewSearch = searchingAll && i18n.language.startsWith('he');
+  const translatedSearch = searchingAll && !hebrewSearch;
+
   const { data: categories = [], isLoading: categoriesLoading, isError: categoriesError } = useGetCategoriesQuery();
-  const allProductsQuery = useGetProductsQuery(undefined, { skip: selectedCategoryId !== null });
+  const pageQuery = useGetProductPageQuery(
+    { skip, take: PAGE_SIZE, sort: sortBy, generation: browseKey },
+    { skip: !browsing }
+  );
+  const searchQuery = useGetProductSearchQuery(
+    { q: debouncedSearch.trim(), sort: sortBy },
+    { skip: !hebrewSearch }
+  );
+  const translatedSearchQuery = useGetProductsQuery(undefined, { skip: !translatedSearch });
   const categoryProductsQuery = useGetProductsByCategoryQuery(selectedCategoryId ?? 0, {
     skip: selectedCategoryId === null,
   });
 
-  const activeQuery = selectedCategoryId !== null ? categoryProductsQuery : allProductsQuery;
+  const catalogRows = browsing
+    ? pageQuery.data?.items
+    : hebrewSearch
+      ? searchQuery.data?.items
+      : translatedSearch
+        ? translatedSearchQuery.data
+        : categoryProductsQuery.data;
+
   const products = useMemo(
-    () => (activeQuery.data ?? []).map(toProduct),
-    [activeQuery.data]
+    () => (catalogRows ?? []).map(toProduct),
+    [catalogRows]
   );
 
-  const suggestions: SearchSuggestion[] = useMemo(() => {
-    return products
-      .filter(product => matchesSearch(product, debouncedSearch, t))
-      .map(product => ({
-        id: product.id,
-        name: translateCatalogLabel(t, 'names', product.name),
-        category: translateCatalogLabel(t, 'categories', product.category),
-        price: product.price,
-      }));
-  }, [products, debouncedSearch, t]);
+  const filtered = browsing
+    ? products
+    : products.filter(product => matchesSearch(product, debouncedSearch, t));
 
-  const filtered = products.filter(product => matchesSearch(product, debouncedSearch, t));
-
-  const sorted = [...filtered].sort((a, b) => {
-    switch (sortBy) {
-      case 'price-low':
-        return a.price - b.price;
-      case 'price-high':
-        return b.price - a.price;
-      default: {
-        const nameA = translateCatalogLabel(t, 'names', a.name);
-        const nameB = translateCatalogLabel(t, 'names', b.name);
-        return nameA.localeCompare(nameB, i18n.language);
+  const sorted = useMemo(() => {
+    if (browsing) return filtered;
+    return [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'price-low':
+          return a.price - b.price;
+        case 'price-high':
+          return b.price - a.price;
+        default: {
+          const nameA = translateCatalogLabel(t, 'names', a.name);
+          const nameB = translateCatalogLabel(t, 'names', b.name);
+          return nameA.localeCompare(nameB, i18n.language);
+        }
       }
-    }
-  });
+    });
+  }, [browsing, filtered, sortBy, t, i18n.language]);
+
+  const suggestions: SearchSuggestion[] = useMemo(() => {
+    if (browsing || searchTerm.trim() === '') return [];
+    return sorted.map(product => ({
+      id: product.id,
+      name: translateCatalogLabel(t, 'names', product.name),
+      category: translateCatalogLabel(t, 'categories', product.category),
+      price: product.price,
+    }));
+  }, [browsing, searchTerm, sorted, t]);
+
+  const loadedCount = pageQuery.data?.items.length ?? 0;
+  const catalogTotal = pageQuery.data?.total ?? 0;
+  const hasMore = browsing && loadedCount < catalogTotal;
+  const activeError = browsing
+    ? pageQuery.isError
+    : hebrewSearch
+      ? searchQuery.isError
+      : translatedSearch
+        ? translatedSearchQuery.isError
+        : categoryProductsQuery.isError;
+  const initialLoading = browsing
+    ? pageQuery.isLoading || (pageQuery.isFetching && loadedCount === 0)
+    : hebrewSearch
+      ? searchQuery.isLoading || searchQuery.isFetching
+      : translatedSearch
+        ? translatedSearchQuery.isLoading || translatedSearchQuery.isFetching
+        : categoryProductsQuery.isLoading || categoryProductsQuery.isFetching;
+  const loadingMore = browsing && pageQuery.isFetching && loadedCount > 0;
+  const suggestionsReady = searchingAll
+    ? hebrewSearch
+      ? !searchQuery.isLoading && !searchQuery.isFetching
+      : !translatedSearchQuery.isLoading && !translatedSearchQuery.isFetching
+    : !categoryProductsQuery.isLoading && !categoryProductsQuery.isFetching;
+
+  useEffect(() => {
+    loadingMoreRef.current = pageQuery.isFetching;
+  }, [pageQuery.isFetching]);
+
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!browsing || !hasMore || !node) return undefined;
+
+    const observer = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting) || loadingMoreRef.current) return;
+      loadingMoreRef.current = true;
+      setSkip(current => current + PAGE_SIZE);
+    }, { rootMargin: '240px' });
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [browsing, hasMore, loadedCount]);
 
   const selectedCategoryName = selectedCategoryId
     ? categories.find(category => category.Id === selectedCategoryId)?.Name || ''
@@ -107,6 +185,14 @@ const ShoppingScreen: React.FC = () => {
   const handleCategoryChange = (categoryId: number | null) => {
     setSelectedCategoryId(categoryId);
     setSearchTerm('');
+    setSkip(0);
+    setBrowseKey(key => key + 1);
+  };
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+    setSkip(0);
+    setBrowseKey(key => key + 1);
   };
 
   return (
@@ -128,14 +214,14 @@ const ShoppingScreen: React.FC = () => {
                 onChange={setSearchTerm}
                 suggestions={suggestions}
                 onSelectSuggestion={handleSelectSuggestion}
-                suggestionsReady={!activeQuery.isLoading && !activeQuery.isFetching}
+                suggestionsReady={suggestionsReady}
               />
               <FilterBar
                 categories={categories}
                 selectedCategoryId={selectedCategoryId}
                 onCategoryChange={handleCategoryChange}
                 sortBy={sortBy}
-                onSortChange={setSortBy}
+                onSortChange={handleSortChange}
                 categoriesLoading={categoriesLoading}
               />
             </div>
@@ -149,27 +235,34 @@ const ShoppingScreen: React.FC = () => {
         tabIndex={-1}
       >
         <div>
-          {(activeQuery.isLoading || activeQuery.isFetching) && (
+          {initialLoading && (
             <div className="py-16 text-center" role="status">
               <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-700 dark:border-slate-600" aria-hidden="true" />
               <p className="text-slate-600 dark:text-slate-300">{t('shopping.loading')}</p>
             </div>
           )}
 
-          {(activeQuery.isError || categoriesError) && (
+          {(activeError || categoriesError) && (
             <div className="mb-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-800 dark:border-rose-800 dark:bg-rose-950 dark:text-rose-200" role="alert">
               {t('shopping.loadError')}
             </div>
           )}
 
-          {!activeQuery.isLoading && !activeQuery.isFetching && (
+          {!initialLoading && (
             <>
               <ResultsInfo
                 count={sorted.length}
+                total={browsing ? catalogTotal : undefined}
                 searchTerm={debouncedSearch}
                 category={selectedCategoryName}
               />
               <ProductsGrid products={sorted} highlightedId={highlightedId} />
+              {hasMore ? <div ref={sentinelRef} className="h-8" aria-hidden="true" /> : null}
+              {loadingMore ? (
+                <p className="py-4 text-center text-slate-600 dark:text-slate-300" role="status">
+                  {t('shopping.loadingMore')}
+                </p>
+              ) : null}
             </>
           )}
         </div>

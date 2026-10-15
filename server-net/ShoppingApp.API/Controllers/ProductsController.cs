@@ -20,20 +20,56 @@ namespace ShoppingApp.API.Controllers
         }
 
         /// <summary>
-        /// מחזיר מוצרים. אופציונלי: ?ids=1,2,3
+        /// מחזיר מוצרים.
+        /// ?ids=1,2,3 נשאר מערך JSON.
+        /// ?q= מחזיר את כל ההתאמות.
+        /// ?skip=&amp;take= מחזיר עמוד.
+        /// בלי פרמטרים נשאר המערך המלא.
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts([FromQuery] string? ids)
+        public async Task<IActionResult> GetProducts(
+            [FromQuery] string? ids,
+            [FromQuery] int? skip,
+            [FromQuery] int? take,
+            [FromQuery] string? q,
+            [FromQuery] string? sort)
         {
-            if (string.IsNullOrWhiteSpace(ids))
+            if (!string.IsNullOrWhiteSpace(ids))
             {
-                var products = await _productRepository.GetAllAsync();
-                return Ok(products.Select(ProductDto.FromEntity));
+                var parsedIds = ParseIds(ids);
+                var matched = await _productRepository.GetByIdsAsync(parsedIds);
+                return Ok(matched.Select(ProductDto.FromEntity));
             }
 
-            var parsedIds = ParseIds(ids);
-            var matched = await _productRepository.GetByIdsAsync(parsedIds);
-            return Ok(matched.Select(ProductDto.FromEntity));
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                var matches = await _productRepository.SearchAsync(q.Trim(), sort);
+                var items = matches.Select(ProductDto.FromEntity).ToList();
+                return Ok(new ProductPageDto
+                {
+                    Items = items,
+                    Total = items.Count,
+                    Skip = 0,
+                    Take = items.Count
+                });
+            }
+
+            if (skip.HasValue || take.HasValue)
+            {
+                var offset = Math.Max(skip ?? 0, 0);
+                var pageSize = Math.Clamp(take ?? 20, 1, 100);
+                var page = await _productRepository.GetPageAsync(offset, pageSize, sort);
+                return Ok(new ProductPageDto
+                {
+                    Items = page.Items.Select(ProductDto.FromEntity).ToList(),
+                    Total = page.Total,
+                    Skip = offset,
+                    Take = pageSize
+                });
+            }
+
+            var products = await _productRepository.GetAllAsync();
+            return Ok(products.Select(ProductDto.FromEntity));
         }
 
         /// <summary>

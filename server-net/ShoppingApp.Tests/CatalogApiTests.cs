@@ -35,7 +35,7 @@ public class CatalogApiTests : IClassFixture<CatalogApiFactory>
         Assert.Contains(categories, category => category.Name == "בית");
         Assert.Contains(categories, category => category.Name == "ספורט");
         Assert.Contains(categories, category => category.Name == "מזון");
-        Assert.Equal(30, categories.Sum(category => category.ProductCount));
+        Assert.Equal(100, categories.Sum(category => category.ProductCount));
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class CatalogApiTests : IClassFixture<CatalogApiFactory>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var products = await response.Content.ReadFromJsonAsync<List<ProductResponse>>();
         Assert.NotNull(products);
-        Assert.Equal(30, products.Count);
+        Assert.Equal(100, products.Count);
         Assert.All(products, product =>
         {
             Assert.False(string.IsNullOrWhiteSpace(product.Name));
@@ -99,6 +99,34 @@ public class CatalogApiTests : IClassFixture<CatalogApiFactory>
     }
 
     [Fact]
+    public async Task GetProducts_Page_ReturnsTwentyOfOneHundred()
+    {
+        var first = await _client.GetFromJsonAsync<ProductPageResponse>("/api/Products?skip=0&take=20&sort=name");
+        var second = await _client.GetFromJsonAsync<ProductPageResponse>("/api/Products?skip=20&take=20&sort=name");
+
+        Assert.NotNull(first);
+        Assert.NotNull(second);
+        Assert.Equal(100, first.Total);
+        Assert.Equal(20, first.Items.Count);
+        Assert.Equal(20, second.Items.Count);
+        Assert.Equal(0, first.Skip);
+        Assert.DoesNotContain(second.Items.Select(item => item.Id), id => first.Items.Any(item => item.Id == id));
+        Assert.True(string.Compare(first.Items[0].Name, first.Items[1].Name, StringComparison.CurrentCulture) <= 0);
+    }
+
+    [Fact]
+    public async Task GetProducts_Search_ReturnsEveryMatch()
+    {
+        var page = await _client.GetFromJsonAsync<ProductPageResponse>("/api/Products?q=" + Uri.EscapeDataString("דבש"));
+
+        Assert.NotNull(page);
+        Assert.Equal(page.Items.Count, page.Total);
+        Assert.True(page.Items.Count >= 3);
+        Assert.All(page.Items, item => Assert.Contains("דבש", item.Name + item.Description));
+        Assert.Contains(page.Items, item => item.Name == "דבש טהור");
+    }
+
+    [Fact]
     public async Task GetProductsByUnknownCategory_ReturnsNotFound()
     {
         var response = await _client.GetAsync("/api/Products/category/999");
@@ -131,8 +159,17 @@ public class CatalogApiTests : IClassFixture<CatalogApiFactory>
     {
         public int Id { get; set; }
         public string Name { get; set; } = "";
+        public string? Description { get; set; }
         public decimal Price { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = "";
+    }
+
+    private sealed class ProductPageResponse
+    {
+        public List<ProductResponse> Items { get; set; } = [];
+        public int Total { get; set; }
+        public int Skip { get; set; }
+        public int Take { get; set; }
     }
 }

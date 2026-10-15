@@ -9,6 +9,13 @@ export interface BackendProduct {
   createdAt: string;
 }
 
+export interface ProductPage {
+  items: BackendProduct[];
+  total: number;
+  skip: number;
+  take: number;
+}
+
 export interface BackendCategory {
   id: number;
   name: string;

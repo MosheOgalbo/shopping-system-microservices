@@ -8,9 +8,10 @@ This document describes how the running system behaves, which contracts it keeps
 Browser
   shopping-client
     GET  /api/Categories
-    GET  /api/Products
+    GET  /api/Products?skip=&take=     page of 20 while browsing
+    GET  /api/Products?q=              every free-text match
     GET  /api/Products?ids=1,2
-    GET  /api/Products/category/{id}
+    GET  /api/Products/category/{id}   every product in the category
          → server-net → SQL Server
     POST /api/orders
          → server-node → MongoDB
@@ -40,7 +41,7 @@ Each service owns its database. The browser owns the cart until checkout succeed
 | Languages | Hebrew, English, Arabic (`src/i18n`). `he` and `ar` set `dir=rtl`; `en` sets `dir=ltr` |
 | Catalog labels | Seeded Hebrew names are translated in the UI; the stored catalog stays Hebrew |
 | Theme and cart | Light / dark and cart lines persist in `localStorage` |
-| Search | Combobox with a product / category / price table filtered by the selected category |
+| Search | Combobox with a product / category / price table. A category filter and free-text search show every match. Browsing the full catalog loads 20 products and asks the server for the next page on scroll |
 | Accessibility | Skip link, labeled controls, live result text, dialog semantics, visible focus, reduced motion. Success dialog stays open until the user continues |
 | Brand | FreshCart mark in the header and `public/favicon.svg` for the browser tab |
 | Assets | Fonts are self-hosted. Catalog photos are local JPEGs under `public/catalog/` (same origin, no hotlinked CDNs) |
@@ -51,7 +52,8 @@ Each service owns its database. The browser owns the cart until checkout succeed
 - Layers: `ShoppingApp.API` (HTTP), `ShoppingApp.Core` (entities and DTOs), `ShoppingApp.Infrastructure` (DbContext, repositories, migrations).
 - JSON is camelCase. Reads use `AsNoTracking`. SQL connections retry on transient failure.
 - `/health` checks that the database accepts connections.
-- Startup applies migrations and seeds six categories and thirty products. Category product counts match the products in each category.
+- Startup applies migrations and seeds six categories and one hundred products. Category product counts match the products in each category.
+- `GET /api/Products` and `GET /api/Products?ids=` stay JSON arrays. `skip`/`take` and `q` return `{ items, total, skip, take }`. Search returns every match, not a page.
 - CORS origins come from `Cors:AllowedOrigins`, defaulting to the local Vite origin.
 
 ## Orders API

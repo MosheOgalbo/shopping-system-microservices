@@ -50,7 +50,7 @@ Compose points the APIs at `localhost`. Kubernetes and AWS builds use `/api/` so
 | `src/i18n/locales/*.json` | Hebrew, English, Arabic copy and catalog labels |
 | `src/i18n/catalog.ts` | Translates seeded category, name, and description strings |
 | `src/theme/index.ts` | Theme persistence and `dark` class |
-| `services/catalogApi.ts` | `GET Products`, category filter, and `GET Categories` |
+| `services/catalogApi.ts` | Paged `GET Products`, search, category filter, and `GET Categories` |
 | `services/ordersApi.ts` | `POST orders` with `{ productId, quantity }` |
 | `store/slices/cartSlice.ts` | Add, change quantity, remove, clear |
 | `store/persistCart.ts` | Restores the cart from `localStorage` |

@@ -3,10 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { translateCatalogLabel } from '../i18n/catalog';
 import { ResultsInfoProps } from '../types';
 
-const ResultsInfo: React.FC<ResultsInfoProps> = ({ count, searchTerm, category }) => {
+const ResultsInfo: React.FC<ResultsInfoProps> = ({ count = 0, total, searchTerm, category }) => {
   const { t } = useTranslation();
 
   const getProductsText = (): string => {
+    if (typeof total === 'number') return t('results.showing', { shown: count, total });
     if (count === 0) return t('results.none');
     if (count === 1) return t('results.one');
     return t('results.many', { count });

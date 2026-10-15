@@ -28,9 +28,11 @@ English map of the catalog API: purpose, key types/methods, why each file exists
 ### Controller method impact
 
 - `GET /api/Categories` → filter dropdown data.
-- `GET /api/Products` → full catalog on shopping page load.
-- `GET /api/Products?ids=1,2` → products needed to authorize an order.
-- `GET /api/Products/category/{id}` → category-filtered catalog.
+- `GET /api/Products` → full catalog array (order authorization fallback and non-Hebrew search).
+- `GET /api/Products?skip=&take=&sort=` → one page while the shopper is browsing.
+- `GET /api/Products?q=` → every name or description match, not a page.
+- `GET /api/Products?ids=1,2` → products needed to authorize an order. Still a JSON array.
+- `GET /api/Products/category/{id}` → every product in that category.
 - `POST`, `PUT`, and `DELETE` are not mapped. Tests assert those methods return 405.
 
 ## ShoppingApp.Core (domain)
@@ -42,6 +44,7 @@ English map of the catalog API: purpose, key types/methods, why each file exists
 | `Models/Product.cs` | Product entity | `Price`, `CategoryId`, `Image` | Catalog item persisted in SQL Server |
 | `Models/DTOs/CategoryDto.cs` | API-facing category shape | `ProductCount` | Avoids leaking full entity graphs |
 | `Models/DTOs/ProductDto.cs` | API-facing product shape | `CategoryName`, `Image`, `FromEntity` | Stable JSON for React |
+| `Models/DTOs/ProductPageDto.cs` | Paged and search response | `Items`, `Total`, `Skip`, `Take` | Browse pages and full search matches |
 
 ## ShoppingApp.Infrastructure (data access)
 
@@ -55,14 +58,15 @@ English map of the catalog API: purpose, key types/methods, why each file exists
 | `Repositories/ProductRepository.cs` | Product EF implementation | `Include(p => p.Category)` | Ensures `CategoryName` is available for DTOs |
 | `Migrations/20261014115319_InitialSqlServer.cs` | Initial SQL Server schema + seed | `Up`/`Down` | Creates tables on first run |
 | `Migrations/20261015140000_HostedCatalogPhotos.cs` | Seed image paths to local JPEGs | `UpdateData` | Product photos load from the UI origin |
-| `Migrations/20261015160000_ExpandCatalog.cs` | Six categories and thirty products | `InsertData` | Retail catalog the category cards count |
+| `Migrations/20261015160000_ExpandCatalog.cs` | Six categories and thirty products | `InsertData` | First retail expansion |
+| `Migrations/20261015180000_ExpandCatalogTo100.cs` | Products 31–100 | `InsertData` | Catalog the browse page and category counts use |
 | `Migrations/*Designer.cs` / `ApplicationDbContextModelSnapshot.cs` | EF model snapshots | — | Required by EF tooling |
 | `Data/ApplicationDbContextFactory.cs` | EF design-time factory | `IDesignTimeDbContextFactory` | Lets `dotnet ef` build the context without starting the API |
 
 ### Notable design choices
 
 - `OnDelete(DeleteBehavior.Restrict)` prevents silent cascade deletes of products when a category is removed.
-- Seed data includes six Hebrew categories, thirty products with local `/catalog/*.jpg` photos, and retail prices in shekels.
+- Seed data includes six Hebrew categories, one hundred products with local `/catalog/*.jpg` photos, and retail prices in shekels.
 - JSON uses camelCase. Category lists project `ProductCount` without loading product rows.
 
 ## ShoppingApp.Tests

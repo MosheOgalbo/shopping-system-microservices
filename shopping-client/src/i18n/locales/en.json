@@ -44,6 +44,7 @@
     "title": "Choose products for your cart",
     "subtitle": "Categories and products load from the server. Pick a category, set quantity, and add to cart.",
     "loading": "Loading products...",
+    "loadingMore": "Loading more products...",
     "loadError": "We could not load the catalog from the server. Make sure the products service is running and try refreshing."
   },
   "search": {
@@ -69,6 +70,7 @@
     "none": "No products found",
     "one": "Found 1 product",
     "many": "Found {{count}} products",
+    "showing": "Showing {{shown}} of {{total}}",
     "forTerm": "for \"{{term}}\"",
     "inCategory": "in category \"{{category}}\"",
     "statusLabel": "Search results: {{summary}}"

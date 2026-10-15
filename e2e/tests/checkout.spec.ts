@@ -6,14 +6,21 @@ test.describe('shopping checkout flow', () => {
 
     await page.goto('/shopping');
     await expect(page.getByRole('heading', { name: 'בחרו מוצרים לסל' })).toBeVisible();
-    await expect(page.getByText('נמצאו 30 מוצרים')).toBeVisible();
+    await expect(page.getByText('מציג 20 מתוך 100')).toBeVisible();
+    await expect(page.locator('article')).toHaveCount(20);
+
+    await page.getByLabel('חיפוש מוצרים').fill('לפטופ');
+    await expect(page.getByText('נמצאו 4 מוצרים')).toBeVisible();
+    await expect(page.locator('article')).toHaveCount(4);
+    await page.getByLabel('חיפוש מוצרים').fill('');
+    await expect(page.getByText('מציג 20 מתוך 100')).toBeVisible();
 
     await page.getByRole('combobox', { name: 'בחירת קטגוריה' }).click();
-    await expect(page.getByRole('option', { name: /כל הקטגוריות/ })).toContainText('30 פריטים');
-    await expect(page.getByRole('option', { name: /ביגוד/ })).toContainText('5 פריטים');
+    await expect(page.getByRole('option', { name: /כל הקטגוריות/ })).toContainText('100 פריטים');
+    await expect(page.getByRole('option', { name: /ביגוד/ })).toContainText('17 פריטים');
     await page.getByRole('option', { name: /ביגוד/ }).click();
-    await expect(page.getByText('נמצאו 5 מוצרים')).toBeVisible();
-    await expect(page.locator('article')).toHaveCount(5);
+    await expect(page.getByText('נמצאו 17 מוצרים')).toBeVisible();
+    await expect(page.locator('article')).toHaveCount(17);
     await expect(page.getByRole('heading', { name: 'חולצה כחולה' })).toBeVisible();
 
     const shirtCard = page.locator('article').filter({ hasText: 'חולצה כחולה' });
