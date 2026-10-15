@@ -69,7 +69,7 @@ const ShoppingScreen: React.FC = () => {
     { q: debouncedSearch.trim(), sort: sortBy },
     { skip: !hebrewSearch }
   );
-  const translatedSearchQuery = useGetProductsQuery(undefined, { skip: !translatedSearch });
+  const allCatalogQuery = useGetProductsQuery(undefined, { skip: selectedCategoryId !== null });
   const categoryProductsQuery = useGetProductsByCategoryQuery(selectedCategoryId ?? 0, {
     skip: selectedCategoryId === null,
   });
@@ -79,7 +79,7 @@ const ShoppingScreen: React.FC = () => {
     : hebrewSearch
       ? searchQuery.data?.items
       : translatedSearch
-        ? translatedSearchQuery.data
+        ? allCatalogQuery.data
         : categoryProductsQuery.data;
 
   const products = useMemo(
@@ -108,15 +108,25 @@ const ShoppingScreen: React.FC = () => {
     });
   }, [browsing, filtered, sortBy, t, i18n.language]);
 
+  const suggestionProducts = useMemo(() => {
+    const rows = selectedCategoryId !== null ? categoryProductsQuery.data : allCatalogQuery.data;
+    return (rows ?? []).map(toProduct);
+  }, [selectedCategoryId, categoryProductsQuery.data, allCatalogQuery.data]);
+
   const suggestions: SearchSuggestion[] = useMemo(() => {
-    if (browsing || searchTerm.trim() === '') return [];
-    return sorted.map(product => ({
-      id: product.id,
-      name: translateCatalogLabel(t, 'names', product.name),
-      category: translateCatalogLabel(t, 'categories', product.category),
-      price: product.price,
-    }));
-  }, [browsing, searchTerm, sorted, t]);
+    return suggestionProducts
+      .filter(product => matchesSearch(product, searchTerm, t))
+      .sort((a, b) => translateCatalogLabel(t, 'names', a.name).localeCompare(
+        translateCatalogLabel(t, 'names', b.name),
+        i18n.language
+      ))
+      .map(product => ({
+        id: product.id,
+        name: translateCatalogLabel(t, 'names', product.name),
+        category: translateCatalogLabel(t, 'categories', product.category),
+        price: product.price,
+      }));
+  }, [suggestionProducts, searchTerm, t, i18n.language]);
 
   const loadedCount = pageQuery.data?.items.length ?? 0;
   const catalogTotal = pageQuery.data?.total ?? 0;
@@ -126,21 +136,19 @@ const ShoppingScreen: React.FC = () => {
     : hebrewSearch
       ? searchQuery.isError
       : translatedSearch
-        ? translatedSearchQuery.isError
+        ? allCatalogQuery.isError
         : categoryProductsQuery.isError;
   const initialLoading = browsing
     ? pageQuery.isLoading || (pageQuery.isFetching && loadedCount === 0)
     : hebrewSearch
       ? searchQuery.isLoading || searchQuery.isFetching
       : translatedSearch
-        ? translatedSearchQuery.isLoading || translatedSearchQuery.isFetching
+        ? allCatalogQuery.isLoading || allCatalogQuery.isFetching
         : categoryProductsQuery.isLoading || categoryProductsQuery.isFetching;
   const loadingMore = browsing && pageQuery.isFetching && loadedCount > 0;
-  const suggestionsReady = searchingAll
-    ? hebrewSearch
-      ? !searchQuery.isLoading && !searchQuery.isFetching
-      : !translatedSearchQuery.isLoading && !translatedSearchQuery.isFetching
-    : !categoryProductsQuery.isLoading && !categoryProductsQuery.isFetching;
+  const suggestionsReady = selectedCategoryId !== null
+    ? !categoryProductsQuery.isLoading && !categoryProductsQuery.isFetching
+    : !allCatalogQuery.isLoading && !allCatalogQuery.isFetching;
 
   useEffect(() => {
     loadingMoreRef.current = pageQuery.isFetching;
@@ -165,7 +173,7 @@ const ShoppingScreen: React.FC = () => {
     : '';
 
   const handleSelectSuggestion = (productId: string) => {
-    const product = products.find(item => item.id === productId);
+    const product = suggestionProducts.find(item => item.id === productId);
     if (product) {
       setSearchTerm(translateCatalogLabel(t, 'names', product.name));
     }

@@ -136,59 +136,179 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 1,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מחשב נייד לעבודה וללימודים",
+                            Description = "מחשב נייד 13 אינץ׳ לעבודה",
                             Image = "/catalog/laptop.jpg",
-                            Name = "לפטופ Dell",
+                            Name = "לפטופ Dell XPS 13",
                             Price = 3490.00m
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "מחשב נייד קל של Apple",
+                            Image = "/catalog/laptop.jpg",
+                            Name = "מקבוק אייר 13",
+                            Price = 4290.00m
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "מחשב נייד ללימודים",
+                            Image = "/catalog/laptop.jpg",
+                            Name = "לפטופ Lenovo IdeaPad 3",
+                            Price = 2790.00m
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "מחשב נייד עסקי עם זיכרון 16GB",
+                            Image = "/catalog/laptop.jpg",
+                            Name = "לפטופ HP EliteBook 840",
+                            Price = 5190.00m
                         },
                         new
                         {
                             Id = 2,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "אוזניות עם ביטול רעשים",
+                            Description = "אוזניות אלחוטיות עם ביטול רעשים",
                             Image = "/catalog/headphones.jpg",
-                            Name = "אוזניות אלחוטיות",
+                            Name = "אוזניות Sony WH-1000XM5",
                             Price = 399.00m
+                        },
+                        new
+                        {
+                            Id = 34,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "אוזניות ספורט אלחוטיות",
+                            Image = "/catalog/headphones.jpg",
+                            Name = "אוזניות JBL Endurance Run 2",
+                            Price = 249.00m
+                        },
+                        new
+                        {
+                            Id = 35,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "אוזניות סטודיו סגורות",
+                            Image = "/catalog/headphones.jpg",
+                            Name = "אוזניות Audio-Technica ATH-M50x",
+                            Price = 599.00m
+                        },
+                        new
+                        {
+                            Id = 36,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "אוזניות חוטיות עם חיבור USB-C",
+                            Image = "/catalog/headphones.jpg",
+                            Name = "אוזניות Samsung EO-IC100",
+                            Price = 149.00m
                         },
                         new
                         {
                             Id = 7,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "טלפון עם מסך 6.5 אינץ'",
+                            Description = "טלפון עם מסך 6.2 אינץ׳",
                             Image = "/catalog/phone.jpg",
-                            Name = "סמארטפון",
+                            Name = "סמארטפון Samsung Galaxy S24",
                             Price = 2190.00m
+                        },
+                        new
+                        {
+                            Id = 37,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "טלפון עם מסך 6.6 אינץ׳",
+                            Image = "/catalog/phone.jpg",
+                            Name = "סמארטפון Samsung Galaxy A35",
+                            Price = 990.00m
+                        },
+                        new
+                        {
+                            Id = 38,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "טלפון עם מצלמה כפולה",
+                            Image = "/catalog/phone.jpg",
+                            Name = "אייפון 16",
+                            Price = 3290.00m
                         },
                         new
                         {
                             Id = 8,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "טאבלט 10 אינץ' לקריאה ולצפייה",
+                            Description = "טאבלט 10.9 אינץ׳ לקריאה ולצפייה",
                             Image = "/catalog/tablet.jpg",
-                            Name = "טאבלט",
+                            Name = "אייפד 10.9",
                             Price = 1590.00m
+                        },
+                        new
+                        {
+                            Id = 39,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "טאבלט 8.7 אינץ׳ לקריאה",
+                            Image = "/catalog/tablet.jpg",
+                            Name = "טאבלט Samsung Galaxy Tab A9",
+                            Price = 890.00m
+                        },
+                        new
+                        {
+                            Id = 40,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "טאבלט 11 אינץ׳ עם Apple Pencil",
+                            Image = "/catalog/tablet.jpg",
+                            Name = "אייפד אייר 11",
+                            Price = 2490.00m
                         },
                         new
                         {
                             Id = 9,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "רמקול בלוטות' לחדר ולטיולים",
+                            Description = "רמקול בלוטות׳ נייד",
                             Image = "/catalog/speaker.jpg",
-                            Name = "רמקול נייד",
+                            Name = "רמקול JBL Flip 6",
                             Price = 249.00m
+                        },
+                        new
+                        {
+                            Id = 41,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "רמקול בלוטות׳ לחדר",
+                            Image = "/catalog/speaker.jpg",
+                            Name = "רמקול Bose SoundLink Flex",
+                            Price = 449.00m
+                        },
+                        new
+                        {
+                            Id = 42,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "רמקול כיס לטיול",
+                            Image = "/catalog/speaker.jpg",
+                            Name = "רמקול Sony SRS-XB100",
+                            Price = 129.00m
                         },
                         new
                         {
                             Id = 3,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "חולצת כותנה איכותית",
+                            Description = "חולצת ספורט כחולה",
                             Image = "/catalog/shirt.jpg",
-                            Name = "חולצה כחולה",
+                            Name = "חולצת Nike Dri-FIT כחולה",
                             Price = 89.99m
                         },
                         new
@@ -196,9 +316,9 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 4,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "ז'קט קל לעונת המעבר",
+                            Description = "ז'קט ג'ינס קלאסי",
                             Image = "/catalog/jacket.jpg",
-                            Name = "ז'קט קלאסי",
+                            Name = "ז'קט Levi's Trucker",
                             Price = 399.00m
                         },
                         new
@@ -208,7 +328,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "מכנסי ג'ינס בגזרה ישרה",
                             Image = "/catalog/jeans.jpg",
-                            Name = "ג'ינס כהה",
+                            Name = "ג'ינס Levi's 501",
                             Price = 199.00m
                         },
                         new
@@ -218,7 +338,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "נעלי ריצה לאימון יומי",
                             Image = "/catalog/sneakers.jpg",
-                            Name = "נעלי ריצה",
+                            Name = "נעלי Nike Revolution 7",
                             Price = 329.00m
                         },
                         new
@@ -228,337 +348,17 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "סוודר צמר לסתיו ולחורף",
                             Image = "/catalog/sweater.jpg",
-                            Name = "סוודר צמר",
+                            Name = "סוודר צמר Uniqlo",
                             Price = 169.00m
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CategoryId = 3,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "ספר ללימוד תכנות מעשי",
-                            Image = "/catalog/book.jpg",
-                            Name = "ספר תכנות",
-                            Price = 89.00m
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CategoryId = 3,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "שלושה ספרים נבחרים",
-                            Image = "/catalog/books.jpg",
-                            Name = "מארז ספרים",
-                            Price = 149.00m
-                        },
-                        new
-                        {
-                            Id = 13,
-                            CategoryId = 3,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "רומן כריכה רכה",
-                            Image = "/catalog/novel.jpg",
-                            Name = "רומן",
-                            Price = 68.00m
-                        },
-                        new
-                        {
-                            Id = 14,
-                            CategoryId = 3,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מתכונים למטבח הביתי",
-                            Image = "/catalog/cookbook.jpg",
-                            Name = "ספר בישול",
-                            Price = 89.00m
-                        },
-                        new
-                        {
-                            Id = 15,
-                            CategoryId = 3,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "ספר מאויר לילדים",
-                            Image = "/catalog/kids-book.jpg",
-                            Name = "ספר ילדים",
-                            Price = 49.00m
-                        },
-                        new
-                        {
-                            Id = 16,
-                            CategoryId = 4,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מכונת קפה לשימוש ביתי",
-                            Image = "/catalog/coffee-machine.jpg",
-                            Name = "מכונת קפה",
-                            Price = 549.00m
-                        },
-                        new
-                        {
-                            Id = 17,
-                            CategoryId = 4,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "ציפה וזוג ציפיות למיטה זוגית",
-                            Image = "/catalog/bedding.jpg",
-                            Name = "סט מצעים",
-                            Price = 219.00m
-                        },
-                        new
-                        {
-                            Id = 18,
-                            CategoryId = 4,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מנורת קריאה עם אור חם",
-                            Image = "/catalog/lamp.jpg",
-                            Name = "מנורת שולחן",
-                            Price = 129.00m
-                        },
-                        new
-                        {
-                            Id = 19,
-                            CategoryId = 4,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "סיר 5 ליטר עם מכסה",
-                            Image = "/catalog/pot.jpg",
-                            Name = "סיר נירוסטה",
-                            Price = 149.00m
-                        },
-                        new
-                        {
-                            Id = 20,
-                            CategoryId = 4,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מגבת כותנה בגודל אמבט",
-                            Image = "/catalog/towel.jpg",
-                            Name = "מגבת אמבט",
-                            Price = 39.90m
-                        },
-                        new
-                        {
-                            Id = 21,
-                            CategoryId = 5,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "כדור משחק בגודל 5",
-                            Image = "/catalog/soccer.jpg",
-                            Name = "כדור כדורגל",
-                            Price = 79.00m
-                        },
-                        new
-                        {
-                            Id = 22,
-                            CategoryId = 5,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מזרן אימון בעובי 6 מ\"מ",
-                            Image = "/catalog/yoga.jpg",
-                            Name = "מזרן יוגה",
-                            Price = 89.00m
-                        },
-                        new
-                        {
-                            Id = 23,
-                            CategoryId = 5,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "משקולת יד 5 ק\"ג",
-                            Image = "/catalog/dumbbell.jpg",
-                            Name = "משקולת יד",
-                            Price = 59.00m
-                        },
-                        new
-                        {
-                            Id = 24,
-                            CategoryId = 5,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "בקבוק 750 מ\"ל",
-                            Image = "/catalog/bottle.jpg",
-                            Name = "בקבוק ספורט",
-                            Price = 39.00m
-                        },
-                        new
-                        {
-                            Id = 25,
-                            CategoryId = 5,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "שעון דופק לריצה ולאימון",
-                            Image = "/catalog/watch.jpg",
-                            Name = "שעון ספורט",
-                            Price = 449.00m
-                        },
-                        new
-                        {
-                            Id = 26,
-                            CategoryId = 6,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "שמן זית כתית 750 מ\"ל",
-                            Image = "/catalog/olive-oil.jpg",
-                            Name = "שמן זית",
-                            Price = 42.90m
-                        },
-                        new
-                        {
-                            Id = 27,
-                            CategoryId = 6,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "קפה טחון 250 גרם",
-                            Image = "/catalog/coffee.jpg",
-                            Name = "קפה טחון",
-                            Price = 28.90m
-                        },
-                        new
-                        {
-                            Id = 28,
-                            CategoryId = 6,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "פסטה 500 גרם",
-                            Image = "/catalog/pasta.jpg",
-                            Name = "פסטה",
-                            Price = 7.90m
-                        },
-                        new
-                        {
-                            Id = 29,
-                            CategoryId = 6,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "דבש טהור 350 גרם",
-                            Image = "/catalog/honey.jpg",
-                            Name = "דבש טהור",
-                            Price = 32.90m
-                        },
-                        new
-                        {
-                            Id = 30,
-                            CategoryId = 6,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "חפיסת שוקולד מריר 100 גרם",
-                            Image = "/catalog/chocolate.jpg",
-                            Name = "שוקולד מריר",
-                            Price = 14.90m
-                        },
-                        new
-                        {
-                            Id = 31,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מחשב נייד קל של 14 אינץ'",
-                            Image = "/catalog/laptop.jpg",
-                            Name = "לפטופ קל לעבודה",
-                            Price = 4290.00m
-                        },
-                        new
-                        {
-                            Id = 32,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מחשב נייד בסיסי ללימודים",
-                            Image = "/catalog/laptop.jpg",
-                            Name = "לפטופ לסטודנט",
-                            Price = 2790.00m
-                        },
-                        new
-                        {
-                            Id = 33,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מחשב נייד עם זיכרון 16GB",
-                            Image = "/catalog/laptop.jpg",
-                            Name = "לפטופ עסקי",
-                            Price = 5190.00m
-                        },
-                        new
-                        {
-                            Id = 34,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "אוזניות אלחוטיות לאימון",
-                            Image = "/catalog/headphones.jpg",
-                            Name = "אוזניות ספורט",
-                            Price = 249.00m
-                        },
-                        new
-                        {
-                            Id = 35,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "אוזניות סגורות להאזנה",
-                            Image = "/catalog/headphones.jpg",
-                            Name = "אוזניות סטודיו",
-                            Price = 599.00m
-                        },
-                        new
-                        {
-                            Id = 36,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "אוזניות עם חיבור 3.5 מ\"מ",
-                            Image = "/catalog/headphones.jpg",
-                            Name = "אוזניות חוטיות",
-                            Price = 149.00m
-                        },
-                        new
-                        {
-                            Id = 37,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "טלפון עם מסך 6.1 אינץ'",
-                            Image = "/catalog/phone.jpg",
-                            Name = "סמארטפון קומפקטי",
-                            Price = 990.00m
-                        },
-                        new
-                        {
-                            Id = 38,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "טלפון עם מצלמה משולשת",
-                            Image = "/catalog/phone.jpg",
-                            Name = "סמארטפון פרימיום",
-                            Price = 3290.00m
-                        },
-                        new
-                        {
-                            Id = 39,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "טאבלט 8 אינץ' לקריאה",
-                            Image = "/catalog/tablet.jpg",
-                            Name = "טאבלט קל",
-                            Price = 890.00m
-                        },
-                        new
-                        {
-                            Id = 40,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "טאבלט 11 אינץ' עם עט",
-                            Image = "/catalog/tablet.jpg",
-                            Name = "טאבלט לציור",
-                            Price = 2490.00m
-                        },
-                        new
-                        {
-                            Id = 41,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "רמקול בלוטות' לחדר",
-                            Image = "/catalog/speaker.jpg",
-                            Name = "רמקול חדר",
-                            Price = 449.00m
-                        },
-                        new
-                        {
-                            Id = 42,
-                            CategoryId = 1,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "רמקול קטן לטיול",
-                            Image = "/catalog/speaker.jpg",
-                            Name = "רמקול כיס",
-                            Price = 129.00m
                         },
                         new
                         {
                             Id = 43,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "חולצת כותנה לבנה",
+                            Description = "חולצת פולו מכותנה",
                             Image = "/catalog/shirt.jpg",
-                            Name = "חולצה לבנה",
+                            Name = "חולצת פולו Lacoste",
                             Price = 79.00m
                         },
                         new
@@ -568,7 +368,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "חולצת פשתן לקיץ",
                             Image = "/catalog/shirt.jpg",
-                            Name = "חולצת פשתן",
+                            Name = "חולצת פשתן Zara",
                             Price = 119.00m
                         },
                         new
@@ -578,7 +378,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "חולצה מכופתרת למשרד",
                             Image = "/catalog/shirt.jpg",
-                            Name = "חולצה מכופתרת",
+                            Name = "חולצה מכופתרת Calvin Klein",
                             Price = 149.00m
                         },
                         new
@@ -588,7 +388,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "ז'קט ג'ינס ליום יום",
                             Image = "/catalog/jacket.jpg",
-                            Name = "ז'קט ג'ינס",
+                            Name = "ז'קט ג'ינס Levi's",
                             Price = 279.00m
                         },
                         new
@@ -598,7 +398,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "ז'קט מרופד לחורף",
                             Image = "/catalog/jacket.jpg",
-                            Name = "ז'קט חורף",
+                            Name = "ז'קט The North Face",
                             Price = 549.00m
                         },
                         new
@@ -608,7 +408,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "מעיל קל לעונת הגשמים",
                             Image = "/catalog/jacket.jpg",
-                            Name = "מעיל גשם",
+                            Name = "מעיל גשם Columbia",
                             Price = 359.00m
                         },
                         new
@@ -618,7 +418,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "מכנסי ג'ינס בהירים",
                             Image = "/catalog/jeans.jpg",
-                            Name = "ג'ינס בהיר",
+                            Name = "ג'ינס Lee",
                             Price = 179.00m
                         },
                         new
@@ -628,7 +428,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "מכנסי ג'ינס בגזרה צרה",
                             Image = "/catalog/jeans.jpg",
-                            Name = "ג'ינס סקיני",
+                            Name = "ג'ינס Diesel",
                             Price = 229.00m
                         },
                         new
@@ -636,9 +436,9 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 51,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "נעלי עור להליכה בעיר",
+                            Description = "נעליים ליום יום",
                             Image = "/catalog/sneakers.jpg",
-                            Name = "נעלי עיר",
+                            Name = "נעלי Adidas Samba",
                             Price = 459.00m
                         },
                         new
@@ -648,7 +448,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "נעלי הליכה יומיומיות",
                             Image = "/catalog/sneakers.jpg",
-                            Name = "נעלי הליכה",
+                            Name = "נעלי Skechers Go Walk",
                             Price = 229.00m
                         },
                         new
@@ -658,7 +458,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "סוודר דק לעונת מעבר",
                             Image = "/catalog/sweater.jpg",
-                            Name = "סוודר כותנה",
+                            Name = "סוודר כותנה H&M",
                             Price = 139.00m
                         },
                         new
@@ -668,17 +468,27 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "קרדיגן פתוח לסתיו",
                             Image = "/catalog/sweater.jpg",
-                            Name = "קרדיגן",
+                            Name = "קרדיגן Uniqlo",
                             Price = 219.00m
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryId = 3,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "ספר מאת רוברט ס. מרטין",
+                            Image = "/catalog/book.jpg",
+                            Name = "קוד נקי",
+                            Price = 89.00m
                         },
                         new
                         {
                             Id = 55,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מבוא לאלגוריתמים",
+                            Description = "ספרם של קורמן, לייזרסון וריבסט",
                             Image = "/catalog/book.jpg",
-                            Name = "ספר אלגוריתמים",
+                            Name = "מבוא לאלגוריתמים",
                             Price = 109.00m
                         },
                         new
@@ -686,9 +496,9 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 56,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "ספר על בסיסי נתונים",
+                            Description = "ספרם של סילברשץ, קורת וסודרשאן",
                             Image = "/catalog/book.jpg",
-                            Name = "ספר בסיסי נתונים",
+                            Name = "מושגי מערכות מסדי נתונים",
                             Price = 129.00m
                         },
                         new
@@ -698,17 +508,27 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "לימוד פייתון מהיסוד",
                             Image = "/catalog/book.jpg",
-                            Name = "ספר פייתון",
+                            Name = "Python Crash Course",
                             Price = 79.00m
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoryId = 3,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "שלושת ספרי הטרילוגיה",
+                            Image = "/catalog/books.jpg",
+                            Name = "שר הטבעות - מארז",
+                            Price = 149.00m
                         },
                         new
                         {
                             Id = 58,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "שני ספרי ילדים",
+                            Description = "שני הספרים הראשונים",
                             Image = "/catalog/books.jpg",
-                            Name = "מארז ספרי ילדים",
+                            Name = "הארי פוטר - מארז",
                             Price = 99.00m
                         },
                         new
@@ -716,19 +536,29 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 59,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "שני רומנים קלאסיים",
+                            Description = "גאווה ודעה קדומה ושכל וריגוש",
                             Image = "/catalog/books.jpg",
-                            Name = "מארז קלאסיקה",
+                            Name = "ג'יין אוסטן - מארז",
                             Price = 179.00m
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CategoryId = 3,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "רומן מאת ג'ורג' אורוול",
+                            Image = "/catalog/novel.jpg",
+                            Name = "1984",
+                            Price = 68.00m
                         },
                         new
                         {
                             Id = 60,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "רומן על תקופה היסטורית",
+                            Description = "רומן מאת גבריאל גרסיה מרקס",
                             Image = "/catalog/novel.jpg",
-                            Name = "רומן היסטורי",
+                            Name = "מאה שנים של בדידות",
                             Price = 54.00m
                         },
                         new
@@ -736,19 +566,29 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 61,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "רומן מתח בכריכה רכה",
+                            Description = "רומן מתח מאת סטיג לארסון",
                             Image = "/catalog/novel.jpg",
-                            Name = "רומן מתח",
+                            Name = "הנערה עם קעקוע הדרקון",
                             Price = 72.00m
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CategoryId = 3,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "ספר בישול מאת סאמין נוסארט",
+                            Image = "/catalog/cookbook.jpg",
+                            Name = "מלח שומן חומצה חום",
+                            Price = 89.00m
                         },
                         new
                         {
                             Id = 62,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מתכוני אפייה ביתית",
+                            Description = "ספר בישול מאת יוטם אוטולנגי",
                             Image = "/catalog/cookbook.jpg",
-                            Name = "ספר אפייה",
+                            Name = "Ottolenghi Simple",
                             Price = 109.00m
                         },
                         new
@@ -756,19 +596,29 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 63,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מתכונים מהשוק",
+                            Description = "ספר בישול מאת אוטולנגי ותמימי",
                             Image = "/catalog/cookbook.jpg",
-                            Name = "ספר ירקות",
+                            Name = "ירושלים",
                             Price = 79.00m
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CategoryId = 3,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "ספר מאויר מאת אריק קרל",
+                            Image = "/catalog/kids-book.jpg",
+                            Name = "הזחל הרעב מאוד",
+                            Price = 49.00m
                         },
                         new
                         {
                             Id = 64,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "ספר צביעה לילדים",
+                            Description = "ספר חיפוש מאת מרטין הנדפורד",
                             Image = "/catalog/kids-book.jpg",
-                            Name = "ספר צביעה",
+                            Name = "איפה וולי?",
                             Price = 39.00m
                         },
                         new
@@ -776,10 +626,20 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 65,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "סיפור קצר לפני השינה",
+                            Description = "ספר שינה מאת מרגרט וייז בראון",
                             Image = "/catalog/kids-book.jpg",
-                            Name = "ספר שינה",
+                            Name = "לילה טוב ירח",
                             Price = 59.00m
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CategoryId = 4,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "מכונת קפה לקפסולות",
+                            Image = "/catalog/coffee-machine.jpg",
+                            Name = "מכונת Nespresso Vertuo Pop",
+                            Price = 549.00m
                         },
                         new
                         {
@@ -788,7 +648,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "מכונת אספרסו ביתית",
                             Image = "/catalog/coffee-machine.jpg",
-                            Name = "מכונת אספרסו",
+                            Name = "מכונת Breville Barista Express",
                             Price = 1290.00m
                         },
                         new
@@ -796,9 +656,9 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 67,
                             CategoryId = 4,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מכונת פילטר ל־12 כוסות",
+                            Description = "מכונת קפה פילטר ל־12 כוסות",
                             Image = "/catalog/coffee-machine.jpg",
-                            Name = "מכונת קפה פילטר",
+                            Name = "מכונת Philips HD7461",
                             Price = 349.00m
                         },
                         new
@@ -808,8 +668,18 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "מקציף חלב למשקאות חמים",
                             Image = "/catalog/coffee-machine.jpg",
-                            Name = "מקציף חלב",
+                            Name = "מקציף Nespresso Aeroccino",
                             Price = 189.00m
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CategoryId = 4,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "ציפה וזוג ציפיות למיטה זוגית",
+                            Image = "/catalog/bedding.jpg",
+                            Name = "מצעי IKEA NATTJASMIN",
+                            Price = 219.00m
                         },
                         new
                         {
@@ -818,7 +688,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "סט מצעים למיטת ילד",
                             Image = "/catalog/bedding.jpg",
-                            Name = "מצעי ילדים",
+                            Name = "מצעי IKEA STJÄRNSTARR",
                             Price = 149.00m
                         },
                         new
@@ -826,9 +696,9 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 70,
                             CategoryId = 4,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "סט מצעים מכותנה",
+                            Description = "סט מצעים מכותנה למיטה זוגית",
                             Image = "/catalog/bedding.jpg",
-                            Name = "מצעי כותנה",
+                            Name = "מצעי IKEA DVALA",
                             Price = 329.00m
                         },
                         new
@@ -838,8 +708,18 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "שמיכה דקה לקיץ",
                             Image = "/catalog/bedding.jpg",
-                            Name = "שמיכת קיץ",
+                            Name = "שמיכת IKEA SMÅSPORRE",
                             Price = 279.00m
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CategoryId = 4,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "מנורת קריאה עם זרוע מתכווננת",
+                            Image = "/catalog/lamp.jpg",
+                            Name = "מנורת שולחן IKEA TERTIAL",
+                            Price = 129.00m
                         },
                         new
                         {
@@ -848,7 +728,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "מנורת עמידה לסלון",
                             Image = "/catalog/lamp.jpg",
-                            Name = "מנורת רצפה",
+                            Name = "מנורת רצפה IKEA HEKTAR",
                             Price = 189.00m
                         },
                         new
@@ -858,8 +738,18 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "מנורת לילה קטנה",
                             Image = "/catalog/lamp.jpg",
-                            Name = "מנורת לילה",
+                            Name = "מנורת לילה IKEA FADO",
                             Price = 89.00m
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CategoryId = 4,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "סיר נירוסטה 5 ליטר עם מכסה",
+                            Image = "/catalog/pot.jpg",
+                            Name = "סיר IKEA HEMKOMST",
+                            Price = 149.00m
                         },
                         new
                         {
@@ -868,7 +758,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "סיר 2 ליטר עם מכסה",
                             Image = "/catalog/pot.jpg",
-                            Name = "סיר קטן",
+                            Name = "סיר IKEA MIDDAGSMAT",
                             Price = 99.00m
                         },
                         new
@@ -876,10 +766,20 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 75,
                             CategoryId = 4,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "מחבת 28 ס\"מ",
+                            Description = "מחבת 28 ס״מ",
                             Image = "/catalog/pot.jpg",
-                            Name = "מחבת",
+                            Name = "מחבת Tefal",
                             Price = 149.00m
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CategoryId = 4,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "מגבת כותנה בגודל אמבט",
+                            Image = "/catalog/towel.jpg",
+                            Name = "מגבת אמבט IKEA TOFTBO",
+                            Price = 39.90m
                         },
                         new
                         {
@@ -888,7 +788,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "זוג מגבות ידיים",
                             Image = "/catalog/towel.jpg",
-                            Name = "מגבת ידיים",
+                            Name = "מגבות ידיים IKEA TOFTBO",
                             Price = 29.90m
                         },
                         new
@@ -898,8 +798,18 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "מגבת גדולה לים",
                             Image = "/catalog/towel.jpg",
-                            Name = "מגבת חוף",
+                            Name = "מגבת חוף IKEA TOFTBO",
                             Price = 49.90m
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CategoryId = 5,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "כדור משחק בגודל 5",
+                            Image = "/catalog/soccer.jpg",
+                            Name = "כדור Adidas Tiro League",
+                            Price = 79.00m
                         },
                         new
                         {
@@ -908,7 +818,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "כדור למשחק באולם",
                             Image = "/catalog/soccer.jpg",
-                            Name = "כדור אולמות",
+                            Name = "כדור Select Futsal",
                             Price = 129.00m
                         },
                         new
@@ -918,7 +828,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "כדור אימון עמיד",
                             Image = "/catalog/soccer.jpg",
-                            Name = "כדור אימון",
+                            Name = "כדור אימון Nike",
                             Price = 49.00m
                         },
                         new
@@ -928,8 +838,18 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "כדור רך לילדים",
                             Image = "/catalog/soccer.jpg",
-                            Name = "כדור ילדים",
+                            Name = "כדור ילדים Adidas",
                             Price = 39.00m
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CategoryId = 5,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "מזרן יוגה בעובי 5 מ״מ",
+                            Image = "/catalog/yoga.jpg",
+                            Name = "מזרן Manduka PROlite",
+                            Price = 89.00m
                         },
                         new
                         {
@@ -938,7 +858,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "מזרן אימון עבה",
                             Image = "/catalog/yoga.jpg",
-                            Name = "מזרן פילאטיס",
+                            Name = "מזרן פילאטיס Gaiam",
                             Price = 129.00m
                         },
                         new
@@ -948,7 +868,17 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "מזרן דק לתיק",
                             Image = "/catalog/yoga.jpg",
-                            Name = "מזרן נסיעות",
+                            Name = "מזרן נסיעות Manduka",
+                            Price = 59.00m
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CategoryId = 5,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "משקולת יד לאימון",
+                            Image = "/catalog/dumbbell.jpg",
+                            Name = "משקולת Domyos 5 ק״ג",
                             Price = 59.00m
                         },
                         new
@@ -958,7 +888,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "משקולת יד קלה",
                             Image = "/catalog/dumbbell.jpg",
-                            Name = "משקולת 2 ק\"ג",
+                            Name = "משקולת Domyos 2 ק״ג",
                             Price = 39.00m
                         },
                         new
@@ -968,8 +898,18 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "משקולת יד כבדה",
                             Image = "/catalog/dumbbell.jpg",
-                            Name = "משקולת 10 ק\"ג",
+                            Name = "משקולת Domyos 10 ק״ג",
                             Price = 119.00m
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CategoryId = 5,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "בקבוק אימון",
+                            Image = "/catalog/bottle.jpg",
+                            Name = "בקבוק Nike 750 מ״ל",
+                            Price = 39.00m
                         },
                         new
                         {
@@ -978,7 +918,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "בקבוק אימון קטן",
                             Image = "/catalog/bottle.jpg",
-                            Name = "בקבוק 500 מ\"ל",
+                            Name = "בקבוק Nike 500 מ״ל",
                             Price = 29.00m
                         },
                         new
@@ -988,8 +928,18 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "בקבוק שומר חום וקור",
                             Image = "/catalog/bottle.jpg",
-                            Name = "בקבוק תרמי",
+                            Name = "בקבוק Hydro Flask",
                             Price = 49.00m
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CategoryId = 5,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "שעון דופק לריצה ולאימון",
+                            Image = "/catalog/watch.jpg",
+                            Name = "שעון Samsung Galaxy Fit3",
+                            Price = 449.00m
                         },
                         new
                         {
@@ -998,7 +948,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "שעון GPS לריצה",
                             Image = "/catalog/watch.jpg",
-                            Name = "שעון ריצה",
+                            Name = "שעון Garmin Forerunner 55",
                             Price = 699.00m
                         },
                         new
@@ -1008,17 +958,27 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "שעון ספורט בסיסי",
                             Image = "/catalog/watch.jpg",
-                            Name = "שעון בסיסי",
+                            Name = "שעון Amazfit Bip 5",
                             Price = 299.00m
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CategoryId = 6,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "שמן זית כתית מעולה",
+                            Image = "/catalog/olive-oil.jpg",
+                            Name = "שמן זית יד מרדכי 750 מ״ל",
+                            Price = 42.90m
                         },
                         new
                         {
                             Id = 89,
                             CategoryId = 6,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "שמן זית כתית 500 מ\"ל",
+                            Description = "שמן זית כתית 500 מ״ל",
                             Image = "/catalog/olive-oil.jpg",
-                            Name = "שמן זית 500 מ\"ל",
+                            Name = "שמן זית יד מרדכי 500 מ״ל",
                             Price = 28.90m
                         },
                         new
@@ -1026,9 +986,9 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 90,
                             CategoryId = 6,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "שמן זית אורגני 750 מ\"ל",
+                            Description = "שמן זית אורגני 750 מ״ל",
                             Image = "/catalog/olive-oil.jpg",
-                            Name = "שמן זית אורגני",
+                            Name = "שמן זית אורגני עץ הזית",
                             Price = 54.90m
                         },
                         new
@@ -1036,10 +996,20 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 91,
                             CategoryId = 6,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "שמן זית בטעם עדין",
+                            Description = "שמן זית כתית בטעם עדין",
                             Image = "/catalog/olive-oil.jpg",
-                            Name = "שמן זית עדין",
+                            Name = "שמן זית ברכת הארץ",
                             Price = 36.90m
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CategoryId = 6,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "קפה טחון 250 גרם",
+                            Image = "/catalog/coffee.jpg",
+                            Name = "קפה טורקי עלית",
+                            Price = 28.90m
                         },
                         new
                         {
@@ -1048,7 +1018,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "פולי קפה 250 גרם",
                             Image = "/catalog/coffee.jpg",
-                            Name = "קפה פולים",
+                            Name = "פולי קפה Lavazza",
                             Price = 34.90m
                         },
                         new
@@ -1058,7 +1028,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "קפה נמס 200 גרם",
                             Image = "/catalog/coffee.jpg",
-                            Name = "קפה נמס",
+                            Name = "נסקפה נמס",
                             Price = 19.90m
                         },
                         new
@@ -1066,19 +1036,29 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 94,
                             CategoryId = 6,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "קפה טחון קלוי כהה 250 גרם",
+                            Description = "קפה קלוי כהה 250 גרם",
                             Image = "/catalog/coffee.jpg",
-                            Name = "קפה טחון כהה",
+                            Name = "קפה טחון עלית כהה",
                             Price = 42.90m
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CategoryId = 6,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "ספגטי 500 גרם",
+                            Image = "/catalog/pasta.jpg",
+                            Name = "פסטה ברילה",
+                            Price = 7.90m
                         },
                         new
                         {
                             Id = 95,
                             CategoryId = 6,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "פסטה מקמח מלא 500 גרם",
+                            Description = "ספגטי מקמח מלא 500 גרם",
                             Image = "/catalog/pasta.jpg",
-                            Name = "פסטה מלאה",
+                            Name = "פסטה מלאה ברילה",
                             Price = 9.90m
                         },
                         new
@@ -1088,8 +1068,18 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "פתיתים 500 גרם",
                             Image = "/catalog/pasta.jpg",
-                            Name = "פתיתים",
+                            Name = "פתיתים אסם",
                             Price = 6.50m
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CategoryId = 6,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "דבש טהור 350 גרם",
+                            Image = "/catalog/honey.jpg",
+                            Name = "דבש טהור יד מרדכי",
+                            Price = 32.90m
                         },
                         new
                         {
@@ -1098,7 +1088,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "דבש פרחי בר 350 גרם",
                             Image = "/catalog/honey.jpg",
-                            Name = "דבש פרחי בר",
+                            Name = "דבש פרחי בר יד מרדכי",
                             Price = 24.90m
                         },
                         new
@@ -1108,8 +1098,18 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "דבש מפרחי שיטה 350 גרם",
                             Image = "/catalog/honey.jpg",
-                            Name = "דבש שיטה",
+                            Name = "דבש שיטה יד מרדכי",
                             Price = 44.90m
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CategoryId = 6,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "חפיסה 100 גרם",
+                            Image = "/catalog/chocolate.jpg",
+                            Name = "שוקולד מריר עלית",
+                            Price = 14.90m
                         },
                         new
                         {
@@ -1118,7 +1118,7 @@ namespace ShoppingApp.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "חפיסת שוקולד חלב 100 גרם",
                             Image = "/catalog/chocolate.jpg",
-                            Name = "שוקולד חלב",
+                            Name = "שוקולד פרה",
                             Price = 12.90m
                         },
                         new
@@ -1126,9 +1126,9 @@ namespace ShoppingApp.Infrastructure.Migrations
                             Id = 100,
                             CategoryId = 6,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "שוקולד מריר עם אגוזים 100 גרם",
+                            Description = "חפיסה 100 גרם עם אגוזים",
                             Image = "/catalog/chocolate.jpg",
-                            Name = "שוקולד אגוזים",
+                            Name = "שוקולד מריר עלית עם אגוזים",
                             Price = 18.90m
                         });
                 });

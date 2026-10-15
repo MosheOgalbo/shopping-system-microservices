@@ -82,7 +82,7 @@ public class CatalogApiTests : IClassFixture<CatalogApiFactory>
         Assert.NotNull(products);
         Assert.NotEmpty(products);
         Assert.All(products, product => Assert.Equal(2, product.CategoryId));
-        Assert.Contains(products, product => product.Name == "חולצה כחולה");
+        Assert.Contains(products, product => product.Name == "חולצת Nike Dri-FIT כחולה");
     }
 
     [Fact]
@@ -94,8 +94,8 @@ public class CatalogApiTests : IClassFixture<CatalogApiFactory>
         var products = await response.Content.ReadFromJsonAsync<List<ProductResponse>>();
         Assert.NotNull(products);
         Assert.Equal(2, products.Count);
-        Assert.Contains(products, product => product.Name == "חולצה כחולה");
-        Assert.Contains(products, product => product.Name == "ספר תכנות");
+        Assert.Contains(products, product => product.Name == "חולצת Nike Dri-FIT כחולה");
+        Assert.Contains(products, product => product.Name == "קוד נקי");
     }
 
     [Fact]
@@ -123,7 +123,7 @@ public class CatalogApiTests : IClassFixture<CatalogApiFactory>
         Assert.Equal(page.Items.Count, page.Total);
         Assert.True(page.Items.Count >= 3);
         Assert.All(page.Items, item => Assert.Contains("דבש", item.Name + item.Description));
-        Assert.Contains(page.Items, item => item.Name == "דבש טהור");
+        Assert.Contains(page.Items, item => item.Name == "דבש טהור יד מרדכי");
     }
 
     [Fact]

@@ -9,9 +9,9 @@ test.describe('shopping checkout flow', () => {
     await expect(page.getByText('מציג 20 מתוך 100')).toBeVisible();
     await expect(page.locator('article')).toHaveCount(20);
 
-    await page.getByLabel('חיפוש מוצרים').fill('לפטופ');
-    await expect(page.getByText('נמצאו 4 מוצרים')).toBeVisible();
-    await expect(page.locator('article')).toHaveCount(4);
+    await page.getByLabel('חיפוש מוצרים').fill('יד מרדכי');
+    await expect(page.getByText('נמצאו 5 מוצרים')).toBeVisible();
+    await expect(page.locator('article')).toHaveCount(5);
     await page.getByLabel('חיפוש מוצרים').fill('');
     await expect(page.getByText('מציג 20 מתוך 100')).toBeVisible();
 
@@ -21,12 +21,12 @@ test.describe('shopping checkout flow', () => {
     await page.getByRole('option', { name: /ביגוד/ }).click();
     await expect(page.getByText('נמצאו 17 מוצרים')).toBeVisible();
     await expect(page.locator('article')).toHaveCount(17);
-    await expect(page.getByRole('heading', { name: 'חולצה כחולה' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'חולצת Nike Dri-FIT כחולה' })).toBeVisible();
 
-    const shirtCard = page.locator('article').filter({ hasText: 'חולצה כחולה' });
-    await shirtCard.getByRole('button', { name: 'הגדל כמות של חולצה כחולה' }).click();
-    await shirtCard.getByRole('button', { name: 'הגדל כמות של חולצה כחולה' }).click();
-    await shirtCard.getByRole('button', { name: 'הוסף מוצר לסל: חולצה כחולה' }).click();
+    const shirtCard = page.locator('article').filter({ hasText: 'חולצת Nike Dri-FIT כחולה' });
+    await shirtCard.getByRole('button', { name: 'הגדל כמות של חולצת Nike Dri-FIT כחולה' }).click();
+    await shirtCard.getByRole('button', { name: 'הגדל כמות של חולצת Nike Dri-FIT כחולה' }).click();
+    await shirtCard.getByRole('button', { name: 'הוסף מוצר לסל: חולצת Nike Dri-FIT כחולה' }).click();
 
     await expect(page.getByTestId('cart-count')).toHaveText('3 פריטים');
     await expect(page.getByLabel('עגלת קניות - 3 פריטים')).toBeVisible();
@@ -34,7 +34,7 @@ test.describe('shopping checkout flow', () => {
     await page.getByRole('button', { name: 'המשך הזמנה' }).click();
     await expect(page).toHaveURL(/\/order$/);
     await expect(page.getByRole('heading', { name: 'השלמת ההזמנה' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'חולצה כחולה' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'חולצת Nike Dri-FIT כחולה' })).toBeVisible();
     await expect(page.getByText('₪89.99 × 3')).toBeVisible();
 
     await page.getByLabel(/שם פרטי/).fill('דנה');
@@ -79,8 +79,8 @@ test.describe('shopping checkout flow', () => {
     );
 
     await page.goto('/shopping');
-    const shirtCard = page.locator('article').filter({ hasText: 'חולצה כחולה' });
-    await shirtCard.getByRole('button', { name: 'הוסף מוצר לסל: חולצה כחולה' }).click();
+    const shirtCard = page.locator('article').filter({ hasText: 'חולצת Nike Dri-FIT כחולה' });
+    await shirtCard.getByRole('button', { name: 'הוסף מוצר לסל: חולצת Nike Dri-FIT כחולה' }).click();
     await expect(page.getByTestId('cart-count')).toHaveText('1 פריטים');
 
     await page.getByRole('button', { name: 'המשך הזמנה' }).click();

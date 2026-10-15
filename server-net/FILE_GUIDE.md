@@ -60,6 +60,7 @@ English map of the catalog API: purpose, key types/methods, why each file exists
 | `Migrations/20261015140000_HostedCatalogPhotos.cs` | Seed image paths to local JPEGs | `UpdateData` | Product photos load from the UI origin |
 | `Migrations/20261015160000_ExpandCatalog.cs` | Six categories and thirty products | `InsertData` | First retail expansion |
 | `Migrations/20261015180000_ExpandCatalogTo100.cs` | Products 31–100 | `InsertData` | Catalog the browse page and category counts use |
+| `Migrations/20261015200000_RenameCatalogProducts.cs` | Real retail names | `UpdateData` | Hebrew catalog names shown in the UI and translated in English and Arabic |
 | `Migrations/*Designer.cs` / `ApplicationDbContextModelSnapshot.cs` | EF model snapshots | — | Required by EF tooling |
 | `Data/ApplicationDbContextFactory.cs` | EF design-time factory | `IDesignTimeDbContextFactory` | Lets `dotnet ef` build the context without starting the API |
 
