@@ -18,7 +18,7 @@
     "@fontsource/rubik": "^5.2.8",
     "@reduxjs/toolkit": "^2.8.2",
     "i18next": "^26.4.4",
-    "lucide-react": "^0.523.0",
+    "lucide-react": "^1.55.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-i18next": "^17.0.16",
