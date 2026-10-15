@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TEXTS_OrderSummary } from '../util/constants';
 import { translateCatalogLabel } from '../i18n/catalog';
 import { CartItem } from '../types/index';
+import { isImageUrl } from '../util/products';
 
 interface RenderOrderItemProps {
   item: CartItem;
@@ -11,10 +11,6 @@ interface RenderOrderItemProps {
 const RenderOrderItem: React.FC<RenderOrderItemProps> = ({ item }) => {
   const { t } = useTranslation();
   const displayName = translateCatalogLabel(t, 'names', item.name);
-
-  const isImageUrl = (image: string | undefined): boolean => {
-    return image?.startsWith('http') || image?.startsWith('data:') || false;
-  };
 
   return (
     <div className="flex items-center justify-between gap-3 border-b border-slate-200 py-3 last:border-b-0 dark:border-slate-700">
@@ -27,7 +23,7 @@ const RenderOrderItem: React.FC<RenderOrderItemProps> = ({ item }) => {
           />
         ) : (
           <span className="me-3 text-2xl" aria-hidden="true">
-            {item.image || TEXTS_OrderSummary.DEFAULT_PRODUCT_ICON}
+            {item.image || '📦'}
           </span>
         )}
 

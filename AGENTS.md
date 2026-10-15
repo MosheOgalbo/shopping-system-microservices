@@ -71,7 +71,7 @@ cd shopping-client && npm run build
 
 - If asked to “improve architecture,” prefer reliability, typing, tests, and docs over new frameworks.
 - If asked to redesign UI, keep RTL, cart visibility, category filter, quantity control, and required checkout fields.
-- If a dependency looks unused (`formik`, `yup`, MUI, `axios`, `body-parser`), remove it only when verifying no imports remain.
+- If a dependency looks unused, remove it only when verifying no imports remain.
 - When documenting, keep AI/docs markdown in **English** unless the user asks for Hebrew.
 
 ## Out of scope unless requested

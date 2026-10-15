@@ -3,8 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, ShoppingCart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '../hooks';
-import { useCartUi } from '../cartUi';
-import { ROUTES_Header } from '../util/constants';
+import { useCartUi } from '../cartUi/useCartUi';
+import { ROUTES } from '../util/constants';
 import BrandLogo from './BrandLogo';
 import CartPanel from './CartPanel';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -25,7 +25,7 @@ const Header: React.FC = () => {
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const canCheckout = cartItems.length > 0;
-  const isOrderPage = location.pathname === ROUTES_Header.ORDER;
+  const isOrderPage = location.pathname === ROUTES.ORDER;
 
   useEffect(() => {
     setMenuOpen(false);
@@ -77,7 +77,7 @@ const Header: React.FC = () => {
     <header className="relative z-30 border-b border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
         <Link
-          to={ROUTES_Header.SHOPPING}
+          to={ROUTES.SHOPPING}
           className="flex min-w-0 items-center gap-3"
           aria-label={t('a11y.backToShopping')}
         >
@@ -93,11 +93,11 @@ const Header: React.FC = () => {
         </Link>
 
         <nav className="hidden items-center gap-2 md:flex" aria-label={t('a11y.mainNav')}>
-          <Link to={ROUTES_Header.SHOPPING} className={linkClass(!isOrderPage)}>
+          <Link to={ROUTES.SHOPPING} className={linkClass(!isOrderPage)}>
             {t('header.shopping')}
           </Link>
           {canCheckout && (
-            <Link to={ROUTES_Header.ORDER} className={linkClass(isOrderPage)}>
+            <Link to={ROUTES.ORDER} className={linkClass(isOrderPage)}>
               {t('header.order')}
             </Link>
           )}
@@ -197,7 +197,7 @@ const Header: React.FC = () => {
           <CartPanel variant="drawer" />
           <nav className="grid gap-2" aria-label={t('a11y.mainNav')}>
             <Link
-              to={ROUTES_Header.SHOPPING}
+              to={ROUTES.SHOPPING}
               className={`rounded-xl px-4 py-3 text-center text-sm font-semibold ${linkClass(!isOrderPage)}`}
               onClick={() => setMenuOpen(false)}
             >

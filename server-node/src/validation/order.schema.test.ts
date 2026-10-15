@@ -8,7 +8,7 @@ const validOrder = {
     address: 'הרצל 10, תל אביב',
   },
   items: [
-    { productId: '3', name: 'חולצה כחולה', quantity: 2, price: 89.99 },
+    { productId: '3', quantity: 2 },
   ],
 };
 
@@ -26,7 +26,7 @@ describe('orderSchema', () => {
   it('rejects a quantity of zero', () => {
     const result = orderSchema.safeParse({
       ...validOrder,
-      items: [{ productId: '3', name: 'חולצה כחולה', quantity: 0 }],
+      items: [{ productId: '3', quantity: 0 }],
     });
     expect(result.success).toBe(false);
   });
@@ -37,6 +37,14 @@ describe('orderSchema', () => {
       user: { ...validOrder.user, firstName: 'דנה1', address: '<script>alert(1)</script>' },
     });
     expect(result.success).toBe(false);
+  });
+
+  it('accepts Hebrew geresh in a name', () => {
+    const result = orderSchema.safeParse({
+      ...validOrder,
+      user: { ...validOrder.user, lastName: "כהן׳" },
+    });
+    expect(result.success).toBe(true);
   });
 
   it('rejects unknown fields and a non-integer quantity', () => {

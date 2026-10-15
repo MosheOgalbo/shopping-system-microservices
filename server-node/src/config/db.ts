@@ -1,13 +1,8 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-dotenv.config();
+import { requireEnv } from './env';
 
 export const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI!);
-    console.log('✅ Connected to MongoDB');
-  } catch (err) {
-    console.error('❌ Mongo connection error:', err);
-    process.exit(1);
-  }
+  const mongoUri = requireEnv('MONGO_URI');
+  mongoose.set('autoIndex', process.env.NODE_ENV !== 'production');
+  await mongoose.connect(mongoUri);
 };

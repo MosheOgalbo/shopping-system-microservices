@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import { connectDB } from './config/db';
 import orderRoutes from './routes/order.routes';
 import swaggerUi from 'swagger-ui-express';
@@ -15,7 +16,7 @@ export function createApp() {
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(express.json({ limit: '100kb' }));
 
-  const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,http://localhost:5001')
+  const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173')
     .split(',')
     .map(origin => origin.trim())
     .filter(Boolean);
@@ -24,28 +25,48 @@ export function createApp() {
   app.use(cors({
     origin: allowAnyOrigin ? true : corsOrigins,
     credentials: !allowAnyOrigin,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Accept'],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Accept', 'Idempotency-Key'],
   }));
 
-  const swaggerOptions = {
-    swaggerDefinition: {
-      openapi: '3.0.0',
-      info: {
-        title: 'Shopping App Orders API',
-        version: '1.0.0',
-        description: 'Order API for the shopping application',
+  if (process.env.NODE_ENV !== 'test') {
+    app.use('/api/orders', rateLimit({
+      windowMs: 60_000,
+      limit: 30,
+      standardHeaders: true,
+      legacyHeaders: false,
+    }));
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    const swaggerOptions = {
+      swaggerDefinition: {
+        openapi: '3.0.0',
+        info: {
+          title: 'Shopping App Orders API',
+          version: '1.0.0',
+          description: 'Order API for the shopping application',
+        },
+        servers: [{ url: process.env.PUBLIC_URL || `http://localhost:${process.env.PORT || 5001}` }],
       },
-      servers: [{ url: process.env.PUBLIC_URL || `http://localhost:${process.env.PORT || 5001}` }],
-    },
-    apis: ['./src/routes/*.ts'],
-  };
+      apis: ['./src/routes/*.ts'],
+    };
 
-  const swaggerSpec = swaggerJsdoc(swaggerOptions);
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc(swaggerOptions)));
+  }
 
-  app.get('/health', (_req, res) => {
-    res.json({ status: 'ok' });
+  app.get('/health', async (_req, res) => {
+    if (mongoose.connection.readyState !== 1 || !mongoose.connection.db) {
+      res.status(503).json({ status: 'unavailable' });
+      return;
+    }
+
+    try {
+      await mongoose.connection.db.admin().ping();
+      res.json({ status: 'ok' });
+    } catch {
+      res.status(503).json({ status: 'unavailable' });
+    }
   });
 
   app.get('/healthz', (_req, res) => {

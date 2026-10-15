@@ -11,7 +11,7 @@ test.describe('orders API contract', () => {
           address: 'דיזנגוף 50, תל אביב',
         },
         items: [
-          { productId: '3', name: 'not-the-real-name', quantity: 2, price: 1 },
+          { productId: '3', quantity: 2 },
         ],
       },
     });
@@ -32,7 +32,7 @@ test.describe('orders API contract', () => {
           address: 'דיזנגוף 50, תל אביב',
         },
         items: [
-          { productId: '9999', name: 'ghost', quantity: 1, price: 10 },
+          { productId: '9999', quantity: 1 },
         ],
       },
     });

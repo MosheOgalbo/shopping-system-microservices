@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import { useGetProductsQuery, useGetProductsByCategoryQuery } from '../services/productsApi';
-import { useGetCategoriesQuery } from '../services/categoriesApi';
+import { useGetCategoriesQuery, useGetProductsByCategoryQuery, useGetProductsQuery } from '../services/catalogApi';
 import Header from '../components/Header';
 import SearchInput from '../components/SearchInput';
 import FilterBar from '../components/FilterBar';
@@ -34,8 +33,15 @@ function matchesSearch(
 const ShoppingScreen: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState('name');
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedSearch(searchTerm), 200);
+    return () => window.clearTimeout(timer);
+  }, [searchTerm]);
 
   const { data: categories = [], isLoading: categoriesLoading, isError: categoriesError } = useGetCategoriesQuery();
   const allProductsQuery = useGetProductsQuery(undefined, { skip: selectedCategoryId !== null });
@@ -51,17 +57,16 @@ const ShoppingScreen: React.FC = () => {
 
   const suggestions: SearchSuggestion[] = useMemo(() => {
     return products
-      .filter(product => matchesSearch(product, searchTerm, t))
-      .slice(0, 20)
+      .filter(product => matchesSearch(product, debouncedSearch, t))
       .map(product => ({
         id: product.id,
         name: translateCatalogLabel(t, 'names', product.name),
         category: translateCatalogLabel(t, 'categories', product.category),
         price: product.price,
       }));
-  }, [products, searchTerm, t]);
+  }, [products, debouncedSearch, t]);
 
-  const filtered = products.filter(product => matchesSearch(product, searchTerm, t));
+  const filtered = products.filter(product => matchesSearch(product, debouncedSearch, t));
 
   const sorted = [...filtered].sort((a, b) => {
     switch (sortBy) {
@@ -87,15 +92,17 @@ const ShoppingScreen: React.FC = () => {
       setSearchTerm(translateCatalogLabel(t, 'names', product.name));
     }
 
+    setHighlightedId(productId);
     window.requestAnimationFrame(() => {
-      const card = document.getElementById(`product-${productId}`);
-      card?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      card?.classList.add('ring-2', 'ring-emerald-500');
-      window.setTimeout(() => {
-        card?.classList.remove('ring-2', 'ring-emerald-500');
-      }, 1600);
+      document.getElementById(`product-${productId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   };
+
+  useEffect(() => {
+    if (!highlightedId) return undefined;
+    const timer = window.setTimeout(() => setHighlightedId(null), 1600);
+    return () => window.clearTimeout(timer);
+  }, [highlightedId]);
 
   const handleCategoryChange = (categoryId: number | null) => {
     setSelectedCategoryId(categoryId);
@@ -159,10 +166,10 @@ const ShoppingScreen: React.FC = () => {
             <>
               <ResultsInfo
                 count={sorted.length}
-                searchTerm={searchTerm}
+                searchTerm={debouncedSearch}
                 category={selectedCategoryName}
               />
-              <ProductsGrid products={sorted} />
+              <ProductsGrid products={sorted} highlightedId={highlightedId} />
             </>
           )}
         </div>

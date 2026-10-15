@@ -16,7 +16,7 @@ English map of the catalog API: purpose, key types/methods, why each file exists
 
 | File | What it does | Key symbols | Why / impact |
 |---|---|---|---|
-| `Program.cs` | App composition root | `AddDbContext`, `UseSqlServer`, CORS, Swagger, `MigrateAsync`, `/health` | Wires DI, DB, middleware; starts listening |
+| `Program.cs` | App composition root | `AddDbContext`, retry, camelCase JSON, ProblemDetails, `/health` | Wires DI, DB, middleware; starts listening |
 | `Controllers/CategoriesController.cs` | Category read endpoints | `GetCategories`, `GetCategory` | Supplies the category filter. Writes are not exposed |
 | `Controllers/ProductsController.cs` | Product read endpoints | `GetProducts`, `GetProduct`, `GetProductsByCategory` | Main catalog feed for the React screen |
 | `appsettings.json` | Default SQL connection + logging | `ConnectionStrings:DefaultConnection` | Local/non-Compose config baseline |
@@ -29,8 +29,9 @@ English map of the catalog API: purpose, key types/methods, why each file exists
 
 - `GET /api/Categories` → filter dropdown data.
 - `GET /api/Products` → full catalog on shopping page load.
+- `GET /api/Products?ids=1,2` → products needed to authorize an order.
 - `GET /api/Products/category/{id}` → category-filtered catalog.
-- `POST`, `PUT`, and `DELETE` are not mapped. The assignment only needs catalog reads.
+- `POST`, `PUT`, and `DELETE` are not mapped. Tests assert those methods return 405.
 
 ## ShoppingApp.Core (domain)
 
@@ -53,14 +54,16 @@ English map of the catalog API: purpose, key types/methods, why each file exists
 | `Repositories/IProductRepository.cs` | Product persistence contract | `GetByCategoryIdAsync`, … | Isolates query details |
 | `Repositories/ProductRepository.cs` | Product EF implementation | `Include(p => p.Category)` | Ensures `CategoryName` is available for DTOs |
 | `Migrations/20261014115319_InitialSqlServer.cs` | Initial SQL Server schema + seed | `Up`/`Down` | Creates tables on first run |
+| `Migrations/20261015140000_HostedCatalogPhotos.cs` | Seed image paths to local JPEGs | `UpdateData` | Product photos load from the UI origin |
+| `Migrations/20261015160000_ExpandCatalog.cs` | Six categories and thirty products | `InsertData` | Retail catalog the category cards count |
 | `Migrations/*Designer.cs` / `ApplicationDbContextModelSnapshot.cs` | EF model snapshots | — | Required by EF tooling |
 | `Data/ApplicationDbContextFactory.cs` | EF design-time factory | `IDesignTimeDbContextFactory` | Lets `dotnet ef` build the context without starting the API |
 
 ### Notable design choices
 
 - `OnDelete(DeleteBehavior.Restrict)` prevents silent cascade deletes of products when a category is removed.
-- Seed data includes Hebrew category/product names and image URLs for a polished demo.
-- Controllers map entities → DTOs so JSON stays PascalCase-compatible with the current client transformers.
+- Seed data includes six Hebrew categories, thirty products with local `/catalog/*.jpg` photos, and retail prices in shekels.
+- JSON uses camelCase. Category lists project `ProductCount` without loading product rows.
 
 ## ShoppingApp.Tests
 
@@ -68,7 +71,7 @@ English map of the catalog API: purpose, key types/methods, why each file exists
 |---|---|---|---|
 | `ShoppingApp.Tests.csproj` | xUnit + WebApplicationFactory + InMemory EF | — | Integration-style API tests without SQL Server |
 | `CatalogApiFactory.cs` | Test host factory | replaces SQL with InMemory DB, `Testing` env | Deterministic tests |
-| `CatalogApiTests.cs` | Endpoint assertions | health, categories, products, category filter, delete guard | Proves catalog contract for the client |
+| `CatalogApiTests.cs` | Endpoint assertions | health, categories, products, ids filter, write methods 405 | Proves catalog contract for the client |
 
 ## How the catalog service fits the assignment
 

@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { CartUiProvider } from '../cartUi';
+import { CartUiProvider } from '../cartUi/CartUiProvider';
 import { store } from '../store';
 import { addToCart, clearCart } from '../store/slices/cartSlice';
 import Header from './Header';

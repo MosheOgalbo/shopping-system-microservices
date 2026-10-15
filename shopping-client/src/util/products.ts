@@ -1,4 +1,5 @@
-import { BackendProduct, Product } from '../features/products/types';
+import { BackendProduct } from '../services/types';
+import { Product } from '../types';
 
 const categoryIcons: Record<string, string> = {
   'אלקטרוניקה': '📱',
@@ -21,16 +22,24 @@ export function categoryIcon(category: string): string {
 }
 
 export function isImageUrl(image?: string): boolean {
-  return Boolean(image && (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('data:')));
+  return Boolean(
+    image
+    && (
+      image.startsWith('http://')
+      || image.startsWith('https://')
+      || image.startsWith('data:')
+      || image.startsWith('/')
+    )
+  );
 }
 
 export function toProduct(backendProduct: BackendProduct): Product {
   return {
-    id: backendProduct.Id.toString(),
-    name: backendProduct.Name,
-    category: backendProduct.CategoryName,
-    price: backendProduct.Price,
-    description: backendProduct.Description,
-    image: isImageUrl(backendProduct.Image) ? backendProduct.Image : categoryIcon(backendProduct.CategoryName),
+    id: backendProduct.id.toString(),
+    name: backendProduct.name,
+    category: backendProduct.categoryName,
+    price: backendProduct.price,
+    description: backendProduct.description,
+    image: isImageUrl(backendProduct.image) ? backendProduct.image : categoryIcon(backendProduct.categoryName),
   };
 }

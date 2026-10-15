@@ -3,6 +3,8 @@ import { User } from '../models/user.model';
 import { Order } from '../models/order.model';
 import { orderSchema, OrderPayload } from '../validation/order.schema';
 import { authorizeOrderItems, fetchCatalogProducts } from '../services/catalog';
+import { findRememberedOrder, rememberOrder } from '../services/idempotency';
+import { requireEnv } from '../config/env';
 
 export const createOrder = async (req: Request, res: Response): Promise<void> => {
   const parsed = orderSchema.safeParse(req.body);
@@ -14,8 +16,19 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
     return;
   }
 
-  const catalogBaseUrl = process.env.CATALOG_API_URL;
-  if (!catalogBaseUrl) {
+  const idempotencyKey = headerValue(req, 'idempotency-key');
+  if (idempotencyKey) {
+    const remembered = findRememberedOrder(idempotencyKey);
+    if (remembered) {
+      res.status(201).json(remembered);
+      return;
+    }
+  }
+
+  let catalogBaseUrl: string;
+  try {
+    catalogBaseUrl = requireEnv('CATALOG_API_URL');
+  } catch {
     res.status(500).json({ error: 'Catalog service is not configured' });
     return;
   }
@@ -24,7 +37,10 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
 
   let authorizedItems;
   try {
-    const catalogProducts = await fetchCatalogProducts(catalogBaseUrl);
+    const catalogProducts = await fetchCatalogProducts(
+      catalogBaseUrl,
+      items.map(item => item.productId),
+    );
     authorizedItems = authorizeOrderItems(items, catalogProducts);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Catalog validation failed';
@@ -37,18 +53,45 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
     return;
   }
 
-  const user = await upsertUser(userData);
+  let order;
+  try {
+    order = await Order.create({
+      customer: userData,
+      items: authorizedItems,
+      status: 'created',
+      idempotencyKey: idempotencyKey || undefined,
+    });
+  } catch (err: unknown) {
+    const duplicate = typeof err === 'object' && err !== null && 'code' in err && (err as { code?: number }).code === 11000;
+    if (duplicate && idempotencyKey) {
+      const existing = await Order.findOne({ idempotencyKey });
+      if (existing) {
+        const body = { id: existing._id.toString(), status: existing.status };
+        rememberOrder(idempotencyKey, body);
+        res.status(201).json(body);
+        return;
+      }
+    }
+    throw err;
+  }
 
-  const order = await Order.create({
-    user: user._id,
-    items: authorizedItems,
-    status: 'created',
-  });
+  try {
+    const user = await upsertUser(userData);
+    await Order.updateOne({ _id: order._id }, { $set: { user: user._id } });
+  } catch (err) {
+    console.error('User upsert failed after order create', err);
+  }
 
-  res.status(201).json({
+  const body = {
     id: order._id.toString(),
     status: 'created',
-  });
+  };
+
+  if (idempotencyKey) {
+    rememberOrder(idempotencyKey, body);
+  }
+
+  res.status(201).json(body);
 };
 
 async function upsertUser(userData: OrderPayload['user']) {
@@ -78,4 +121,12 @@ async function upsertUser(userData: OrderPayload['user']) {
   user.address = userData.address;
   await user.save();
   return user;
+}
+
+function headerValue(req: Request, name: string): string | undefined {
+  const value = req.headers[name];
+  if (typeof value === 'string' && value.trim()) {
+    return value.trim();
+  }
+  return undefined;
 }

@@ -8,55 +8,20 @@ export interface Product {
   image?: string;
 }
 
-export interface BackendProduct {
-  Id: number;
-  Name: string;
-  Description: string;
-  Price: number;
-  CategoryId: number;
-  CategoryName: string;
-  Image?: string; // URL לתמונה - אופציונלי
-  CreatedAt: string;
-}
-
-// טיפוס לפריט בעגלה
 export interface CartItem extends Product {
   quantity: number;
 }
 
-// טיפוס לשליחת הזמנה לשרת
-export interface OrderItem {
-  productId: string;
-  name: string;
-  quantity: number;
-}
-
-export interface OrderRequest {
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    address: string;
-  };
-  items: OrderItem[];
-}
-
-// טיפוס לקטגוריה מהשרת
-export interface BackendCategory {
+export interface Category {
   Id: number;
   Name: string;
-  CreatedAt?: string;
-}
-
-// טיפוס לקטגוריה בצד הלקוח
-export interface Category {
-  id: number;
-  name: string;
   icon?: string;
+  productCount?: number;
 }
 
 export interface ProductsGridProps {
   products: Product[];
+  highlightedId?: string | null;
 }
 
 export interface ResultsInfoProps {
@@ -97,6 +62,7 @@ export interface SuccessModalProps {
 
 export interface PropsProductCard {
   product: Product;
+  highlighted?: boolean;
 }
 
 
@@ -105,6 +71,7 @@ export interface CategoryFilter {
   Id: number;
   Name: string;
   icon?: string;
+  productCount?: number;
 }
 
 export interface FormFieldProps {

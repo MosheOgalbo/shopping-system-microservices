@@ -10,104 +10,68 @@ namespace ShoppingApp.API.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly ILogger<ProductsController> _logger;
 
         public ProductsController(
             IProductRepository productRepository,
-            ICategoryRepository categoryRepository,
-            ILogger<ProductsController> logger)
+            ICategoryRepository categoryRepository)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
-            _logger = logger;
         }
 
         /// <summary>
-        /// מחזיר את כל המוצרים
+        /// מחזיר מוצרים. אופציונלי: ?ids=1,2,3
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts([FromQuery] string? ids)
         {
-            try
+            if (string.IsNullOrWhiteSpace(ids))
             {
                 var products = await _productRepository.GetAllAsync();
                 return Ok(products.Select(ProductDto.FromEntity));
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "שגיאה בשליפת המוצרים");
-                return StatusCode(500, "שגיאה פנימית בשרת");
-            }
+
+            var parsedIds = ParseIds(ids);
+            var matched = await _productRepository.GetByIdsAsync(parsedIds);
+            return Ok(matched.Select(ProductDto.FromEntity));
         }
 
         /// <summary>
         /// מחזיר מוצר לפי ID
         /// </summary>
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
-            try
+            var product = await _productRepository.GetByIdAsync(id);
+            if (product == null)
             {
-                var product = await _productRepository.GetByIdAsync(id);
-                if (product == null)
-                {
-                    return NotFound($"מוצר עם ID {id} לא נמצא");
-                }
+                return NotFound($"מוצר עם ID {id} לא נמצא");
+            }
 
-                return Ok(ProductDto.FromEntity(product));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "שגיאה בשליפת מוצר {ProductId}", id);
-                return StatusCode(500, "שגיאה פנימית בשרת");
-            }
+            return Ok(ProductDto.FromEntity(product));
         }
 
         /// <summary>
         /// מחזיר מוצרים לפי ID קטגוריה
         /// </summary>
-        [HttpGet("category/{categoryId}")]
+        [HttpGet("category/{categoryId:int}")]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsByCategory(int categoryId)
         {
-            try
+            if (!await _categoryRepository.ExistsAsync(categoryId))
             {
-                if (!await _categoryRepository.ExistsAsync(categoryId))
-                {
-                    return NotFound($"קטגוריה עם ID {categoryId} לא נמצאה");
-                }
+                return NotFound($"קטגוריה עם ID {categoryId} לא נמצאה");
+            }
 
-                var products = await _productRepository.GetByCategoryIdAsync(categoryId);
-                return Ok(products.Select(ProductDto.FromEntity));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "שגיאה בשליפת מוצרים לקטגוריה {CategoryId}", categoryId);
-                return StatusCode(500, "שגיאה פנימית בשרת");
-            }
+            var products = await _productRepository.GetByCategoryIdAsync(categoryId);
+            return Ok(products.Select(ProductDto.FromEntity));
         }
 
-        /// <summary>
-        /// מחזיר מוצרים לפי שם קטגוריה
-        /// </summary>
-        [HttpGet("category/name/{categoryName}")]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsByCategoryName(string categoryName)
-        {
-            try
-            {
-                var category = await _categoryRepository.GetByNameAsync(categoryName);
-                if (category == null)
-                {
-                    return NotFound($"קטגוריה עם שם '{categoryName}' לא נמצאה");
-                }
-
-                var products = await _productRepository.GetByCategoryIdAsync(category.Id);
-                return Ok(products.Select(ProductDto.FromEntity));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "שגיאה בשליפת מוצרים לקטגוריה {CategoryName}", categoryName);
-                return StatusCode(500, "שגיאה פנימית בשרת");
-            }
-        }
+        private static IReadOnlyCollection<int> ParseIds(string ids) =>
+            ids.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(value => int.TryParse(value, out var id) ? id : (int?)null)
+                .Where(id => id.HasValue)
+                .Select(id => id!.Value)
+                .Distinct()
+                .ToArray();
     }
 }

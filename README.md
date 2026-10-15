@@ -2,6 +2,8 @@
 
 Three-service shopping system: a React client, a .NET catalog API on SQL Server, and a Node orders API on MongoDB.
 
+The short Hebrew submission note is [`SUBMISSION.md`](./SUBMISSION.md). MongoDB is used for the order document; Elasticsearch is not required for checkout.
+
 | Service | Stack | Responsibility |
 |---|---|---|
 | `shopping-client` | React, Redux Toolkit, Vite | Catalog, cart, checkout UI |
@@ -22,6 +24,7 @@ MongoDB satisfies the NoSQL requirement. Elasticsearch is not used.
 | [`k8s/README.md`](./k8s/README.md) | Local Kubernetes |
 | [`aws/README.md`](./aws/README.md) | ECR and EKS |
 | [`e2e/README.md`](./e2e/README.md) | Playwright suite |
+| [`SUBMISSION.md`](./SUBMISSION.md) | Hebrew hand-in note with the Git link |
 | [`AGENTS.md`](./AGENTS.md) | Constraints for coding agents |
 
 ## Run with Docker

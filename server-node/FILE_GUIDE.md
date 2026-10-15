@@ -31,14 +31,14 @@ English map of the orders API: purpose, key functions, why each file exists, and
 | File | What it does | Key symbols | Why / impact |
 |---|---|---|---|
 | `src/routes/order.routes.ts` | Route table for orders | `POST /` | Maps create-order to the controller; no public email lookup |
-| `src/controllers/order.controller.ts` | Business handler | `createOrder` | Validates, authorizes catalog prices, upserts user, stores order, returns `{ id, status }` |
+| `src/controllers/order.controller.ts` | Business handler | `createOrder` | Validates, authorizes catalog prices, stores a customer snapshot, upserts user, returns `{ id, status }` |
 
 ### `createOrder` flow
 
 1. Parse body with Zod (`orderSchema`).
 2. Reject empty carts / bad quantities / invalid user fields with `400`.
-3. Find or create `User` by email, and refresh name and address when that email already exists.
-4. Create `Order` with `items[]` and `status: "created"`.
+3. Create `Order` with an embedded `customer` snapshot, catalog-authorized `items[]`, and `status: "created"`.
+4. Then find or create `User` by email. Older orders keep the address that was submitted with them.
 5. Respond `201` with `{ id, status }` — the contract the React client expects.
 
 Public lookup by email is not exposed. Email is stored on the user document and used only to find or create that user during checkout.
@@ -48,7 +48,7 @@ Public lookup by email is not exposed. Email is stored on the user document and 
 | File | What it does | Key symbols | Why / impact |
 |---|---|---|---|
 | `src/models/user.model.ts` | Mongoose user schema | `firstName`, `lastName`, `email` (unique), `address` | Stores checkout identity details |
-| `src/models/order.model.ts` | Mongoose order schema | `user` ObjectId, `items[]` with numeric `quantity`, `status` | Persists the assignment’s order document |
+| `src/models/order.model.ts` | Mongoose order schema | `customer` snapshot, `items[]`, `status` enum, timestamps | Persists the assignment’s order document |
 
 ### Why quantity is `Number`
 

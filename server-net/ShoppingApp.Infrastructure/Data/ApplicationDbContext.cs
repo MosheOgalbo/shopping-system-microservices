@@ -38,76 +38,8 @@ namespace ShoppingApp.Infrastructure.Data
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-            var now = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-            modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, Name = "אלקטרוניקה", Description = "מוצרי אלקטרוניקה ומחשבים", CreatedAt = now },
-                new Category { Id = 2, Name = "ביגוד", Description = "בגדים ואקססוריז", CreatedAt = now },
-                new Category { Id = 3, Name = "ספרים", Description = "ספרים ומגזינים", CreatedAt = now }
-            );
-
-            modelBuilder.Entity<Product>().HasData(
-                new Product
-                {
-                    Id = 1,
-                    Name = "לפטופ Dell",
-                    Description = "מחשב נייד לעבודה וללימודים",
-                    Price = 2999.99m,
-                    CategoryId = 1,
-                    Image = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80",
-                    CreatedAt = now
-                },
-                new Product
-                {
-                    Id = 2,
-                    Name = "אוזניות אלחוטיות",
-                    Description = "אוזניות עם ביטול רעשים",
-                    Price = 349.00m,
-                    CategoryId = 1,
-                    Image = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80",
-                    CreatedAt = now
-                },
-                new Product
-                {
-                    Id = 3,
-                    Name = "חולצה כחולה",
-                    Description = "חולצת כותנה איכותית",
-                    Price = 89.99m,
-                    CategoryId = 2,
-                    Image = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80",
-                    CreatedAt = now
-                },
-                new Product
-                {
-                    Id = 4,
-                    Name = "ז'קט קלאסי",
-                    Description = "ז'קט קל לעונת המעבר",
-                    Price = 249.00m,
-                    CategoryId = 2,
-                    Image = "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&q=80",
-                    CreatedAt = now
-                },
-                new Product
-                {
-                    Id = 5,
-                    Name = "ספר תכנות",
-                    Description = "ספר ללימוד תכנות מעשי",
-                    Price = 149.99m,
-                    CategoryId = 3,
-                    Image = "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800&q=80",
-                    CreatedAt = now
-                },
-                new Product
-                {
-                    Id = 6,
-                    Name = "מארז ספרים",
-                    Description = "שלושה ספרים נבחרים",
-                    Price = 119.00m,
-                    CategoryId = 3,
-                    Image = "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&q=80",
-                    CreatedAt = now
-                }
-            );
+            modelBuilder.Entity<Category>().HasData(CatalogSeed.Categories);
+            modelBuilder.Entity<Product>().HasData(CatalogSeed.Products);
         }
     }
 }

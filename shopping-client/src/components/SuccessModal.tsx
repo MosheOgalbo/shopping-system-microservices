@@ -15,11 +15,6 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, orderId })
   useEffect(() => {
     if (!isOpen) return undefined;
 
-    const timer = window.setTimeout(() => {
-      onClose();
-      navigate('/shopping');
-    }, 3000);
-
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose();
@@ -28,10 +23,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, orderId })
     };
 
     window.addEventListener('keydown', onKeyDown);
-    return () => {
-      window.clearTimeout(timer);
-      window.removeEventListener('keydown', onKeyDown);
-    };
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, [isOpen, onClose, navigate]);
 
   if (!isOpen) return null;
@@ -75,17 +67,13 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, orderId })
           </p>
         </div>
 
-        <div className="flex flex-col gap-3">
-          <button
-            type="button"
-            onClick={handleContinueShopping}
-            className="w-full rounded-xl bg-emerald-700 px-6 py-3 font-semibold text-white shadow-lg transition hover:bg-emerald-800 dark:bg-emerald-600"
-          >
-            {t('success.continue')}
-          </button>
-
-          <p className="text-center text-xs text-gray-500 dark:text-slate-400">{t('success.autoClose')}</p>
-        </div>
+        <button
+          type="button"
+          onClick={handleContinueShopping}
+          className="w-full rounded-xl bg-emerald-700 px-6 py-3 font-semibold text-white shadow-lg transition hover:bg-emerald-800 dark:bg-emerald-600"
+        >
+          {t('success.continue')}
+        </button>
       </div>
     </div>
   );

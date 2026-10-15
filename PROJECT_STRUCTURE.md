@@ -43,12 +43,13 @@ shopping-app/
 ├── e2e/
 ├── shopping-client/
 │   ├── public/favicon.svg
+│   ├── public/catalog/          # local product photos
 │   └── src/
 │       ├── pages/               # ShoppingScreen, OrderScreen
 │       ├── components/          # header, catalog, cart, checkout
 │       ├── i18n/                # he, en, ar
 │       ├── theme/               # light / dark
-│       ├── services/            # catalog and orders HTTP
+│       ├── services/            # catalogApi and orders HTTP
 │       └── store/               # cart and API cache
 ├── server-net/
 │   ├── ShoppingApp.API/

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { CartItem } from '../store/types';
+import { CartItem } from '../types';
 import { API_ENDPOINTS } from '../util/constants';
 import { OrderRequest } from './types';
 
@@ -8,14 +8,11 @@ export interface PlaceOrderResponse {
   status: string;
 }
 
-const transformCartItemsToOrderItems = (cartItems: CartItem[]) => {
-  return cartItems.map(item => ({
+const transformCartItemsToOrderItems = (cartItems: CartItem[]) =>
+  cartItems.map(item => ({
     productId: item.id,
-    name: item.name,
     quantity: item.quantity,
-    price: item.price,
   }));
-};
 
 export const ordersApi = createApi({
   reducerPath: 'ordersApi',
@@ -27,18 +24,19 @@ export const ordersApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Order'],
   endpoints: (builder) => ({
     placeOrder: builder.mutation<PlaceOrderResponse, { user: OrderRequest['user']; items: CartItem[] }>({
       query: (orderData) => ({
         url: 'orders/',
         method: 'POST',
+        headers: {
+          'Idempotency-Key': crypto.randomUUID(),
+        },
         body: {
           user: orderData.user,
           items: transformCartItemsToOrderItems(orderData.items),
         } satisfies OrderRequest,
       }),
-      invalidatesTags: ['Order'],
     }),
   }),
 });

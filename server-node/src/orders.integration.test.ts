@@ -11,14 +11,19 @@ const originalCatalogUrl = process.env.CATALOG_API_URL;
 
 beforeAll(async () => {
   process.env.CATALOG_API_URL = 'http://catalog.test/api';
-  global.fetch = jest.fn(async () => ({
-    ok: true,
-    json: async () => ([
-      { Id: 1, Name: 'לפטופ Dell', Price: 2999.99 },
-      { Id: 5, Name: 'ספר תכנות', Price: 149.99 },
-      { Id: 3, Name: 'חולצה כחולה', Price: 89.99 },
-    ]),
-  })) as unknown as typeof fetch;
+  process.env.NODE_ENV = 'test';
+  global.fetch = jest.fn(async (input: RequestInfo | URL) => {
+    const url = String(input);
+    expect(url).toContain('/Products?ids=');
+    return {
+      ok: true,
+      json: async () => ([
+        { id: 1, name: 'לפטופ Dell', price: 2999.99 },
+        { id: 5, name: 'ספר תכנות', price: 149.99 },
+        { id: 3, name: 'חולצה כחולה', price: 89.99 },
+      ]),
+    };
+  }) as unknown as typeof fetch;
 
   mongo = await MongoMemoryServer.create();
   await mongoose.connect(mongo.getUri());
@@ -54,8 +59,8 @@ const payload = {
     address: 'ויצמן 5, חיפה',
   },
   items: [
-    { productId: '1', name: 'fake laptop', quantity: 1, price: 1 },
-    { productId: '5', name: 'fake book', quantity: 2, price: 2 },
+    { productId: '1', quantity: 1 },
+    { productId: '5', quantity: 2 },
   ],
 };
 
@@ -66,23 +71,21 @@ describe('orders API', () => {
     expect(response.body.status).toBe('ok');
   });
 
-  it('stores an order with catalog-authoritative item data', async () => {
+  it('stores an order with a customer snapshot and catalog prices', async () => {
     const created = await request(app).post('/api/orders').send(payload);
     expect(created.status).toBe(201);
     expect(created.body.status).toBe('created');
     expect(typeof created.body.id).toBe('string');
 
-    const user = await User.findOne({ email: 'yossi@example.com' }).lean();
-    expect(user?.firstName).toBe('יוסי');
-
     const stored = await Order.findById(created.body.id).lean();
+    expect(stored?.customer).toMatchObject(payload.user);
     expect(stored?.items).toEqual([
       { productId: '1', name: 'לפטופ Dell', quantity: 1, price: 2999.99 },
       { productId: '5', name: 'ספר תכנות', quantity: 2, price: 149.99 },
     ]);
   });
 
-  it('updates the saved address when the same email orders again', async () => {
+  it('keeps the original address on an older order when the same email orders again', async () => {
     const first = await request(app).post('/api/orders').send(payload);
     expect(first.status).toBe(201);
 
@@ -92,14 +95,33 @@ describe('orders API', () => {
         firstName: 'יוסף',
         address: 'הרצל 10, תל אביב',
       },
-      items: [{ productId: '3', name: 'fake shirt', quantity: 1, price: 1 }],
+      items: [{ productId: '3', quantity: 1 }],
     });
     expect(second.status).toBe(201);
 
     const users = await User.find({ email: 'yossi@example.com' }).lean();
     expect(users).toHaveLength(1);
-    expect(users[0].firstName).toBe('יוסף');
     expect(users[0].address).toBe('הרצל 10, תל אביב');
+
+    const firstStored = await Order.findById(first.body.id).lean();
+    expect(firstStored?.customer.address).toBe('ויצמן 5, חיפה');
+    expect(firstStored?.customer.firstName).toBe('יוסי');
+  });
+
+  it('returns the same order for a repeated idempotency key', async () => {
+    const first = await request(app)
+      .post('/api/orders')
+      .set('Idempotency-Key', 'order-1')
+      .send(payload);
+    const second = await request(app)
+      .post('/api/orders')
+      .set('Idempotency-Key', 'order-1')
+      .send(payload);
+
+    expect(first.status).toBe(201);
+    expect(second.status).toBe(201);
+    expect(second.body.id).toBe(first.body.id);
+    expect(await Order.countDocuments()).toBe(1);
   });
 
   it('rejects an invalid order without saving it', async () => {
@@ -115,7 +137,7 @@ describe('orders API', () => {
   it('rejects unknown product ids', async () => {
     const response = await request(app).post('/api/orders').send({
       user: { ...payload.user, email: 'unknown@example.com' },
-      items: [{ productId: '999', name: 'ghost', quantity: 1, price: 10 }],
+      items: [{ productId: '999', quantity: 1 }],
     });
 
     expect(response.status).toBe(400);

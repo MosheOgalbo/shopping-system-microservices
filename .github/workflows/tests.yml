@@ -25,6 +25,8 @@ jobs:
           cache-dependency-path: server-node/package-lock.json
       - run: npm ci
         working-directory: server-node
+      - run: npm audit --omit=dev --audit-level=high
+        working-directory: server-node
       - run: npm run build
         working-directory: server-node
       - run: npm test
@@ -40,6 +42,8 @@ jobs:
           cache: npm
           cache-dependency-path: shopping-client/package-lock.json
       - run: npm ci
+        working-directory: shopping-client
+      - run: npm audit --omit=dev --audit-level=high
         working-directory: shopping-client
       - run: npm run lint
         working-directory: shopping-client

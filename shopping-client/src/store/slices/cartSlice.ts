@@ -4,11 +4,8 @@ import { Product, CartState } from '../types';
 
 const MAX_QUANTITY = 99;
 
-
-
 const initialState: CartState = {
   items: [],
-  isOpen: false,
 };
 
 const cartSlice = createSlice({
@@ -40,12 +37,6 @@ const cartSlice = createSlice({
     clearCart(state) {
       state.items = [];
     },
-    toggleCart(state) {
-      state.isOpen = !state.isOpen;
-    },
-    setCartOpen(state, action: PayloadAction<boolean>) {
-      state.isOpen = action.payload;
-    }
   },
 });
 
@@ -54,8 +45,6 @@ export const {
   removeFromCart,
   updateQuantity,
   clearCart,
-  toggleCart,
-  setCartOpen
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

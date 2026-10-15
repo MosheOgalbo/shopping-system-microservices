@@ -9,6 +9,7 @@ The browser application: catalog, cart, and checkout. It talks to the catalog AP
 | `Dockerfile` | Builds the static app. `VITE_API_PRODUCTS` and `VITE_API_ORDERS` are baked in at build time |
 | `index.html` | Document shell, tab title, favicon, theme bootstrap before React loads |
 | `public/favicon.svg` | Browser-tab icon |
+| `public/catalog/*.jpg` | Product photos served from the UI origin |
 | `src/main.tsx` | Mounts the app |
 | `src/App.tsx` | Router for `/shopping` and `/order`, skip link |
 | `src/index.css` | Tailwind, RTL/LTR text alignment, dark palette, focus and reduced-motion rules |
@@ -32,7 +33,7 @@ Compose points the APIs at `localhost`. Kubernetes and AWS builds use `/api/` so
 | `components/ThemeToggle.tsx` | Light / dark |
 | `components/DocumentDirection.tsx` | Sets `html lang`, `dir`, and document title |
 | `components/SearchInput.tsx` | Search combobox and product table |
-| `components/FilterBar.tsx` | Category and sort |
+| `components/FilterBar.tsx` | Category filter opens a table of category cards with item counts, plus sort |
 | `components/ProductCard.tsx` | Quantity and add to cart |
 | `components/ProductsGrid.tsx` | Result grid |
 | `components/CartPanel.tsx` | Cart lines and checkout. Beside the products from the `md` breakpoint, and inside a side drawer on smaller screens |
@@ -49,11 +50,12 @@ Compose points the APIs at `localhost`. Kubernetes and AWS builds use `/api/` so
 | `src/i18n/locales/*.json` | Hebrew, English, Arabic copy and catalog labels |
 | `src/i18n/catalog.ts` | Translates seeded category, name, and description strings |
 | `src/theme/index.ts` | Theme persistence and `dark` class |
-| `services/productsApi.ts` | `GET Products` and `GET Products/category/{id}` |
-| `services/categoriesApi.ts` | `GET Categories` |
-| `services/ordersApi.ts` | `POST orders` with cart lines |
+| `services/catalogApi.ts` | `GET Products`, category filter, and `GET Categories` |
+| `services/ordersApi.ts` | `POST orders` with `{ productId, quantity }` |
 | `store/slices/cartSlice.ts` | Add, change quantity, remove, clear |
-| `util/products.ts` | Maps PascalCase catalog DTOs to UI products |
+| `store/persistCart.ts` | Restores the cart from `localStorage` |
+| `cartUi/` | Mobile cart drawer context, split so Fast Refresh can lint |
+| `util/products.ts` | Maps camelCase catalog DTOs to UI products |
 | `util/constants.ts` | API base URLs and validation lengths |
 
 ## Tests
@@ -64,3 +66,4 @@ Compose points the APIs at `localhost`. Kubernetes and AWS builds use `/api/` so
 | `components/OrderForm.test.tsx` | Empty required fields block submit |
 | `store/slices/cartSlice.test.ts` | Cart merge and clear rules |
 | `util/products.test.ts` | Catalog DTO mapping |
+| `store/persistCart.test.ts` | Cart survives a reload |

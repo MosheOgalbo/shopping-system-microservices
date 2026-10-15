@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch } from '../hooks';
 import { translateCatalogLabel } from '../i18n/catalog';
@@ -6,7 +6,7 @@ import { addToCart } from '../store/slices/cartSlice';
 import { PropsProductCard } from '../types';
 import { isImageUrl } from '../util/products';
 
-const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
+const ProductCard: React.FC<PropsProductCard> = ({ product, highlighted = false }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [quantity, setQuantity] = useState(1);
@@ -16,17 +16,22 @@ const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
   const displayCategory = translateCatalogLabel(t, 'categories', product.category);
   const displayDescription = translateCatalogLabel(t, 'descriptions', product.description);
 
+  useEffect(() => {
+    if (!added) return undefined;
+    const timer = window.setTimeout(() => setAdded(false), 1200);
+    return () => window.clearTimeout(timer);
+  }, [added]);
+
   const handleAddToCart = () => {
     dispatch(addToCart({ product, quantity }));
     setAdded(true);
-    window.setTimeout(() => setAdded(false), 1200);
   };
 
   return (
     <article
       id={`product-${product.id}`}
       data-product-id={product.id}
-      className="flex h-full min-h-[26rem] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg dark:border-slate-700 dark:bg-slate-900 dark:shadow-none dark:hover:shadow-emerald-950/40"
+      className={`flex h-full min-h-[26rem] flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg dark:bg-slate-900 dark:shadow-none dark:hover:shadow-emerald-950/40 ${highlighted ? 'border-emerald-500 ring-2 ring-emerald-500 dark:border-emerald-400' : 'border-slate-200 dark:border-slate-700'}`}
     >
       <div className="relative aspect-[4/3] shrink-0 overflow-hidden bg-slate-100 dark:bg-slate-800">
         {isImageUrl(product.image) ? (

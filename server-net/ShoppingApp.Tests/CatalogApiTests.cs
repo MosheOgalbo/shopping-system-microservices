@@ -32,6 +32,27 @@ public class CatalogApiTests : IClassFixture<CatalogApiFactory>
         Assert.Contains(categories, category => category.Name == "אלקטרוניקה");
         Assert.Contains(categories, category => category.Name == "ביגוד");
         Assert.Contains(categories, category => category.Name == "ספרים");
+        Assert.Contains(categories, category => category.Name == "בית");
+        Assert.Contains(categories, category => category.Name == "ספורט");
+        Assert.Contains(categories, category => category.Name == "מזון");
+        Assert.Equal(30, categories.Sum(category => category.ProductCount));
+    }
+
+    [Fact]
+    public async Task CategoryProductCounts_MatchProductsInThatCategory()
+    {
+        var categoriesResponse = await _client.GetAsync("/api/Categories");
+        var categories = await categoriesResponse.Content.ReadFromJsonAsync<List<CategoryResponse>>();
+        Assert.NotNull(categories);
+
+        foreach (var category in categories)
+        {
+            var productsResponse = await _client.GetAsync($"/api/Products/category/{category.Id}");
+            var products = await productsResponse.Content.ReadFromJsonAsync<List<ProductResponse>>();
+            Assert.NotNull(products);
+            Assert.Equal(category.ProductCount, products.Count);
+            Assert.All(products, product => Assert.Equal(category.Id, product.CategoryId));
+        }
     }
 
     [Fact]
@@ -42,7 +63,7 @@ public class CatalogApiTests : IClassFixture<CatalogApiFactory>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var products = await response.Content.ReadFromJsonAsync<List<ProductResponse>>();
         Assert.NotNull(products);
-        Assert.True(products.Count >= 6);
+        Assert.Equal(30, products.Count);
         Assert.All(products, product =>
         {
             Assert.False(string.IsNullOrWhiteSpace(product.Name));
@@ -62,6 +83,19 @@ public class CatalogApiTests : IClassFixture<CatalogApiFactory>
         Assert.NotEmpty(products);
         Assert.All(products, product => Assert.Equal(2, product.CategoryId));
         Assert.Contains(products, product => product.Name == "חולצה כחולה");
+    }
+
+    [Fact]
+    public async Task GetProductsByIds_ReturnsOnlyThoseProducts()
+    {
+        var response = await _client.GetAsync("/api/Products?ids=3,5");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var products = await response.Content.ReadFromJsonAsync<List<ProductResponse>>();
+        Assert.NotNull(products);
+        Assert.Equal(2, products.Count);
+        Assert.Contains(products, product => product.Name == "חולצה כחולה");
+        Assert.Contains(products, product => product.Name == "ספר תכנות");
     }
 
     [Fact]

@@ -1,49 +1,53 @@
 using Microsoft.EntityFrameworkCore;
-using ShoppingApp.Core.Models;
+using ShoppingApp.Core.Models.DTOs;
 using ShoppingApp.Infrastructure.Data;
 
 namespace ShoppingApp.Infrastructure.Repositories
 {
-    // מימוש ממשק ICategoryRepository שמבצע גישה לנתונים (Data Access Layer) עבור קטגוריות
     public class CategoryRepository : ICategoryRepository
     {
         private readonly ApplicationDbContext _context;
 
-        // קונסטרקטור שמקבל את ה-DbContext של אפליקציית ה-Entity Framework
         public CategoryRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // מחזיר את כל הקטגוריות עם המוצרים המקושרים לכל קטגוריה, ממוין לפי שם
-        public async Task<IEnumerable<Category>> GetAllAsync()
+        public async Task<IReadOnlyList<CategoryDto>> GetAllAsync()
         {
             return await _context.Categories
-                .Include(c => c.Products)  // טוען את רשימת המוצרים המקושרים (Eager Loading)
-                .OrderBy(c => c.Name)
+                .AsNoTracking()
+                .OrderBy(category => category.Name)
+                .Select(category => new CategoryDto
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    Description = category.Description,
+                    CreatedAt = category.CreatedAt,
+                    ProductCount = category.Products.Count()
+                })
                 .ToListAsync();
         }
 
-        // מחזיר קטגוריה לפי מזהה, כולל טוען את המוצרים המקושרים
-        public async Task<Category?> GetByIdAsync(int id)
+        public async Task<CategoryDto?> GetByIdAsync(int id)
         {
             return await _context.Categories
-                .Include(c => c.Products)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .AsNoTracking()
+                .Where(category => category.Id == id)
+                .Select(category => new CategoryDto
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    Description = category.Description,
+                    CreatedAt = category.CreatedAt,
+                    ProductCount = category.Products.Count()
+                })
+                .FirstOrDefaultAsync();
         }
 
-        // מחזיר קטגוריה לפי שם (חיפוש לא תלוי אותיות גדולות/קטנות)
-        public async Task<Category?> GetByNameAsync(string name)
+        public Task<bool> ExistsAsync(int id)
         {
-            return await _context.Categories
-                .Include(c => c.Products)
-                .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
-        }
-
-        // בודק האם קיימת קטגוריה עם מזהה מסוים
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _context.Categories.AnyAsync(c => c.Id == id);
+            return _context.Categories.AsNoTracking().AnyAsync(category => category.Id == id);
         }
     }
 }

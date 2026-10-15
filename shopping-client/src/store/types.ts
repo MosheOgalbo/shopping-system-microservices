@@ -1,17 +1,7 @@
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-  description?: string;
-  image?: string;
-}
+import { CartItem } from '../types';
 
-export interface CartItem extends Product {
-  quantity: number;
-}
+export type { Product, CartItem } from '../types';
 
 export interface CartState {
   items: CartItem[];
-  isOpen: boolean;
 }

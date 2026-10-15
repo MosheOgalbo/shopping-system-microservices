@@ -1,15 +1,27 @@
 export interface BackendProduct {
-  Id: number;
-  Name: string;
-  Description: string;
-  Price: number;
-  CategoryId: number;
-  CategoryName: string;
-  Image: string;
-  CreatedAt: string;
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  categoryId: number;
+  categoryName: string;
+  image?: string;
+  createdAt: string;
 }
 
-// טיפוס הנתונים שנשלחים לשרת
+export interface BackendCategory {
+  id: number;
+  name: string;
+  productCount?: number;
+}
+
+export interface Category {
+  Id: number;
+  Name: string;
+  icon?: string;
+  productCount: number;
+}
+
 export interface OrderRequest {
   user: {
     firstName: string;
@@ -19,14 +31,6 @@ export interface OrderRequest {
   };
   items: {
     productId: string;
-    name: string;
     quantity: number;
-    price?: number;
   }[];
-}
-
-export  interface Category {
-  Id: number;
-  Name: string;
-  icon?: string;
 }

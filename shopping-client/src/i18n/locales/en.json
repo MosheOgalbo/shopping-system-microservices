@@ -57,6 +57,10 @@
   },
   "filter": {
     "allCategories": "All categories",
+    "itemsOne": "1 item",
+    "itemsMany": "{{count}} items",
+    "categoriesTable": "Category table",
+    "columnCount": "Items",
     "sortByName": "Sort by name",
     "sortPriceLow": "Price: low to high",
     "sortPriceHigh": "Price: high to low"
@@ -128,31 +132,81 @@
     "thanks": "Thank you for your order",
     "orderNumber": "Order number:",
     "body": "Your order was received and will be processed as soon as possible.\nYou will get an email update about the order status.",
-    "continue": "Continue shopping",
-    "autoClose": "This window will close automatically in 3 seconds..."
+    "continue": "Continue shopping"
   },
   "catalog": {
     "categories": {
       "אלקטרוניקה": "Electronics",
       "ביגוד": "Clothing",
-      "ספרים": "Books"
+      "ספרים": "Books",
+      "בית": "Home",
+      "ספורט": "Sports",
+      "מזון": "Groceries"
     },
     "names": {
       "לפטופ Dell": "Dell Laptop",
       "אוזניות אלחוטיות": "Wireless Headphones",
+      "סמארטפון": "Smartphone",
+      "טאבלט": "Tablet",
+      "רמקול נייד": "Portable Speaker",
       "חולצה כחולה": "Blue Shirt",
       "ז'קט קלאסי": "Classic Jacket",
+      "ג'ינס כהה": "Dark Jeans",
+      "נעלי ריצה": "Running Shoes",
+      "סוודר צמר": "Wool Sweater",
       "ספר תכנות": "Programming Book",
-      "מארז ספרים": "Book Bundle"
+      "מארז ספרים": "Book Bundle",
+      "רומן": "Novel",
+      "ספר בישול": "Cookbook",
+      "ספר ילדים": "Children's Book",
+      "מכונת קפה": "Coffee Machine",
+      "סט מצעים": "Bedding Set",
+      "מנורת שולחן": "Desk Lamp",
+      "סיר נירוסטה": "Stainless Pot",
+      "מגבת אמבט": "Bath Towel",
+      "כדור כדורגל": "Soccer Ball",
+      "מזרן יוגה": "Yoga Mat",
+      "משקולת יד": "Dumbbell",
+      "בקבוק ספורט": "Sports Bottle",
+      "שעון ספורט": "Sports Watch",
+      "שמן זית": "Olive Oil",
+      "קפה טחון": "Ground Coffee",
+      "פסטה": "Pasta",
+      "דבש טהור": "Honey",
+      "שוקולד מריר": "Dark Chocolate"
     },
     "descriptions": {
       "מחשב נייד לעבודה וללימודים": "Laptop for work and study",
       "אוזניות עם ביטול רעשים": "Headphones with noise cancellation",
+      "טלפון עם מסך 6.5 אינץ'": "Phone with a 6.5-inch screen",
+      "טאבלט 10 אינץ' לקריאה ולצפייה": "10-inch tablet for reading and video",
+      "רמקול בלוטות' לחדר ולטיולים": "Bluetooth speaker for home and travel",
       "חולצת כותנה איכותית": "Quality cotton shirt",
       "חולצת כותנה": "Cotton shirt",
       "ז'קט קל לעונת המעבר": "Light jacket for transitional weather",
+      "מכנסי ג'ינס בגזרה ישרה": "Straight-fit jeans",
+      "נעלי ריצה לאימון יומי": "Running shoes for daily training",
+      "סוודר צמר לסתיו ולחורף": "Wool sweater for fall and winter",
       "ספר ללימוד תכנות מעשי": "Book for practical programming",
-      "שלושה ספרים נבחרים": "Three selected books"
+      "שלושה ספרים נבחרים": "Three selected books",
+      "רומן כריכה רכה": "Paperback novel",
+      "מתכונים למטבח הביתי": "Recipes for the home kitchen",
+      "ספר מאויר לילדים": "Illustrated children's book",
+      "מכונת קפה לשימוש ביתי": "Home coffee machine",
+      "ציפה וזוג ציפיות למיטה זוגית": "Duvet cover and two pillowcases for a double bed",
+      "מנורת קריאה עם אור חם": "Reading lamp with warm light",
+      "סיר 5 ליטר עם מכסה": "5-liter pot with a lid",
+      "מגבת כותנה בגודל אמבט": "Cotton bath towel",
+      "כדור משחק בגודל 5": "Size 5 match ball",
+      "מזרן אימון בעובי 6 מ\"מ": "6 mm training mat",
+      "משקולת יד 5 ק\"ג": "5 kg dumbbell",
+      "בקבוק 750 מ\"ל": "750 ml bottle",
+      "שעון דופק לריצה ולאימון": "Heart-rate watch for running and training",
+      "שמן זית כתית 750 מ\"ל": "750 ml extra virgin olive oil",
+      "קפה טחון 250 גרם": "250 g ground coffee",
+      "פסטה 500 גרם": "500 g pasta",
+      "דבש טהור 350 גרם": "350 g pure honey",
+      "חפיסת שוקולד מריר 100 גרם": "100 g dark chocolate bar"
     }
   }
 }

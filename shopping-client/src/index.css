@@ -12,7 +12,7 @@ body {
   margin: 0;
   background: #f1f5f9;
   color: #0f172a;
-  font-family: "Rubik", "Noto Sans Arabic", "Segoe UI", sans-serif;
+  font-family: "Rubik", "Noto Sans Arabic", "Segoe UI", "Arial Hebrew", Tahoma, sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 

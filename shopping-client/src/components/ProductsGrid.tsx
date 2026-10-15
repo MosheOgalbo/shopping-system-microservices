@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import ProductCard from './ProductCard';
 import { ProductsGridProps } from '../types';
 
-const ProductsGrid: React.FC<ProductsGridProps> = ({ products }) => {
+const ProductsGrid: React.FC<ProductsGridProps> = ({ products, highlightedId }) => {
   const { t } = useTranslation();
 
   if (products.length === 0) {
@@ -26,7 +26,7 @@ const ProductsGrid: React.FC<ProductsGridProps> = ({ products }) => {
     >
       {products.map(product => (
         <div key={product.id} role="listitem" className="h-full min-w-0">
-          <ProductCard product={product} />
+          <ProductCard product={product} highlighted={product.id === highlightedId} />
         </div>
       ))}
     </div>

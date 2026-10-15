@@ -1,7 +1,5 @@
 import { Schema, model } from 'mongoose';
-
-const nameRegex = /^(?=.*\p{L})[\p{L}\s'-]+$/u;
-const addressRegex = /^(?=.*[\p{L}\p{N}])[\p{L}\p{N}\s,.'#/’-]+$/u;
+import { ADDRESS_PATTERN, NAME_PATTERN } from '../validation/patterns';
 
 const userSchema = new Schema({
   firstName: {
@@ -9,7 +7,7 @@ const userSchema = new Schema({
     required: true,
     minlength: [2, 'First name must be at least 2 characters'],
     maxlength: 50,
-    match: [nameRegex, 'First name contains invalid characters'],
+    match: [NAME_PATTERN, 'First name contains invalid characters'],
     trim: true,
   },
   lastName: {
@@ -17,13 +15,12 @@ const userSchema = new Schema({
     required: true,
     minlength: [2, 'Last name must be at least 2 characters'],
     maxlength: 50,
-    match: [nameRegex, 'Last name contains invalid characters'],
+    match: [NAME_PATTERN, 'Last name contains invalid characters'],
     trim: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true,
     lowercase: true,
     trim: true,
     maxlength: 200,
@@ -33,9 +30,11 @@ const userSchema = new Schema({
     required: true,
     minlength: [5, 'Address must be at least 5 characters'],
     maxlength: 300,
-    match: [addressRegex, 'Address contains invalid characters'],
+    match: [ADDRESS_PATTERN, 'Address contains invalid characters'],
     trim: true,
   },
-});
+}, { timestamps: true });
+
+userSchema.index({ email: 1 }, { unique: true });
 
 export const User = model('User', userSchema);
